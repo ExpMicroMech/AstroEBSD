@@ -29,3 +29,7 @@ Thumbs.db
 #Matlab Files
 *.asv
 *.fig
+/phases/cifs
+/phases/dynamic_templates
+/phases/masterpatterns
+/phases/phasefiles
