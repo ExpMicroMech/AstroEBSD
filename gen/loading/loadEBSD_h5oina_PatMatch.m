@@ -175,10 +175,6 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
         % rounding errors instead of using the 'force' option
         
         langle = double(EBSDphases.(pN).Lattice_Angles');
-        if pN=='phase_1'
-            EBSDphases.(pN).Space_Group=192;
-        else
-        end
         csm = crystalSymmetry('SpaceId',EBSDphases.(pN).Space_Group);
         if strcmp(csm.lattice,'trigonal') | strcmp(csm.lattice,'hexagonal')
             langle(isnull(langle-2/3*pi,1e-7))=2/3*pi;
@@ -210,10 +206,6 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
         % rounding errors instead of using the 'force' option
         
         langle = double(DPphases.(pN).Lattice_Angles');
-        if pN=='phase_1'
-            DPphases.(pN).Space_Group=192;
-        else
-        end
         csm = crystalSymmetry('SpaceId',DPphases.(pN).Space_Group);
         if strcmp(csm.lattice,'trigonal') | strcmp(csm.lattice,'hexagonal')
             langle(isnull(langle-2/3*pi,1e-7))=2/3*pi;

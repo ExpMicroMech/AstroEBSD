@@ -89,9 +89,37 @@ while p < iterations
     
     %generate the template again and match
     [ EBSP_halfcorr ] = EBSP_gen(EBSP_geometry,rotmat_best,screen_int,isHex );
-    EBSP_loghalfcorr = logsample(EBSP_halfcorr, rmin, rmax, screensize/2, screensize/2, LPTsize, LPTsize); %Thransform the x/y corrected image into LPT space
+    EBSP_loghalfcorr = logsample(EBSP_halfcorr, rmin, rmax/sqrt(2), screensize/2, screensize/2, LPTsize, LPTsize); %Transform the x/y corrected image into LPT space
     %measure the Z rotation
-    [ rotmat_z_correction] = Angle_ShiftZ( EBSP_ref.logp,EBSP_loghalfcorr,correction,LPTsize,SettingsXCF2,RTM_setup.Rz ); %This generate the Z correction roation matrix for the x/y corrected image
+    
+%     figure;
+%     subplot(3,1,1); imagesc(EBSP_ref.logp);
+%     subplot(3,1,2); imagesc(EBSP_loghalfcorr);
+%     subplot(3,1,3); imagesc(EBSP_ref.logp-EBSP_loghalfcorr);
+
+    %hard code the z correction
+    SettingsXCF3.roisize=2^(floor(log10(size(EBSP_ref.logp,1)/4)/log10(2)));
+    
+    logxpos=floor(size(EBSP_ref.logp,1)/2);
+    logypos=floor((1:3)*logxpos/2);
+    SettingsXCF3.roiloc=[logxpos,logypos(1);
+        logxpos,logypos(2);
+        logxpos,logypos(3);];
+    SettingsXCF3.numroi=3;
+    SettingsXCF3.filters=[0 0 0 SettingsXCF3.roisize/2];
+    [SettingsXCF3.FFTfilter,SettingsXCF3.hfilter] = fFilters(SettingsXCF3.roisize,SettingsXCF3.filters);
+    %need to filter
+            [FFTData_ref,data_fill] =fROIEx2(EBSP_ref.logp,SettingsXCF3);
+        [FFTData_test,data_fill]=fROIEx2(EBSP_loghalfcorr,SettingsXCF3);
+    RegOut3=zeros(3,4);
+    for n=1:3
+         [RegOut3(n,:)] = fReg( FFTData_ref(:,:,n),FFTData_test(:,:,n),SettingsXCF3.roisize,100,data_fill); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
+    end
+    angle_z=pi*2*mean(RegOut3(:,2))/LPTsize;
+    rotmat_z_correction=RTM_setup.Rz(angle_z);
+       
+%     [ rotmat_z_correction] = Angle_ShiftZ( EBSP_ref.logp,EBSP_loghalfcorr,correction,LPTsize,SettingsXCF2,RTM_setup.Rz ); %This generate the Z correction roation matrix for the x/y corrected image
+
     rotmat_best = rotmat_best * rotmat_z_correction;
     
     %do this without generation of the template again
@@ -112,10 +140,12 @@ end
 [ EBSP_final ] = EBSP_gen( EBSP_geometry,rotmat_best,screen_int,isHex ); %generate the EBSP for this iteration
 
 %FFT it
-[FFTData_final]  =fROIEx(EBSP_final,SettingsXCF.hfilter,SettingsXCF.FFTfilter,SettingsXCF.roiloc,SettingsXCF.filters,SettingsXCF.numroi,SettingsXCF.roisize);
+% [FFTData_final,datafill_final]  =fROIEx(EBSP_final,SettingsXCF.hfilter,SettingsXCF.FFTfilter,SettingsXCF.roiloc,SettingsXCF.filters,SettingsXCF.numroi,SettingsXCF.roisize);
+
+[FFTData_final,datafill_final]=fROIEx2(EBSP_final,SettingsXCF);
 
 %Cross correlate to get an x and y shift
-RegFinal = fReg( FFTData_Ref,FFTData_final,SettingsXCF.roisize,SettingsXCF.mesh,XCF_data_fill); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
+RegFinal = fReg( FFTData_Ref,FFTData_final,SettingsXCF.roisize,SettingsXCF.mesh,datafill_final); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
 
 end
 

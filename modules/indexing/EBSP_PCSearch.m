@@ -2,8 +2,8 @@ function [EBSP_Fe_PCOut] = EBSP_PCSearch(EBSP_Fe_PC,Settings_Cor,Settings_Rad,Se
 %EBSP_PCSEARCH Find the pattern centre
 
 %set the bounds on the GA
-PC_GA_ub=Settings_PCin.start+Settings_PCin.range;
-PC_GA_lb=Settings_PCin.start-Settings_PCin.range;
+PC_GA_ub=Settings_PCin.start(:)+Settings_PCin.range(:);
+PC_GA_lb=Settings_PCin.start(:)-Settings_PCin.range(:);
 
 
 %set up the GA - needs the global optimisation toolbox
@@ -13,7 +13,7 @@ PC_GA_options.UseParallel=false;
 PC_GA_options.MaxGenerations=15;
 PC_GA_options.PopulationSize=30;
 PC_GA_options.MaxStallGenerations=20;
-PC_GA_options.Display='iter';
+PC_GA_options.Display='none';
 %for help with this:
 %doc ga
 

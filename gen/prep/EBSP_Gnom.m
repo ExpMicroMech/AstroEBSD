@@ -1,7 +1,7 @@
 function [ EBSP ] = EBSP_Gnom( PatternInfo,PCin )
 %EBSP_GNOM Generate the gnomonic coordinate set for a detector geometry
 %   Inputs = Decector - a structure with fields
-%   
+%
 %   using Bruker coordinate systems
 %   PC(3)=0.5; %in units of screen height
 %   PC(1)=0.5; %in units of screen width, from left of exp. pattern
@@ -16,11 +16,27 @@ if isfield(PatternInfo,'ScreenWidth')
     PatternInfo.size(1)=PatternInfo.ScreenHeight;
 end
 
+if isfield(PatternInfo,'screensize')
+    PatternInfo.size(2)=PatternInfo.screensize;
+    PatternInfo.size(2)=PatternInfo.screensize;
+    PatternInfo.size(1)=PatternInfo.screensize;
+end
 
-if isfield(PCin,'PCX')
+if isfield(PatternInfo,'ij')
+    EBSP.ij=PatternInfo.ij;
+else
+    EBSP.ij=0;
+end
+
+
+if isfield(PCin,'DD')
     PC(1)=PCin.PCX;
     PC(2)=PCin.PCY;
     PC(3)=PCin.DD;
+elseif isfield(PCin,'PCZ')
+    PC(1)=PCin.PCX;
+    PC(2)=PCin.PCY;
+    PC(3)=PCin.PCZ;
 else
     PC=PCin;
 end

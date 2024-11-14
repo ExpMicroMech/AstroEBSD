@@ -36,7 +36,11 @@ else
 end
 
 %sample the pattern from the interpolant
-[i_data] = Cube_Sample(r2(:,1),r2(:,2),r2(:,3),screen_int,isHex);
+if isfield(screen_int,'pp') %use sterographic reprojection
+    [i_data] = Stereo_Sample(r2(:,1),r2(:,2),r2(:,3),screen_int);
+else %use cube reprojection
+    [i_data] = Cube_Sample(r2(:,1),r2(:,2),r2(:,3),screen_int,isHex);
+end
 
 %reshape the output
 EBSP_out=reshape(i_data,EBSP_av.size(1),EBSP_av.size(2));

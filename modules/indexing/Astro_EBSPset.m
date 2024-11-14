@@ -533,8 +533,8 @@ end
         PC_GA_options.MaxStallGenerations=20;
         PC_GA_options.Display='iter';
         
-        PC_GA_ub=PC_start+PC_range;
-        PC_GA_lb=PC_start-PC_range;
+        PC_GA_ub=PC_start(:)+PC_range(:);
+        PC_GA_lb=PC_start(:)-PC_range(:);
         
         
         EBSP_single=get(i_raw,'UserData');
@@ -543,7 +543,7 @@ end
         phase_list=get(h_phases,'string');
         phase_num=get(h_phases,'value');
         %build the phase
-        [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder( phase_list(phase_num),InputUser.Phase_Folder );
+        [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num,~ ] = Phase_Builder_RTM( phase_list(phase_num),InputUser.Phase_Folder );
    
         
         FitFunc = @(PC_test) PC_GAOpt( PC_test,EBSP_single.Peak_Centre,EBSP_single.PatternInfo.size,Crystal_LUT,Crystal_UCell,1);
@@ -655,8 +655,8 @@ end
         if exist(InputUser.Phase_Folder,'dir') ~=7
             error(['The folder ' InputUser.Phase_Folder ' does not exist']);
         end
-        
-        folder_dir = dir(InputUser.Phase_Folder);
+        phasfolder=fullfile(InputUser.Phase_Folder,'phasefiles'); %bug fix due to phase folder restructure
+        folder_dir = dir(phasfolder);
         [~,idx] = sort([folder_dir.datenum]);
         folder_dir=folder_dir(idx);
         folder_files={folder_dir.name};

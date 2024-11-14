@@ -88,6 +88,7 @@ Detector_tilt = RTM.Rx(MicroscopeData.TotalTilt);
 %% Handle whether to load patterns as we go, or use an input stack, and preallocate the FFT variables
 if exist_inputpats==0
     P_list=Data_InputMap.PMap(:);
+    P_list=P_list(find(~isnan(P_list)));
     tot_P_list=numel(P_list);
 else
     tot_P_list=size(InputPats,3);
@@ -101,7 +102,7 @@ Mean_PC=[mean(Data_InputMap.PCX(:),'omitnan'),mean(Data_InputMap.PCY(:),'omitnan
 [~,XCF_data_fill] = refine_prep(zeros(Settings_CorX.size,Settings_CorX.size),SettingsXCF,RTM);
 Full_PC=zeros(tot_P_list,3);
 %preallocate the transform structure
-Pat_Ref_r = struct('FFT', zeros(numel(XCF_data_fill), numel(XCF_data_fill)), 'logp', zeros(RTM.LPTsize,RTM.LPTsize));
+Pat_Ref_r = struct('FFT', zeros(numel(XCF_data_fill), numel(XCF_data_fill)), 'logp', zeros(RTM.LPTsize,RTM.LPTsize),'pat_in',zeros(Settings_CorX.size,Settings_CorX.size));
 
 %% Set up the matching...
 
@@ -130,7 +131,7 @@ if exist_inputpats==0
     end
 
 else %We're loading from an input stack of patterns
-    parfor P_test=1:tot_P_list
+    for P_test=1:tot_P_list
         %Take the EBSP from the input stack
         Pat_Ref_BG=InputPats(:,:,P_test);
         %Get the geometry
@@ -143,7 +144,6 @@ else %We're loading from an input stack of patterns
        else % get the median from the entire map
             Full_PC(P_test,:) = [median(PCX(:),'omitnan'),median(PCY(:),'omitnan'),median(DD(:),'omitnan')];
        end   
-    
     %extract the LPT and the FFT
     [Pat_Ref_r(P_test)] = refine_prep(Pat_Ref_BG,SettingsXCF,RTM);
     end
@@ -159,8 +159,15 @@ num_phases=length(InputUser.Phases);
 G_Out=zeros(3,3,tot_P_list,num_phases);
 PH_Out=zeros(tot_P_list,num_phases);
 EAng_Out=zeros(3,tot_P_list,num_phases);
+pd=cell(tot_P_list,num_phases);
+
+lib=cell(tot_P_list,num_phases);
 
 for num_lib=1:num_phases %run through each phase
+    
+    if RTM.KeepLib==0
+        lib=cell(tot_P_list,num_phases);
+    end
 
     PhaseInput=InputUser.Phases{num_lib};
     pTime(['Testing against ' PhaseInput],time1);
@@ -172,6 +179,10 @@ for num_lib=1:num_phases %run through each phase
     %generate the simulated pattern cube
     [screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
 
+    %uncomment these to override and use triclinic symmetry
+    %cs_phase=crystalSymmetry('triclinic',[1,2.2,3.1],[80*degree,75*degree,95*degree]);
+    %disp('crystal symmetry manually set to triclinic for testing... turn me off')
+    
     %populate SO(3)
     [ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
 
@@ -179,16 +190,16 @@ for num_lib=1:num_phases %run through each phase
     [ template_library ] = Library_Gen(Mean_EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
 
     % get adjustment factor for radial crop
-    radial_adjustment=fPHFac(Mean_EBSD_geom,Settings_CorX,screen_int,RTM,SettingsXCF);
-    
+    %radial_adjustment=fPHFac(Mean_EBSD_geom,Settings_CorX,screen_int,RTM,SettingsXCF);
     
     switch RTM.parsearch % library serach in parallel: RTM.parsearch=1
         case 1 %run through each pattern in series, with library search in parallel
             
             for P_test=1:tot_P_list
                 %test the library
-                [G_SO3,Library_PH]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,1);
-
+                [G_SO3,Library_PH,pd{P_test,num_lib},lib{P_test,num_lib}]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,1);
+                %pd gives mean, std for the exp() peak heights 
+                
                 %generate the geometry for this location
                 [ EBSD_geom ] = EBSP_Gnom( PatternInfo,Full_PC(P_test,:));
                 %refine
@@ -197,14 +208,15 @@ for num_lib=1:num_phases %run through each phase
                 %store the orientation
                 G_Out(:,:,P_test,num_lib)=G_Refined;
                 %store the PH
-                PH_Out(P_test,num_lib)=regout_R(4)./radial_adjustment;
+                PH_Out(P_test,num_lib)=regout_R(4);%./radial_adjustment;
+                %disp([num2str(P_test),' of ',num2str(tot_P_list),' phase ',num2str(num_lib)])
             end
             
         case 2 % analyse PATTERNS in parallel, with lib search in series
             
             parfor P_test=1:tot_P_list
                 %test the library
-                [G_SO3,Library_PH]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,0);
+                [G_SO3,Library_PH,pd{P_test,num_lib},~]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,0);
 
                 %generate the geometry for this location
                 [ EBSD_geom ] = EBSP_Gnom( PatternInfo,Full_PC(P_test,:));
@@ -214,14 +226,14 @@ for num_lib=1:num_phases %run through each phase
                 %store the orientation
                 G_Out(:,:,P_test,num_lib)=G_Refined;
                 %store the PH
-                PH_Out(P_test,num_lib)=regout_R(4)./radial_adjustment;
+                PH_Out(P_test,num_lib)=regout_R(4);%./radial_adjustment;
             end
             
         case 0 %do everything in series
             
             for P_test=1:tot_P_list
                 %test the library
-                [G_SO3,Library_PH]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,0);
+                [G_SO3,Library_PH,pd{P_test,num_lib},~]=fLibraryTest(template_library,library_G,Pat_Ref_r(P_test).FFT,SettingsXCF,XCF_data_fill,0);
 
                 %generate the geometry for this location
                 [ EBSD_geom ] = EBSP_Gnom( PatternInfo,Full_PC(P_test,:));
@@ -231,7 +243,7 @@ for num_lib=1:num_phases %run through each phase
                 %store the orientation
                 G_Out(:,:,P_test,num_lib)=G_Refined;
                 %store the PH
-                PH_Out(P_test,num_lib)=regout_R(4)./radial_adjustment;
+                PH_Out(P_test,num_lib)=regout_R(4);%./radial_adjustment;
                 
                 
                 
@@ -244,7 +256,7 @@ for num_lib=1:num_phases %run through each phase
     for P_test=1:tot_P_list
         EAng_Out(:,P_test,num_lib)=conv_G_to_EA(G_Out(:,:,P_test,num_lib)*inv(Detector_tilt));
     end
-
+    
 end
     
 
@@ -313,9 +325,36 @@ end
 % RTM.Output.euler3=Euler3;
 
 %%
+% if RTM.Normalise==1
+%    
+%     RTM.Output.PeakHeight=zeros(size(PH_Out));
+%     for i=1:size(PH_Out,1)
+%         for p=1:size(PH_Out,2)
+%             
+%             %grab the peak height and the prob dist parameters
+%             PH=PH_Out(i,p);
+%             params=pd{i,p};
+% 
+%             %take the exp() and then mean centre / normalise
+%             log_ph=log(PH);
+%             log_ph_norm=(log_ph-params(1))./params(2);
+%             RTM.Output.PeakHeight(i,p)=log_ph_norm;
+% 
+%         end
+%     end
+%     
+% else
+    RTM.Output.PeakHeight=PH_Out;
+%end
 
-RTM.Output.PeakHeight=PH_Out;
+%%
 RTM.Output.Eulers=EAng_Out;
+RTM.Output.pds=pd;
+
+%%
+if RTM.KeepLib==1;
+    RTM.Output.Lib=lib;
+end
 
 %%
 pTime('finished all phases', time1);

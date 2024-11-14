@@ -107,6 +107,12 @@ if (ncol>length(colorbrewer.(ctype).(cname)))
     cbrew_init=colorbrewer.(ctype).(cname){length(colorbrewer.(ctype).(cname))};
     colormap=interpolate_cbrewer(cbrew_init, interp_method, ncol);
     colormap=colormap./255;
+    
+    colormap=colormap-min(colormap(:));
+    while max(colormap(:)) > 1
+        colormap=colormap./max(colormap(:));
+    end
+
     return
 end
 
@@ -124,5 +130,9 @@ if (isempty(colorbrewer.(ctype).(cname){ncol}))
 end
 
 colormap=(colorbrewer.(ctype).(cname){ncol})./255;
+
+%tbb edit
+%normalise
+
 
 end

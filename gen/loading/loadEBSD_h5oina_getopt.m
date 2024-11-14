@@ -1,4 +1,4 @@
-function [ebsd,EBSDdata,opt,ebsdpm,EBSDdata2] = loadEBSD_h5oina_getopt(fname,warningOn,varargin)
+function [ebsd,EBSDdata,opt,ebsdpm,EBSDdata2] = loadEBSD_h5oina_getopt(fname,varargin)
 % read HKL *.h5oina hdf5 file
 % documented here: https://github.com/oinanoanalysis/h5oina/blob/master/H5OINAFile.md
 % note that Matlab < R2021b does not handle hdf5 v1.10 and one needs to use hdf5format_convert
@@ -124,9 +124,7 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
                 EDSheader.(sane_name) = content;
             end
         catch
-            if warningOn==1
-                warning('Error loading EDS data - catch loop invoked')
-            end 
+            warning('Error loading EDS data - catch loop invoked')
         end
     end
 
@@ -163,10 +161,6 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
         % rounding errors instead of using the 'force' option
 
         langle = double(EBSDphases.(pN).Lattice_Angles');
-%         if pN=='phase_1'
-%             EBSDphases.(pN).Space_Group=192;
-%         else
-%         end
         csm = crystalSymmetry('SpaceId',EBSDphases.(pN).Space_Group);
         if strcmp(csm.lattice,'trigonal') | strcmp(csm.lattice,'hexagonal')
             langle(isnull(langle-2/3*pi,1e-7))=2/3*pi;
@@ -350,9 +344,7 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
             catch
                 csm = crystalSymmetry('SpaceId',1);
                 PMphases.(pN).Space_Group=1;
-                if warningOn==1
-                    warning(['Space group for PM phase ' pN ' not loaded, and set to 1']);
-                end
+                warning(['Space group for PM phase ' pN ' not loaded, and set to 1']);
             end
 
             if strcmp(csm.lattice,'trigonal') | strcmp(csm.lattice,'hexagonal')
@@ -436,11 +428,22 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
             opt2.euler3_P=PMdata.Euler(3,:);
         end
     catch
-        if warningOn==1
-            warning('Did not load pattern matched data')
-        end
+        warning('Did not load pattern matched data')
     end
 
+
+    %    opt.x=opt.X;
+    %     opt.y=opt.Y;
+
+    %     opt=rmfield(opt,'X');
+    %     opt=rmfield(opt,'Y');
+
+    %     opt.bc = EBSDdata.Band_Contrast;
+    %     opt.bs = EBSDdata.Band_Slope;
+    %     opt.bands = EBSDdata.Bands;
+    %     opt.MAD = EBSDdata.Mean_Angular_Deviation;
+    %     opt.quality = EBSDdata.Pattern_Quality;
+    %
     % if available, add EDS data
     if exist('EDSdata','var')
         eds_names = fieldnames(EDSdata);
@@ -472,9 +475,7 @@ for k = 1 :length(EBSD_index) % TODO: find a good way to write out multiple data
             ebsdpm = ebsdtemp2;
         end
     catch
-        if warningOn==1
-            warning('Pattern matched data not loaded')
-        end
+        warning('Pattern matched data not loaded')
     end
 
 

@@ -18,7 +18,10 @@ function [ correction,SettingsXCF2 ] = LPT_Settings( LPTsize,SettingsXCF )
 % the full file path to the cif file to the phase file you are using
 
 %   Detailed explanation goes here
-correction.xlim=150:406;
+xlim1=ceil((150/500)*LPTsize);
+xlim2=floor((406/500)*LPTsize);
+
+correction.xlim=xlim1:xlim2;
 correction.xlim=round(LPTsize*correction.xlim/500);
 correction.xrange=range(correction.xlim)+1; %Bits for the smaller ROIs
 % FFT reference
@@ -28,7 +31,7 @@ SettingsXCF2.mesh = 3;
 SettingsXCF2.roisize=correction.xrange; %Settings for the FFT in the z correction, these need to be different to the ones for the FFT indexing
 % 
 %set up the filters
-SettingsXCF.filters=[0.5,0.5/2,38,38/2]; %From fiddling these seem to be the best filter settings, but there may be better ones
+SettingsXCF.filters=[0.5,0.5/2,38,38/2]*SettingsXCF2.roisize/64; %From fiddling these seem to be the best filter settings, but there may be better ones
 % SettingsXCF2.filters = round([log2(SettingsXCF2.roisize)/2,log2(SettingsXCF2.roisize)/4,4*log2(SettingsXCF2.roisize),2*log2(SettingsXCF2.roisize)]); %playing with these filters might help thinking of it
 [SettingsXCF2.FFTfilter,SettingsXCF2.hfilter] = fFilters(SettingsXCF2.roisize,SettingsXCF2.filters);
 

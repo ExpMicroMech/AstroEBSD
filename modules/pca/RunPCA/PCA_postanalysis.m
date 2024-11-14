@@ -203,10 +203,8 @@ end
 
 end
 %%
-clearvars -except backfol homefolder list folders ind ind_forbidden RTM_update post cmap namesetting inds
+clearvars -except backfol homefolder list folders ind ind_forbidden RTM_update post cmap namesetting inds InputUser
 
 
-
-            
     
 

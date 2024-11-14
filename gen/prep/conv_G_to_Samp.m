@@ -4,6 +4,7 @@ function [G_output] = conv_G_to_Samp(G_input,Detector_tilt)
 G_output=zeros(3,3,size(G_input,3));
 
 for n=1:size(G_input,3)
-    G_output(:,:,n)=Detector_tilt*G_input(:,:,n)';
+%     G_output(:,:,n)=Detector_tilt*G_input(:,:,n)';
+G_output(:,:,n)=G_input(:,:,n) * Detector_tilt';
 end
 

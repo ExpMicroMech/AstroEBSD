@@ -59,6 +59,7 @@ y(ind,:)=b(ind).YData;
 std_n(:,ind)=std_el(:,ind)./(2*sqrt(1));%n_labels(ind)));
 end
 er=errorbar(ctr',y',std_n);
+ylim([0,inf])
 
 for ind=1:length(phaseid)
 er(ind).Color = 0.8*cmap(phaseid(ind),:);                            
