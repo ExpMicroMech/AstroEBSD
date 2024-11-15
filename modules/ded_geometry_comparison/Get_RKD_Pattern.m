@@ -26,7 +26,7 @@ close all;
 %% Input Variables
 
 mtex_location='C:\Users\billy\Documents\MATLAB\mtex-5.11.1';
-astro_location='C:\Users\billy\Documents\GitHub\AstroEBSD_v2_standalone';
+astro_location='D:\AstroEBSD';
 
 % path to data file
 TFS_DataLoc='D:\2024-11-04T15_22_24_Al_ben\2024-11-04T16_31_57';
