@@ -141,7 +141,7 @@ subplot(1,4,3); imagesc(single_pattern_bgcor); axis xy; axis image; colormap('gr
 
 % histogram stretch
 single_pattern_bgcor_noisefilled = normalizeto1(single_pattern_bgcor_noisefilled);
-single_pattern_bgcor_noisefilled = imadjust(single_pattern_bgcor_noisefilled,[mean(single_pattern_bgcor_noisefilled(:))-2*std(single_pattern_bgcor_noisefilled(:)), mean(single_pattern_bgcor_noisefilled(:))+2*std(single_pattern_bgcor_noisefilled(:))],[]);
+single_pattern_bgcor_noisefilled = imadjust(single_pattern_bgcor_noisefilled,[mean(single_pattern_bgcor_noisefilled(:))-3*std(single_pattern_bgcor_noisefilled(:)), mean(single_pattern_bgcor_noisefilled(:))+3*std(single_pattern_bgcor_noisefilled(:))],[]);
 subplot(1,4,4); imagesc(single_pattern_bgcor_noisefilled); axis xy; axis image; colormap('gray');
 
 % FFT

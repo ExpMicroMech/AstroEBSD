@@ -104,10 +104,14 @@ InputUser.Phase_Input  = {'Al_bwkd'}; %Si, Ferrite
 [ Pat_sim_eang2 ] = EBSP_gen( EBSD_geom_gensim,gmatrix1*Detector_tilt,screen_int); %generate the EBSP for this iteration 
 
 %% Contrast normalization
-Settings_Cor.MeanCentre=1;
-[Pat_sim_eang1, ~] = EBSP_BGCor(Pat_sim_eang1, Settings_Cor);
-[Pat_sim_eang2, ~] = EBSP_BGCor(Pat_sim_eang2, Settings_Cor);
-[expPat, ~] = EBSP_BGCor(expPat, Settings_Cor);
+Pat_sim_eang1 = Pat_sim_eang1 - mean(Pat_sim_eang1(:)); 
+Pat_sim_eang1 = Pat_sim_eang1 / std(Pat_sim_eang1(:));
+
+Pat_sim_eang2 = Pat_sim_eang2 - mean(Pat_sim_eang2(:)); 
+Pat_sim_eang2 = Pat_sim_eang2 / std(Pat_sim_eang2(:));
+
+expPat = expPat - mean(expPat(:)); 
+expPat = expPat / std(expPat);
 
 %% figure 1: exp, sim1, sim2
 subplot(1,3,1); % experimental
