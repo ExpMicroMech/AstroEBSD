@@ -9,7 +9,7 @@
 % For that, use "Reconstruction_Band_profiling.m".
 
 % This script accompanies the following article(s):
-% "Comparison of Kikuchi Diffraction Geometries in Scanning Electron Microscopy"
+% "Comparison of Kikuchi Diffraction Geometries in Scanning Electron Microscope"
 % Tianbi Zhang, Lukas Berners, Jakub Holzer, T. Ben Britton 
 
 % Requirements: 

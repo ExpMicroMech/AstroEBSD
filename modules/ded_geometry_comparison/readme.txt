@@ -29,11 +29,11 @@ Contents:
 Notes:
 
 (1) To process the raw .h5 EBSD and TKD patterns, use scripts in /modules/ded_general/
-	(*) To process the on-axis TKD patterns using the exposure fusion method, use decks/TKD_HDR_pattern_astro which incorporates functions in /modules/ded_tkd
+	(*) Please find the raw data in the data availability statement of the manuscript.
+    (**) To process the on-axis TKD patterns using the exposure fusion method, use decks/TKD_HDR_pattern_astro which incorporates functions in /modules/ded_tkd
 
 (2) The following were not performed within a single script, but manually:
 	(i) Averaging multiple reconstructed stereograms (both regular grid and spherical harmonics)
 	(ii) Saving the band profiles for plotting.
-	(iii)
 
 We exported the reconstructed stereograms and averaged them manually.

@@ -1,13 +1,27 @@
 function [ebsdtemp,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc)
-%bIDX_to_EBSD Converts a TFS IDX file to an MTEX EBSD data set
+%% bIDX_to_EBSD 
+% Converts a TFS IDX file to an MTEX EBSD data set
+% Created by T. Ben Britton in November 2024
+% Edited and annotated by Tianbi Zhang in November 2024
+
+% This script takes a Kikuchi pattern, index it, reproject it onto the
+% diffraction sphere and create a stereogram.
+
+% This script accompanies the following article(s):
 %
-% (c) B Britton 2024
+% "Comparison of Kikuchi Diffraction Geometries in 
+% Scanning Electron Microscope"
+% Tianbi Zhang, Lukas Berners, Jakub Holzer, T. Ben Britton 
+
+% Requirements: 
+% (1) MATLAB toolboxes: image processsing, statistics and machine learning,
+% parallel computing
+% (2) AstroEBSD package - this script is available as a part of the latest
+% AstroEBSD distribution.
+% (3) MTEX toolbox (https://mtex-toolbox.github.io/)
 
 multiphase_full=fullfile(TFS_DataLoc,'\results','multiphases.idx');
 sitedata_full=fullfile(TFS_DataLoc,'site.json');
-
-
-% "C:\Users\benja\Documents\EBSD\2024-09-30T14_39_59_Co_Map\2024-09-30T15_20_59\site.json"
 
 % Load the site data
 

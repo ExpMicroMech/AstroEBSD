@@ -9,7 +9,9 @@
 % "Multi-exposure diffraction pattern fusion applied to enable wider-angle 
 % transmission Kikuchi diffraction with direct electron detectors"
 % Tianbi Zhang, T. Ben Britton 
-% "xxx"
+%
+% "Comparison of Kikuchi Diffraction Geometries in 
+% Scanning Electron Microscope"
 % Tianbi Zhang, Lukas Berners, Jakub Holzer, T. Ben Britton 
 
 % Requirements: 

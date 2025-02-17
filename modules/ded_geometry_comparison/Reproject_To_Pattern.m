@@ -10,7 +10,7 @@
 % such files.
 
 % This script accompanies the following article(s):
-% "Comparison of Kikuchi Diffraction Geometries in Scanning Electron Microscopy"
+% "Comparison of Kikuchi Diffraction Geometries in Scanning Electron Microscope"
 % Tianbi Zhang, Lukas Berners, Jakub Holzer, T. Ben Britton 
 
 % (In this manuscript, the reprojections from reconstructed stereograms 
