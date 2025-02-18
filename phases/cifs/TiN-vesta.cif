@@ -1,0 +1,55 @@
+
+#======================================================================
+# CRYSTAL DATA
+#----------------------------------------------------------------------
+data_VESTA_phase_1
+
+_chemical_name_common                  'New structure'
+_cell_length_a                         2.969000
+_cell_length_b                         2.969000
+_cell_length_c                         4.777000
+_cell_angle_alpha                      90.000000
+_cell_angle_beta                       90.000000
+_cell_angle_gamma                      120.000000
+_cell_volume                           36.467525
+_space_group_name_H-M_alt              'P 63/m m c'
+_space_group_IT_number                 194
+
+loop_
+_space_group_symop_operation_xyz
+   'x, y, z'
+   '-x, -y, -z'
+   '-y, x-y, z'
+   'y, -x+y, -z'
+   '-x+y, -x, z'
+   'x-y, x, -z'
+   '-x, -y, z+1/2'
+   'x, y, -z+1/2'
+   'y, -x+y, z+1/2'
+   '-y, x-y, -z+1/2'
+   'x-y, x, z+1/2'
+   '-x+y, -x, -z+1/2'
+   'y, x, -z'
+   '-y, -x, z'
+   'x-y, -y, -z'
+   '-x+y, y, z'
+   '-x, -x+y, -z'
+   'x, x-y, z'
+   '-y, -x, -z+1/2'
+   'y, x, z+1/2'
+   '-x+y, y, -z+1/2'
+   'x-y, -y, z+1/2'
+   'x, x-y, -z+1/2'
+   '-x, -x+y, z+1/2'
+
+loop_
+   _atom_site_label
+   _atom_site_occupancy
+   _atom_site_fract_x
+   _atom_site_fract_y
+   _atom_site_fract_z
+   _atom_site_adp_type
+   _atom_site_U_iso_or_equiv
+   _atom_site_type_symbol
+   XX         1.0     0.333000     0.667000     0.250000    Uiso  0.050000 Ti
+   XX         1.0     0.333000     0.667000     0.250000    Uiso  0.050000 N

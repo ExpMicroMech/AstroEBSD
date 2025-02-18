@@ -1,0 +1,92 @@
+#------------------------------------------------------------------------------
+#$Date: 2016-04-12 20:30:58 +0300 (Tue, 12 Apr 2016) $
+#$Revision: 182023 $
+#$URL: svn://www.crystallography.net/cod/cif/1/00/90/1009058.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/. The original data for this entry
+# were provided by IUCr Journals, http://journals.iucr.org/.
+#
+# The file may be used within the scientific community so long as
+# proper attribution is given to the journal article from which the
+# data were obtained.
+#
+data_1009058
+loop_
+_publ_author_name
+'Bertaut, E. F.'
+'Blum, P.'
+_publ_section_title
+;
+ Existence et structure d'une nouvelle phase dans le systeme Mo-B
+;
+_journal_coden_ASTM              ACCRA9
+_journal_issue                   1
+_journal_name_full               'Acta Crystallographica'
+_journal_page_first              72
+_journal_page_last               72
+_journal_paper_doi               10.1107/s0365110x51000180
+_journal_volume                  4
+_journal_year                    1951
+_chemical_formula_structural     'Mo B2'
+_chemical_formula_sum            'B2 Mo'
+_chemical_name_systematic        'Molybdenum boride'
+_space_group_IT_number           191
+_symmetry_cell_setting           hexagonal
+_symmetry_Int_Tables_number      191
+_symmetry_space_group_name_Hall  '-P 6 2'
+_symmetry_space_group_name_H-M   'P 6/m m m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                120
+_cell_formula_units_Z            1
+_cell_length_a                   3.05
+_cell_length_b                   3.05
+_cell_length_c                   3.113
+_cell_volume                     25.1
+_cod_database_code               1009058
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x-y,z
+y-x,-x,z
+y,x,z
+x-y,-y,z
+-x,y-x,z
+-x,-y,z
+y,y-x,z
+x-y,x,z
+-y,-x,z
+y-x,y,z
+x,x-y,z
+-x,-y,-z
+y,y-x,-z
+x-y,x,-z
+-y,-x,-z
+y-x,y,-z
+x,x-y,-z
+x,y,-z
+-y,x-y,-z
+y-x,-x,-z
+y,x,-z
+x-y,-y,-z
+-x,y-x,-z
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+_atom_site_calc_flag
+Mo1 Mo6+ 1 a 0. 0. 0. 1. 0 d
+B1 B3- 2 d 0.3333 0.6667 0.5 1. 0 d
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Mo6+ 6.000
+B3- -3.000

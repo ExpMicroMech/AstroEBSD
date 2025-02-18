@@ -1,0 +1,86 @@
+#------------------------------------------------------------------------------
+#$Date: 2017-10-06 19:24:22 +0300 (Fri, 06 Oct 2017) $
+#$Revision: 201816 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/9/01/60/9016031.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/. The original data for this entry
+# were provided the American Mineralogist Crystal Structure Database,
+# http://rruff.geo.arizona.edu/AMS/amcsd.php
+#
+# The file may be used within the scientific community so long as
+# proper attribution is given to the journal article from which the
+# data were obtained.
+#
+data_9016031
+loop_
+_publ_author_name
+'Bergman, G.'
+'Shoemaker, D. P.'
+_publ_section_title
+;
+ The determination of the crystal structure of the sigma phase
+ in the iron-chromium and iron-molybdenum systems
+;
+_journal_name_full               'Acta Crystallographica'
+_journal_page_first              857
+_journal_page_last               865
+_journal_paper_doi               10.1107/S0365110X54002605
+_journal_volume                  7
+_journal_year                    1954
+_chemical_formula_sum            'Cr2.5 Fe2.5'
+_space_group_IT_number           136
+_symmetry_space_group_name_Hall  '-P 4n 2n'
+_symmetry_space_group_name_H-M   'P 42/m n m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                90
+_cell_length_a                   8.800
+_cell_length_b                   8.800
+_cell_length_c                   4.544
+_cell_volume                     351.887
+_database_code_amcsd             0017754
+_exptl_crystal_density_diffrn    7.634
+_cod_original_formula_sum        '(Cr2.5 Fe2.5)'
+_cod_database_code               9016031
+_amcsd_formula_title             CrFe
+loop_
+_space_group_symop_operation_xyz
+x,y,z
+-y,-x,z
+y,x,-z
+1/2+y,1/2-x,1/2-z
+1/2-y,1/2+x,1/2+z
+1/2+x,1/2-y,1/2+z
+1/2-x,1/2+y,1/2-z
+x,y,-z
+-x,-y,z
+y,x,z
+-y,-x,-z
+1/2-y,1/2+x,1/2-z
+1/2+y,1/2-x,1/2+z
+1/2-x,1/2+y,1/2+z
+1/2+x,1/2-y,1/2-z
+-x,-y,-z
+loop_
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+CrM1 0.00000 0.00000 0.00000 0.50000
+FeM1 0.00000 0.00000 0.00000 0.50000
+CrM2 0.39810 0.39810 0.00000 0.50000
+FeM2 0.39810 0.39810 0.00000 0.50000
+CrM3 0.46320 0.13160 0.00000 0.50000
+FeM3 0.46320 0.13160 0.00000 0.50000
+CrM4 0.73760 0.06530 0.00000 0.50000
+FeM4 0.73760 0.06530 0.00000 0.50000
+CrM5 0.18230 0.18230 0.25240 0.50000
+FeM5 0.18230 0.18230 0.25240 0.50000
+loop_
+_cod_related_entry_id
+_cod_related_entry_database
+_cod_related_entry_code
+1 AMCSD 0017754
