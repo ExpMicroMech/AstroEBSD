@@ -1,9 +1,7 @@
 /utils/gmail.m
 /testing/*
 /outputs/*
-/phases/cifs/*
-/phases/masterpatterns/*
-/phases/phasefiles/*
+
 
 # Logs and databases #
 ######################
@@ -29,8 +27,13 @@ Thumbs.db
 #Matlab Files
 *.asv
 *.fig
-/phases/cifs
-/phases/dynamic_templates
-/phases/masterpatterns
+
+# Phase folders
+#/phases/cifs
+#/phases/dynamic_templates
+#/phases/masterpatterns
+#/phases/phasefiles
 /phases/phasefiles
-/phases/phasefiles
+#/phases/cifs/*
+#/phases/masterpatterns/*
+#/phases/phasefiles/*
