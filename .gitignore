@@ -30,10 +30,10 @@ Thumbs.db
 
 # Phase folders
 #/phases/cifs
-#/phases/dynamic_templates
-#/phases/masterpatterns
-#/phases/phasefiles
-/phases/phasefiles
 #/phases/cifs/*
+#/phases/dynamic_templates
+#/phases/dynamic_templates/*
+#/phases/masterpatterns
 #/phases/masterpatterns/*
+#/phases/phasefiles
 #/phases/phasefiles/*
