@@ -62,7 +62,7 @@ Settings_CorX.SplitBG=1; %deal with a split screen
 
 %% now run the code
 RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
-RTM.Bin_loc = fullfile(RTM.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
 RTM.parsearch=2;
 
 [MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );

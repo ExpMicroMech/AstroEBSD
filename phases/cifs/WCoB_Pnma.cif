@@ -1,0 +1,72 @@
+
+#(C) 2019 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure, and the U.S. Secretary of
+#Commerce on behalf of the United States.  All rights reserved.
+data_613388-ICSD
+_database_code_ICSD 613388
+_audit_creation_date 2013-02-01
+_chemical_name_systematic 'Tungsten cobalt boride (1/1/1)'
+_chemical_formula_structural 'W Co B'
+_chemical_formula_sum 'B1 Co1 W1'
+_chemical_name_structure_type TiNiSi-MgSrSi
+_exptl_crystal_density_diffrn 13.69
+_publ_section_title 'The crystal structure of Mo Co B and related compounds'
+_publ_section_comment 'Cell and Type only determined'
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary
+
+;
+Acta Crystallographica, Section B: Structural Crystallography and Crystal
+Chemistry
+; 1968 24 930 934 ACBCAR
+loop_
+_publ_author_name
+'Jeitschko, W.'
+_cell_length_a 5.724(1)
+_cell_length_b 3.240(1)
+_cell_length_c 6.632(1)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 90.
+_cell_volume 123.
+_cell_formula_units_Z 4
+_symmetry_space_group_name_H-M 'P n m a'
+_symmetry_Int_Tables_number 62
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+1 'x+1/2, y, -z+1/2'
+2 'x, -y+1/2, z'
+3 '-x+1/2, y+1/2, z+1/2'
+4 '-x, -y, -z'
+5 '-x+1/2, -y, z+1/2'
+6 '-x, y+1/2, -z'
+7 'x+1/2, -y+1/2, -z+1/2'
+8 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+W0+ 0
+Co0+ 0
+B0+ 0
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+W1 W0+ 4 c 0.027 0.25 0.173 . 1. 0
+Co1 Co0+ 4 c 0.148 0.25 0.556 . 1. 0
+B1 B0+ 4 c 0.27 0.25 0.861 . 1. 0
+#End of TTdata_613388-ICSD

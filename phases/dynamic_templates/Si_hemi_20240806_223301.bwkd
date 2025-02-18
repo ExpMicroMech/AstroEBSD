@@ -1,0 +1,81 @@
+{
+    "source_info": "Si ECP",
+    "ed_model": 0,
+    "ed_kV": 20.0,
+    "projection_mode" : 0,
+    "pattern_nrows": 1025,
+    "pattern_ncols": 1025,
+    "pattern_euler_z1":  0.0,
+    "pattern_euler_x":   0.0,
+    "pattern_euler_z2":  0.0,
+    "pattern_pc" : [-0.25, 0.25, -0.25, 0.25],
+    "beamlist_d_min": 0.3,
+    "beamlist_F_min": 0.1,
+    "beamlist_max_local_angle_hkl": 4.0,
+    "beamlist_nbeams_limit": 3000,
+    "ed_imfp": 150.0,
+    "ed_bsrange" : -150.0,
+    "ed_th_min": 0.0,
+    "ed_th_max": 500.0,
+    "cpu_parallel_threads": 48,
+    "crystal": {
+        "lattice_parameters": [5.4307, 5.4307, 5.4307, 90.0, 90.0, 90.0],
+        "motif": [{
+                "label": "Si",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.0,
+                "y": 0.5,
+                "z": 0.5,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.5,
+                "y": 0.0,
+                "z": 0.5,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.5,
+                "y": 0.5,
+                "z": 0.0,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.25,
+                "y": 0.25,
+                "z": 0.25,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.25,
+                "y": 0.75,
+                "z": 0.75,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.75,
+                "y": 0.25,
+                "z": 0.75,
+                "occ": 1.0
+            }, {
+                "label": "Si",
+                "x": 0.75,
+                "y": 0.75,
+                "z": 0.25,
+                "occ": 1.0
+            }
+        ],
+        "atoms": [{
+                "label": "Si",
+                "Z": 14,
+                "dbwc": 0.1,
+                "dbws": 0.1
+            }
+        ]
+    }
+}

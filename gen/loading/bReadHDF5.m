@@ -96,6 +96,14 @@ catch
     warning('Beam and sample data not loaded')
     end
 end
+
+try
+    MapData.P_Original=h5read(InputUser.HDF5FullFile,[HDF5_info.Groups.Name      '/EBSD/Data/p']); %note that 1 is added
+    if warn==1
+        warning('P_Original_Loaded')
+    end
+catch
+end
 %read the header info
 
 try
@@ -199,6 +207,14 @@ catch
     warning('Phase data not loaded')
     end
 end
+
+%read the EDS energy bins
+try
+    MapData.EDS.energies=h5read(InputUser.HDF5FullFile,[HDF5_info.Groups.Name    '/EDX1/Header/Energy']);
+catch
+end
+
+
 
 
 end

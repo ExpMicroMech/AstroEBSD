@@ -34,13 +34,15 @@ for n=1:correction.yroi_num
     [FFTData_LPT_test,~]  =fROIEx(correction.ROI_test,SettingsXCF2.hfilter,SettingsXCF2.FFTfilter,[correction.xrange/2 correction.xrange/2],SettingsXCF2.filters,SettingsXCF2.numroi,SettingsXCF2.roisize);
     
     %XCF this ROI
-    [RegOut3(n,:)] = fReg( FFTData_LPT_ref,FFTData_LPT_test,SettingsXCF2.roisize,SettingsXCF2.mesh,XCF_LPT_data_fill); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
+%     [RegOut3(n,:)] = fReg( FFTData_LPT_ref,FFTData_LPT_test,SettingsXCF2.roisize,SettingsXCF2.mesh,XCF_LPT_data_fill); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
+    [RegOut3(n,:)] = fReg( FFTData_LPT_ref,FFTData_LPT_test,SettingsXCF2.roisize,10,XCF_LPT_data_fill); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
     
 end
 
 %calculate the z rotation
 shift.zFFT = mean(RegOut3(:,2));
 sf = LPTsize/360;
+shift.zFFT/(128/360)
 angle.zcorrFFT = (shift.zFFT/sf)*pi/180;
 
 %create a matrix

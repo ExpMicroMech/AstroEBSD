@@ -1,0 +1,99 @@
+#------------------------------------------------------------------------------
+#$Date: 2015-01-27 21:58:39 +0200 (Tue, 27 Jan 2015) $
+#$Revision: 130149 $
+#$URL: svn://www.crystallography.net/cod/cif/1/00/90/1009035.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1009035
+loop_
+_publ_author_name
+'Bertaut, F'
+'Blum, P'
+_publ_section_title              'Etude des borures de chrome.'
+_journal_coden_ASTM              COREAF
+_journal_name_full
+;
+Comptes Rendus Hebdomadaires des Seances de l'Academie des Sciences
+(1884 - 1965)
+;
+_journal_page_first              1055
+_journal_page_last               1056
+_journal_volume                  236
+_journal_year                    1953
+_chemical_formula_structural     'Cr5 B3'
+_chemical_formula_sum            'B3 Cr5'
+_chemical_name_systematic        'Chromium bromide (5/3)'
+_space_group_IT_number           140
+_symmetry_cell_setting           tetragonal
+_symmetry_Int_Tables_number      140
+_symmetry_space_group_name_Hall  '-I 4 2c'
+_symmetry_space_group_name_H-M   'I 4/m c m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                90
+_cell_formula_units_Z            4
+_cell_length_a                   5.46
+_cell_length_b                   5.46
+_cell_length_c                   10.64
+_cell_volume                     317.2
+_cod_database_code               1009035
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-x,-y,z
+x,-y,1/2+z
+-x,y,1/2+z
+-y,x,z
+y,-x,z
+y,x,1/2+z
+-y,-x,1/2+z
+-x,-y,-z
+x,y,-z
+-x,y,1/2-z
+x,-y,1/2-z
+y,-x,-z
+-y,x,-z
+-y,-x,1/2-z
+y,x,1/2-z
+1/2+x,1/2+y,1/2+z
+1/2-x,1/2-y,1/2+z
+1/2+x,1/2-y,z
+1/2-x,1/2+y,z
+1/2-y,1/2+x,1/2+z
+1/2+y,1/2-x,1/2+z
+1/2+y,1/2+x,z
+1/2-y,1/2-x,z
+1/2-x,1/2-y,1/2-z
+1/2+x,1/2+y,1/2-z
+1/2-x,1/2+y,-z
+1/2+x,1/2-y,-z
+1/2+y,1/2-x,1/2-z
+1/2-y,1/2+x,1/2-z
+1/2-y,1/2-x,-z
+1/2+y,1/2+x,-z
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+_atom_site_calc_flag
+Cr1 Cr0 16 l 0.166 0.666 0.15 1. 0 d
+Cr2 Cr0 4 c 0. 0. 0. 1. 0 d
+B1 B0 4 a 0. 0. 0.25 1. 0 d
+B2 B0 8 h 0.625 0.125 0. 1. 0 d
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Cr0 0.000
+B0 0.000

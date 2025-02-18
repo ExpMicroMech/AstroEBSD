@@ -60,7 +60,7 @@ num_phases=size(Crystal_UCell,2);
 
 PC_GA_options = optimoptions('ga');
 PC_GA_options.FunctionTolerance=1E-3;
-PC_GA_options.UseParallel=0;
+PC_GA_options.UseParallel=false;
 PC_GA_options.MaxGenerations=15;
 PC_GA_options.PopulationSize=30;
 PC_GA_options.MaxStallGenerations=20;

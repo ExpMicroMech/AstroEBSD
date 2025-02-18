@@ -22,8 +22,10 @@ function [ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( screen
 SettingsXCF.roisize=screensize;
 SettingsXCF.roiloc  = [SettingsXCF.roisize/2 SettingsXCF.roisize/2];
 SettingsXCF.numroi = 1;
-SettingsXCF.filters=[0.5,0.5/2,38,38/2]; %From fiddling these seem to be the best filter settings, but there may be better ones
-
+SettingsXCF.filters=floor([0.5,0.5/2,38,38/2]*128/screensize); %From fiddling these seem to be the best filter settings, but there may be better ones
+if SettingsXCF.filters(1) == 0
+    SettingsXCF.filters(1) = SettingsXCF.filters(1)+1;
+end
 % SettingsXCF.filters = round([log2(SettingsXCF.roisize)/2,log2(SettingsXCF.roisize)/4,4*log2(SettingsXCF.roisize),2*log2(SettingsXCF.roisize)]);
 [SettingsXCF.FFTfilter,SettingsXCF.hfilter] = fFilters(SettingsXCF.roisize,SettingsXCF.filters);
 

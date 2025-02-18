@@ -34,6 +34,13 @@ end
 if printing==1
     cd(InputUser.ResultsDir)
     cmap1=cbrewer('qual','Set1',80);
+    
+    %deal with a norming issue
+    cmap1=cmap1-min(cmap1(:));
+    while max(cmap1(:) > 1) %norm the range
+        cmap1=cmap1./max(cmap1(:));
+    end
+    
     cmap=repmat(cmap1,100,1);
     figure
     imagesc(tile.map_reshaped); colormap(cmap); axis off;

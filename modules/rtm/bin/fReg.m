@@ -9,6 +9,7 @@
 %
 %also modded to handle the filtered FFT sizes
 %TBB 2012
+% XCF_roisize=numel(data_fill);
 
 CC=zeros(XCF_roisize*2);
 

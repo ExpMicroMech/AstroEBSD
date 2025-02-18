@@ -1,0 +1,22 @@
+data_global
+_chemical_name_mineral 'TriClinicTest'
+_cell_length_a 2
+_cell_length_b 3
+_cell_length_c 4
+_cell_angle_alpha 70
+_cell_angle_beta 100
+_cell_angle_gamma 120
+_cell_volume 12.521
+_exptl_crystal_density_diffrn      5.769
+_symmetry_space_group_name_H-M 'P 1'
+loop_
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+C  0 0 0 1 1
+Fe 0.110 0.420 0.700 1 1
+
+

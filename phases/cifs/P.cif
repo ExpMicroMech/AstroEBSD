@@ -1,0 +1,94 @@
+#------------------------------------------------------------------------------
+#$Date: 2018-09-27 07:13:35 +0300 (Thu, 27 Sep 2018) $
+#$Revision: 211196 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/2/31/03/2310313.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/. The original data for this entry
+# were provided by IUCr Journals, http://journals.iucr.org/.
+#
+# The file may be used within the scientific community so long as
+# proper attribution is given to the journal article from which the
+# data were obtained.
+#
+data_2310313
+loop_
+_publ_author_name
+'Shoemaker, D.P.'
+'Shoemaker, C.B.'
+'Wilson, F.C.'
+_publ_section_title
+;
+ The crystal structure of the P-phase, Mo - Ni - Cr. II. Refinemant of
+ parameters and discussion of atomic coordination
+;
+_journal_name_full               'Acta Crystallographica (1,1948-23,1967)'
+_journal_page_first              1
+_journal_page_last               14
+_journal_volume                  10
+_journal_year                    1957
+_chemical_formula_sum            'Cr9.54 Mo25.24 Ni21.22'
+_space_group_IT_number           62
+_symmetry_space_group_name_Hall  '-P 2c 2ab'
+_symmetry_space_group_name_H-M   'P b n m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                90
+_cell_formula_units_Z            1
+_cell_length_a                   16.983
+_cell_length_b                   4.752
+_cell_length_c                   9.07
+_cell_volume                     731.978
+_citation_journal_id_ASTM        ACCRA9
+_cod_data_source_file            Shoemaker_ACCRA9_1957_1313.cif
+_cod_data_source_block           Cr9.54Mo25.24Ni21.22
+_cod_original_cell_volume        731.9781
+_cod_original_sg_symbol_Hall     '-P 2ac 2n (z,x,y)'
+_cod_database_code               2310313
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+x+1/2,-y+1/2,-z
+-x+1/2,y+1/2,-z+1/2
+-x,-y,z+1/2
+-x,-y,-z
+-x-1/2,y-1/2,z
+x-1/2,-y-1/2,z-1/2
+x,y,-z-1/2
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Mo3 Mo 0.3257 0.1578 0.25 0.41 0.0
+Ni11 Ni 0.2504 0.5375 0.9986 0.69 0.0
+Ni12 Ni 0.3868 0.2883 0.0008 0.414 0.0
+Cr9 Cr 0.9383 0.365 0.25 0.124 0.0
+Ni8 Ni 0.8152 0.078 0.25 0.69 0.0
+Cr2 Cr 0.1363 0.2547 0.25 0.264 0.0
+Ni9 Ni 0.9383 0.365 0.25 0.276 0.0
+Mo12 Mo 0.3868 0.2883 0.0008 0.4 0.0
+Cr8 Cr 0.8152 0.078 0.25 0.31 0.0
+Mo9 Mo 0.9383 0.365 0.25 0.6 0.0
+Ni5 Ni 0.665 0.3553 0.25 0.345 0.0
+Cr1 Cr 0.0737 0.1134 0.25 0.233 0.0
+Mo1 Mo 0.0737 0.1134 0.25 0.25 0.0
+Cr3 Cr 0.3257 0.1578 0.25 0.183 0.0
+Mo5 Mo 0.665 0.3553 0.25 0.5 0.0
+Ni3 Ni 0.3257 0.1578 0.25 0.407 0.0
+Mo2 Mo 0.1363 0.2547 0.25 0.15 0.0
+Ni2 Ni 0.1363 0.2547 0.25 0.586 0.0
+Mo10 Mo 0.5202 0.0355 0.25 1 0.0
+Cr12 Cr 0.3868 0.2883 0.0008 0.186 0.0
+Cr4 Cr 0.6058 0.1819 0.25 0.124 0.0
+Mo4 Mo 0.6058 0.1819 0.25 0.6 0.0
+Ni1 Ni 0.0737 0.1134 0.25 0.517 0.0
+Ni4 Ni 0.6058 0.1819 0.25 0.276 0.0
+Cr5 Cr 0.665 0.3553 0.25 0.155 0.0
+Mo6 Mo 0.4746 0.4536 0.25 1 0.0
+Mo7 Mo 0.1988 0.4047 0.25 1 0.0
+Cr11 Cr 0.2504 0.5375 0.9986 0.31 0.0

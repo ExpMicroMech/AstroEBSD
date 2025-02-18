@@ -15,35 +15,45 @@ function [ EBSDPat ] = bReadEBSP(EBSPData,pattern_number)
 %v1 - TBB 14/04/2017
 %v2 - TBB 30/03/2020 - added whole array reading
 
-if exist('pattern_number','var') == 0 %read all the patterns
-    patterninfo=h5info(EBSPData.HDF5_loc,EBSPData.PatternFile);
-    EBSDPat_t=h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 1],[EBSPData.PW EBSPData.PH patterninfo.Dataspace.Size(3)]);
+if isfield(EBSPData,'HDF5_loc')
     
-    %convert into the array we like to work with
-    %swap rows and columns
-    EBSDPat=permute(EBSDPat_t,[2,1,3]);
-   
-    %flip the pattern UD
-    EBSDPat=flipud(EBSDPat);
-    
-    %convert to double
-    EBSDPat=double(EBSDPat);
-else
-    if isnumeric(pattern_number) %check its numeric
-        if numel(pattern_number) == 1
-            EBSDPat=flipud(double(h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 pattern_number],[EBSPData.PW EBSPData.PH 1]))');
-        end
-        if numel(pattern_number) == 2
-           EBSDPat_t=h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 pattern_number(1)],[EBSPData.PW EBSPData.PH pattern_number(2)]); 
-           EBSDPat=permute(EBSDPat_t,[2,1,3]);
-           EBSDPat=flipud(EBSDPat);
-           EBSDPat=double(EBSDPat);
-        end
-
+    if exist('pattern_number','var') == 0 %read all the patterns
+        patterninfo=h5info(EBSPData.HDF5_loc,EBSPData.PatternFile);
+        EBSDPat_t=h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 1],[EBSPData.PW EBSPData.PH patterninfo.Dataspace.Size(3)]);
+        
+        %convert into the array we like to work with
+        %swap rows and columns
+        EBSDPat=permute(EBSDPat_t,[2,1,3]);
+        
+        %flip the pattern UD
+        EBSDPat=flipud(EBSDPat);
+        
+        %convert to double
+        EBSDPat=double(EBSDPat);
     else
-        disp('The patterns cannot be read');
+        if isnumeric(pattern_number) %check its numeric
+            if numel(pattern_number) == 1
+                EBSDPat=flipud(double(h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 pattern_number],[EBSPData.PW EBSPData.PH 1]))');
+            end
+            if numel(pattern_number) == 2
+                EBSDPat_t=h5read(EBSPData.HDF5_loc,EBSPData.PatternFile,[1 1 pattern_number(1)],[EBSPData.PW EBSPData.PH pattern_number(2)]);
+                EBSDPat=permute(EBSDPat_t,[2,1,3]);
+                EBSDPat=flipud(EBSDPat);
+                EBSDPat=double(EBSDPat);
+            end
+            
+        else
+            disp('The patterns cannot be read');
+        end
     end
-end
+    
+elseif isfield(EBSPData,'ang_name')
+    
 
+    pattern_name=sprintf([EBSPData.ang_name '_x%.0fy%.0f.tif'],[EBSPData.x(pattern_number),EBSPData.y(pattern_number)]*1E2);
+    EBSDPat=double(flipud(imread(fullfile(EBSPData.pattern_locs,pattern_name))));
+    
+    
+end
 end
 

@@ -1,0 +1,76 @@
+#------------------------------------------------------------------------------
+#$Date: 2016-02-13 21:28:24 +0200 (Sat, 13 Feb 2016) $
+#$Revision: 176429 $
+#$URL: svn://www.crystallography.net/cod/cif/1/53/27/1532769.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1532769
+loop_
+_publ_author_name
+'Novoselova, T.'
+'Malinov, S.'
+'Sha, W.'
+'Zhecheva, A.'
+_publ_section_title
+;
+ High-temperature synchrotron X-ray diffraction study of phases in a gamma
+ Ti Al alloy
+;
+_journal_name_full               'Materials Science and Engineering A'
+_journal_page_first              103
+_journal_page_last               112
+_journal_volume                  371
+_journal_year                    2004
+_chemical_formula_sum            'Al Ti'
+_chemical_name_systematic        'Ti Al'
+_space_group_IT_number           123
+_symmetry_space_group_name_Hall  '-P 4 2'
+_symmetry_space_group_name_H-M   'P 4/m m m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                90
+_cell_formula_units_Z            1
+_cell_length_a                   2.8373
+_cell_length_b                   2.8373
+_cell_length_c                   4.0591
+_cell_volume                     32.677
+_citation_journal_id_ASTM        MSAPE3
+_cod_data_source_file            Novoselova_MSAPE3_2004_1955.cif
+_cod_data_source_block           Al1Ti1
+_cod_original_cell_volume        32.67686
+_cod_original_formula_sum        'Al1 Ti1'
+_cod_database_code               1532769
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x,z
+-x,-y,z
+y,-x,z
+x,-y,-z
+y,x,-z
+-x,y,-z
+-y,-x,-z
+-x,-y,-z
+y,-x,-z
+x,y,-z
+-y,x,-z
+-x,y,z
+-y,-x,z
+x,-y,z
+y,x,z
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Ti1 Ti 0 0 0 1 0.0
+Al1 Al 0.5 0.5 0.5 1 0.0

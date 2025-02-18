@@ -1,0 +1,83 @@
+#------------------------------------------------------------------------------
+#$Date: 2016-02-21 11:56:54 +0200 (Sun, 21 Feb 2016) $
+#$Revision: 176809 $
+#$URL: svn://www.crystallography.net/cod/cif/2/31/00/2310086.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/. The original data for this entry
+# were provided by IUCr Journals, http://journals.iucr.org/.
+#
+# The file may be used within the scientific community so long as
+# proper attribution is given to the journal article from which the
+# data were obtained.
+#
+data_2310086
+loop_
+_publ_author_name
+'Beattie, H.J.jr.'
+_publ_section_title
+;
+ The crystal structure of an M3 B2 double boride
+;
+_journal_name_full               'Acta Crystallographica (1,1948-23,1967)'
+_journal_page_first              607
+_journal_page_last               609
+_journal_paper_doi               10.1107/S0365110X58001626
+_journal_volume                  11
+_journal_year                    1958
+_chemical_formula_sum            'B2 Cr0.64 Fe0.43 Mo1.08 Ni0.21 Ti0.64'
+_chemical_name_systematic        'Cr0.64 Fe0.43 Mo1.08 Ni0.21 Ti0.64 B2'
+_space_group_IT_number           127
+_symmetry_space_group_name_Hall  '-P 4 2ab'
+_symmetry_space_group_name_H-M   'P 4/m b m'
+_cell_angle_alpha                90
+_cell_angle_beta                 90
+_cell_angle_gamma                90
+_cell_formula_units_Z            2
+_cell_length_a                   5.783
+_cell_length_b                   5.783
+_cell_length_c                   3.134
+_cell_volume                     104.811
+_citation_journal_id_ASTM        ACCRA9
+_cod_data_source_file            boron_123.cif
+_cod_data_source_block           B2Cr0.64Fe0.43Mo1.08Ni0.21Ti0.64
+_cod_original_cell_volume        104.8106
+_cod_database_code               2310086
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-y,x,z
+-x,-y,z
+y,-x,z
+x+1/2,-y+1/2,-z
+y+1/2,x+1/2,-z
+-x+1/2,y+1/2,-z
+-y+1/2,-x+1/2,-z
+-x,-y,-z
+y,-x,-z
+x,y,-z
+-y,x,-z
+-x-1/2,y-1/2,z
+-y-1/2,-x-1/2,z
+x-1/2,-y-1/2,z
+y-1/2,x-1/2,z
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Ti2 Ti 0.183 0.683 0 0.213 0.0
+Mo2 Mo 0.183 0.683 0 0.36 0.0
+Ni2 Ni 0.183 0.683 0 0.07 0.0
+Mo1 Mo 0 0 0.5 0.36 0.0
+Fe2 Fe 0.183 0.683 0 0.144 0.0
+Ni1 Ni 0 0 0.5 0.07 0.0
+Fe1 Fe 0 0 0.5 0.144 0.0
+Cr1 Cr 0 0 0.5 0.213 0.0
+B1 B 0.394 0.894 0.5 1 0.0
+Cr2 Cr 0.183 0.683 0 0.213 0.0
+Ti1 Ti 0 0 0.5 0.213 0.0

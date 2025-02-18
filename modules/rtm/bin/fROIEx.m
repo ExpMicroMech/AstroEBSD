@@ -6,6 +6,8 @@ function [FFTData,data_fill]=fROIEx(Image1,XCF_hfilter,XCF_FFTfilter,XCF_roiloc,
 % do not share without express permission.
 % b.britton@imperial.ac.uk
 
+% XCF_filters=floor(XCF_roisize*XCF_filters/128); %normalise the filter sizes
+
 %put together the bounding window sizes
 roi_imgx=zeros(XCF_roisize,XCF_numroi);
 roi_imgy=zeros(XCF_roisize,XCF_numroi);
@@ -16,7 +18,13 @@ for n=1:XCF_numroi
     roi_imgx(:,n)=(1:XCF_roisize)+XCF_roiloc(n,1)-XCF_roisize/2;
 end
 
-data_fill=[1:(XCF_filters(3)+XCF_filters(4)),XCF_roisize-(XCF_filters(3)+XCF_filters(4)-1):XCF_roisize];
+%deal with when the filters are large
+df_1=XCF_filters(3)+XCF_filters(4);
+if df_1>XCF_roisize/2
+    df_1=floor(XCF_roisize/2);
+end
+
+data_fill=[1:df_1,XCF_roisize-(df_1+1):XCF_roisize];
 data_fillsize=length(data_fill);
 XCF_FFTfilter=XCF_FFTfilter(data_fill,data_fill);
 

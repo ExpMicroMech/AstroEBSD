@@ -6,7 +6,7 @@ close all
 
 %% Load metadata
 InputUser.HDF5_file = file;
-RTM.Bin_loc=fullfile(InputUser.Astro_loc,'phases','masterpatterns');
+RTM.Bin_loc=fullfile(InputUser.Astro_loc,'phases','dynamic_templates');
 RTM.Phase_Folder=fullfile(InputUser.Astro_loc,'phases');
 
 [MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );

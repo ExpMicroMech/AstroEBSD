@@ -9,6 +9,10 @@ function [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases ] = 
 %% run code
 num_Phases=size(Phases,2);
 
+if strcmpi(Phase_Folder(end-5:end),'phases')
+    Phase_Folder=fullfile(Phase_Folder,'phasefiles/');
+end
+
 for num_P=1:num_Phases
     %read the phases
     Phase_File=fullfile(Phase_Folder,[Phases{num_P} '.pha']);

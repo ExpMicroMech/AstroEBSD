@@ -1,0 +1,99 @@
+#------------------------------------------------------------------------------
+#$Date: 2017-01-18 01:41:59 +0200 (Wed, 18 Jan 2017) $
+#$Revision: 190601 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/1/54/50/1545054.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/
+#
+# All data on this site have been placed in the public domain by the
+# contributors.
+#
+data_1545054
+loop_
+_publ_author_name
+'Liss, Klaus-Dieter'
+'Funakoshi, Ken-Ichi'
+'Dippenaar, Rian'
+'Higo, Yuji'
+'Shiro, Ayumi'
+'Reid, Mark'
+'Suzuki, Hiroshi'
+'Shobu, Takahisa'
+'Akita, Koichi'
+_publ_section_title
+;
+ Hydrostatic Compression Behavior and High-Pressure Stabilized \b-Phase in
+ \g-Based Titanium Aluminide Intermetallics
+;
+_journal_issue                   7
+_journal_name_full               Metals
+_journal_page_first              165
+_journal_paper_doi               10.3390/met6070165
+_journal_volume                  6
+_journal_year                    2016
+_chemical_formula_structural     'Al Ti3'
+_chemical_formula_sum            'Al Ti3'
+_space_group_IT_number           194
+_symmetry_Int_Tables_number      194
+_symmetry_space_group_name_Hall  '-P 6c 2c'
+_symmetry_space_group_name_H-M   'P 63/m m c'
+_cell_angle_alpha                90.
+_cell_angle_beta                 90.
+_cell_angle_gamma                120.
+_cell_formula_units_Z            2
+_cell_length_a                   5.76803
+_cell_length_b                   5.76803
+_cell_length_c                   4.64241
+_cell_measurement_pressure       100
+_cell_measurement_temperature    300.0
+_cell_volume                     133.761
+_cod_data_source_file            alpha2-TiAl-M1472002.cif
+_cod_data_source_block           global
+_cod_original_formula_sum        'Al1 Ti3'
+_cod_database_code               1545054
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+1 'x, x-y, -z+1/2'
+2 '-x+y, y, -z+1/2'
+3 '-y, -x, -z+1/2'
+4 '-x+y, -x, -z+1/2'
+5 '-y, x-y, -z+1/2'
+6 'x, y, -z+1/2'
+7 '-x, -x+y, z+1/2'
+8 'x-y, -y, z+1/2'
+9 'y, x, z+1/2'
+10 'x-y, x, z+1/2'
+11 'y, -x+y, z+1/2'
+12 '-x, -y, z+1/2'
+13 '-x, -x+y, -z'
+14 'x-y, -y, -z'
+15 'y, x, -z'
+16 'x-y, x, -z'
+17 'y, -x+y, -z'
+18 '-x, -y, -z'
+19 'x, x-y, z'
+20 '-x+y, y, z'
+21 '-y, -x, z'
+22 '-x+y, -x, z'
+23 '-y, x-y, z'
+24 'x, y, z'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Al1 Al0+ 2 c 0.3333 0.6667 0.25 1. 1.3
+Ti1 Ti0+ 6 h 0.833 0.666 0.25 1. 1.3
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Al0+ 0
+Ti0+ 0

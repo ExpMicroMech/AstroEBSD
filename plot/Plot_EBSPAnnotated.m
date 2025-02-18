@@ -1,19 +1,20 @@
 function [ f1 ] = Plot_EBSPAnnotated( EBSD_Pattern_in,EBSD_Geometry,nhat_gnom,RotMat,Crystal_UCell,Family_List,s1)
 %PLOT_EBSPANNOTATED Summary of this function goes here
 %   Detailed explanation goes here
-cset=[1,0,0;
-    0,1,0;
-    0,0,1;
-    0,1,1;
-    1,0,1;
-    1,1,0];
-cset=[cset;cset*0.5];
+cset=[0, 0.4470, 0.7410;
+    0.8500, 0.3250, 0.0980;
+    0.9290, 0.6940, 0.1250;
+    0.4940, 0.1840, 0.5560;
+    0.4660, 0.6740, 0.1880;
+    0.3010, 0.7450, 0.9330;
+    0.6350, 0.0780, 0.1840];
+cset=[cset;cset*0.25;cset*0.5;cset*0.8];
 
 U.K         =   Crystal_UCell.At*RotMat;
 U.Kstar     =   Crystal_UCell.Astar*RotMat;
 
 
-f1(1)=imagesc(EBSD_Geometry.x_screen,EBSD_Geometry.y_screen,EBSD_Pattern_in,'Parent',s1);
+f1(1)=imagesc(EBSD_Geometry.x_screen,EBSD_Geometry.y_screen,EBSD_Pattern_in,'Parent',s1); axis off;
 
 axis(s1,'equal','xy');
 hold(s1,'on')
@@ -24,8 +25,8 @@ ylabel(s1,'Y / Z');
 colormap('gray')
 
 %plot the PC
-f1(2)=scatter(0,0,50,'wo','filled','Parent',s1);
-f1(3)=scatter(0,0,50,'rx','Parent',s1);
+f1(2)=scatter(0,0,100,'wo','filled','Parent',s1);
+f1(3)=scatter(0,0,100,'rx','Parent',s1);
 
 
 

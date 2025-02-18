@@ -26,6 +26,14 @@ grad2=[0,0,0];
 
 skipgradcalc=0;
 
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM( {PhaseInput},RTM.Phase_Folder);
+cs=loadCIF(RTM_info.cif_file);
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( {PhaseInput},RTM.Phase_Folder);
+[screen_int,facedata] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+PatternInfo.ScreenWidth=RTM.screensize;
+PatternInfo.ScreenHeight=RTM.screensize;
+
 %% Run the iteration
 %disp(['Starting refinement'])
 for n=1:n_its
@@ -59,16 +67,7 @@ InputPats=RefPatCor;
 %phase=1;
 %InputUser.Phase_Input=InputUser.Phases(phase);
 
-[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM( {PhaseInput},RTM.Phase_Folder);
-cs=loadCIF(RTM_info.cif_file);
 
-[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( {PhaseInput},RTM.Phase_Folder);
-[screen_int,facedata] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
-
-[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
-
-PatternInfo.ScreenWidth=RTM.screensize;
-PatternInfo.ScreenHeight=RTM.screensize;
 %Set up the screen
 [ EBSP_av ] = EBSP_Gnom( PatternInfo,PC_refined );
 [ template_pat ] = EBSP_gen( EBSP_av,rotmat,screen_int,0 ); %generate the EBSP for this iteration
@@ -162,14 +161,7 @@ else
 
     %phase=1;
     %InputUser.Phase_Input=InputUser.Phases(phase);
-    cs=loadCIF(RTM_info.cif_file);
-    [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( {PhaseInput},RTM.Phase_Folder);
-    [screen_int,facedata] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
 
-    [ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
-
-    PatternInfo.ScreenWidth=RTM.screensize;
-    PatternInfo.ScreenHeight=RTM.screensize;
     %Set up the screen
     [ EBSP_av ] = EBSP_Gnom( PatternInfo,PC_refined );
     [ template_pat ] = EBSP_gen( EBSP_av,rotmat,screen_int,0 ); %generate the EBSP for this iteration
@@ -204,6 +196,10 @@ else
     phi1_n=Phi1_Temp;
     PHI_n=PHI_Temp;
     phi2_n=Phi2_Temp;  
+    
+    Refine.PC_it(n,:)=PC_start;
+    Refine.Eulers_it(n,:)=[phi1,PHI,phi2];
+    Refine.PH_it(n)=phbest;
 end
 
 %if there's an improvement:

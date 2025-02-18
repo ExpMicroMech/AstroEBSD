@@ -24,7 +24,10 @@ cmap4=cbrewer('div','RdBu',100);
 axes(hsub(1))
 %subplot(2,3,1)
 imagesc(RTMOutput.phase)
-colormap(gca,cbrewer('qual','Dark2',10))
+cmap1=cbrewer('qual','Dark2',10);
+
+
+colormap(gca,cmap1)
 title('RTM phase assignment')
 hcb1=colorbar;
 pbaspect([1.33,1,1])
