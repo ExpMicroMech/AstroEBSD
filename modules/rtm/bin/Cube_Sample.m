@@ -27,7 +27,7 @@ function [i_data,screen_number] = Cube_Sample(xjs,yjs,zjs,screen_int,isHex)
 % if ~isfield(screen_int, "simSource")
 %    screen_int.simSource='Bruker'
 
-%v2 - Lukas Berners modified the code, to read in the Master patterns from
+%v2 - Lukas Berners modified the code, to read in the reference patterns from
 %the square Lambert projection as implemented by the Marc DeGraef group in
 %EMsoft.  Callahan, Patrick G.; Graef, Marc de, Microscopy and
 %microanalysis 19 (2013), 1255-1265 doi:10.1017/S1431927613001840

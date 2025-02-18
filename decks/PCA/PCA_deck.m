@@ -47,7 +47,7 @@ InputUser.Astro_loc='C:\Users\tpm416\Documents\GitHub\AstroEBSD';
 
 %These need to be the names of '.pha' files in the '\phases\phasefiles'
 %folder. There need to be corresponding '.cif' and '.BIN' files in 'cifs'
-%and 'masterpatterns' folders. - Only relevant to RTM analyses.
+%and 'dynamic_templates' folders. - Only relevant to RTM analyses.
 InputUser.Phases={'Ni','ZrC','M6C'};
 
 % Run PCA on EBSD, EDX, or both

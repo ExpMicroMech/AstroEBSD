@@ -101,7 +101,7 @@ classdef detector
     end
     
     function pattern = simulatePattern(det,master,ori,flux,bg)
-      % simulate a Kikushi pattern given a master pattern
+      % simulate a Kikuchi pattern given a master pattern
       
       if nargin == 2, ori = rotation.id; end
       pattern = reshape(master.eval(ori \ det.nodesS2),det.nrows,det.ncols);

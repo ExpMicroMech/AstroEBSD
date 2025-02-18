@@ -1,5 +1,5 @@
 function [screen_int,facedata] = Cube_Generate(BinFile,isHex,varargin)
-%MasterCube - Read a bin file from Dynamics & Build Interpolants
+%Cube_Generate - Read a bin file from Dynamics & Build Interpolants
 
 % This code is copyright Alex Foden and Ben Britton 09/04/2019
 %
@@ -18,7 +18,7 @@ function [screen_int,facedata] = Cube_Generate(BinFile,isHex,varargin)
 % If you are using a CIF file not in the MTEX toolbox, you will need to add
 % the full file path to the cif file to the phase file you are using
 
-%v2 - Lukas Berners modified the code, to read in the Master patterns from
+%v2 - Lukas Berners modified the code, to read in the reference patterns from
 %the square Lambert projection as implemented by the Marc DeGraef group in
 %EMsoft. I also just decided, to give the
 % 2023_07_19 (JJJJ_MM_DD)
