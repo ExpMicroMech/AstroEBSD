@@ -29,11 +29,13 @@ Thumbs.db
 *.fig
 
 # Phase folders
-#/phases/cifs
-#/phases/cifs/*
-#/phases/dynamic_templates
-#/phases/dynamic_templates/*
-#/phases/masterpatterns
-#/phases/masterpatterns/*
-#/phases/phasefiles
-#/phases/phasefiles/*
+/phases/cifs
+/phases/cifs/*
+/phases/dynamic_templates
+/phases/dynamic_templates/*
+/phases/phasefiles
+/phases/phasefiles/*
+
+# Phase folders - deprecated
+/phases/masterpatterns
+/phases/masterpatterns/*
