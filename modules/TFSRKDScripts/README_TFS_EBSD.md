@@ -25,3 +25,8 @@ The scripts are located in two folders: ``TFSRKDUtils`` (functions) and ``TFSRKD
 - ``ReadTFSJson.m``: a wrapper for reading JSON files, since most Thermo Fisher metadata are stored in JSON files.
 - ``ReadTFSOrientationData.m``: loading orientation data from ``your_project/results/multiphase.idx`` into a table. 
 - ``TileQuadPatterns.m`` (RKD only): tile the four detector quadrants and apply a crop to form a single RKD pattern.
+
+## Changelog
+
+- 2025/04: initial release
+- 2025/06: updates to raw pattern loading scripts; adding map reading scripts; some scripts are renamed for clarity.
