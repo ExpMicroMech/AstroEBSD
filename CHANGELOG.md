@@ -8,7 +8,10 @@ Prof. Britton (TBB) is involved in most of these updates, and additional contrib
 
 See `modules/AstroECP` for details.
 
-With help from M. Haroon Qaiser
+- Added AstroECP as a pattern indexing and visualization tool and an experimental control assistant that facilitates ECCI by precisely dictating about the requisite stage tilts/rotations of SEM to navigate along the crystal.
+- A digital twin of our SEM within a graphical user interface is included to help navigate the electron channeling patterns and quickly access specific ECCI conditions for subsequent analysis.
+
+Principal contributions from M. Haroon Qaiser
 
 ## 08/07/2025 - Thermo Fisher data loader (v1.4.0)
 
