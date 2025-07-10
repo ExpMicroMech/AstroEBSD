@@ -1,18 +1,18 @@
 # Change Log
 
-Here we list major updates to the repositories. Small fixes are listed under the corresponding major versions.
+Here we list major updates to the repository since 25/09/2019. Small fixes are listed under the corresponding major versions.
 
 Prof. Britton (TBB) is involved in most of these updates, and additional contributers are also listed. 
 
 ## 10/07/2025 - AstroECP
 
-See 'modules/AstroECP' for details.
+See `modules/AstroECP` for details.
 
 With help from M. Haroon Qaiser
 
-## 08/07/2025 - Thermo Fisher data loader
+## 08/07/2025 - Thermo Fisher data loader (v1.4.0)
 
-See 'modules/TFSRKDScripts' for details
+See `modules/TFSRKDScripts` for details
 
 - Added code for loading data from Thermo Fisher Scientific systems, including TruePix (EBSD) and RKD data. This include:
   - Reading and plotting orientation and phase data
@@ -26,11 +26,11 @@ With help from Tianbi Zhang, Lukas Berners
 
 General: 
 
-- 'phases/masterpattern' renamed to 'phases/dynamical_templates'
+- `phases/masterpattern` renamed to `phases/dynamical_templates`
 - Added support of dynamical templates from EMsoft (.h5), AztecCrystal Mapsweeper and the Winkelmann tool ("BWKD"). A few examples of Si are provided.
-- A tutorial document on how to generate dynamical templates and use them in AstroEBSD is added to 'tutorial_docs'.
+- A tutorial document on how to generate dynamical templates and use them in AstroEBSD is added to `tutorial_docs`.
 
-Kikuchi geometry comparison (see 'modules/ded_geometry_comparison')
+Kikuchi geometry comparison (see `modules/ded_geometry_comparison`)
 
 - Improved code for Spherical reprojection in Cartesian coordinates
 - Codes for spherical reprojection in spherical coordinates and band profile analysis
@@ -45,7 +45,7 @@ With help from Dr. Ruth Birch
 
 ## 23/11/2023 - direct electron detector (MiniPIX TPX3)-based modular systems (v1.2.0)
 
-See 'modules/ded-tkd', 'modules/ded-ebsd' for details.
+See `modules/ded-tkd`, `modules/ded-ebsd` for details.
 
 - Codes for exposure fusion of on-axis TKD patterns
 - Geometry calibration and reindexing of static DED-based EBSD system
