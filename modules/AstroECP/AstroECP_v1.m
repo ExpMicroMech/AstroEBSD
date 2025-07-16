@@ -20,7 +20,7 @@ clear; home; close all;
 %% set up the file locations and voltage
 Input_Data.astro_location='D:\Lukas_Astro\AstroEBSD_v2-pca_lukas\';
 Input_Data.mtex_location='D:\Lukas_Astro\mtex-5.10.2\'; %working with 5.10.2
-Input_Data.V_in=20E3; %voltage in V - energy keV
+Input_Data.V_in=10E3; %voltage in V - energy keV
 
 %ECP - Tescan loader
 Input_Data.image_frame=1; % for selecting the image frame from a grouped image of multiple detectors. 1 if only have one frame. 
@@ -93,12 +93,12 @@ Input_Data.lambda_p=Input_Data.lambda/Input_Data.lattice_param_scale; %lambda no
 
 Input_Data.cset=[1,0,0; 0,1,0; 0,0,1; 0,1,1; 1,0,1;1,1,0];
 Input_Data.cset=[Input_Data.cset;Input_Data.cset*0.5];
-Input_Data.Phase_Input{1}='Si';
-Input_Data.crystal_shape='cube'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or forsterite
+Input_Data.Phase_Input{1}='SrRuO3_10kV_Pnma';
+Input_Data.crystal_shape='orthorhombic'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic' 
 Input_Data.miller1=[0 0 1]; %miller indicies for PF plot
 Input_Data.miller2=[1 1 0]; %miller indicies for PF plot
 Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
-Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
 
 %% Settings for pattern refinement
 
@@ -423,11 +423,11 @@ h_drx_dtext=uicontrol('style','edit','string',num2str(DeltaRs(1)),...
 h_drx_dtext.Units='normalized';
 
 %buttons to modify
-h_drx_minus=uicontrol('style','pushbutton','string','-    ↓','FontSize', 12,...
+h_drx_minus=uicontrol('style','pushbutton','string','-    ↑','FontSize', 12,...
     'position',[xstart+xsep*0 ystart+3*ysep xwid yhig],'Callback',@rXm);
 h_drx_minus.Units='normalized';
 
-h_drx_plus=uicontrol('style','pushbutton','string','+    ↑','FontSize', 12,...
+h_drx_plus=uicontrol('style','pushbutton','string','+    ↓','FontSize', 12,...
     'position',[xstart+xsep*0 ystart+4*ysep xwid yhig],'Callback',@rXp);
 h_drx_plus.Units='normalized';
 
@@ -737,8 +737,8 @@ function refine(~,eventdata)
 g_dynamics=Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2);
 
 % swap for olivine/Si
-  % [Pattern_Sim]=EBSP_gen( EBSD_Geometry,g_dynamics*RotMat,screen_int);
- [Pattern_Sim]=EBSP_gen( EBSD_Geometry,RotMat,screen_int);
+  [Pattern_Sim]=EBSP_gen( EBSD_Geometry,g_dynamics*RotMat,screen_int);
+ % [Pattern_Sim]=EBSP_gen( EBSD_Geometry,RotMat,screen_int);
 
         i_ecp=imagesc(EBSD_Geometry.x_screen,EBSD_Geometry.y_screen,Pattern_Sim,'Parent',h_ecp);
         colormap('gray');
@@ -753,7 +753,7 @@ g_dynamics=Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2);
         if h_ecp_bands.Value == 1
             
             %reusing the previous method
-            Plot_EBSPAnnotated_TZ( Pattern_Sim,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_ecp, Input_Data.V_in);
+            % Plot_EBSPAnnotated_TZ( Pattern_Sim,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_ecp, Input_Data.V_in);
             
            
             
@@ -826,7 +826,7 @@ g_dynamics=Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2);
             if h_exp_bands.Value == 1
 
 
-   Plot_EBSPAnnotated_TZ( ECP_data,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_exp, Input_Data.V_in);
+   % Plot_EBSPAnnotated_TZ( ECP_data,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_exp, Input_Data.V_in);
 
 
 
@@ -982,6 +982,7 @@ end
             % axis off; axis equal;
             h_s_xe.UserData=h_pf1;
             h_s_xe.UserData=h_pf2;
+             
             try
                                
                 cs_phase=loadCIF(RTM_info.cif_file);
@@ -995,8 +996,10 @@ end
                 elseif  strcmpi(Input_Data.crystal_shape,'hex')
                     cS=crystalShape.hex(cs_phase);
               
-                elseif  strcmpi(Input_Data.crystal_shape,'forsterite')
-                cs_phase = crystalSymmetry.load('9000319'); %load cif file of olivine
+                elseif  strcmpi(Input_Data.crystal_shape,'orthorhombic')
+                cs_phase = crystalSymmetry.load(RTM_info.cif_file) %load cif file 
+                  
+                
                 mm = Miller({1,0,0},cs_phase);  
                 rr = Miller({0,1,0},cs_phase);  
                 zz = Miller({0,0,1},cs_phase);  
@@ -1135,33 +1138,48 @@ plot(ori_single * cS(Miller(0,-1,0,cs_phase)),'FaceColor','LightSeaGreen','FaceA
         % end
         
 
-       %   bands_clean_upper=cBand(bands.upper_zp,sf);
-       % if ~isempty(bands_clean_upper.x) && ~isempty(bands_clean_upper.y)
-       %        plot(bands_clean_upper.x,bands_clean_upper.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)  % line width Line size
-       %       % plot(bands_clean_upper.x,'color',csetn,'LineWidth',0.5,'LineStyle','-','Parent',h_ecp)  % line width Line size
-       %  end
-       % 
-       % 
-       %    bands_clean_lower=cBand(bands.lower_zp,sf);
-       %  if ~isempty(bands_clean_lower.x) && ~isempty(bands_clean_lower.y)
-       %      plot(bands_clean_lower.x,bands_clean_lower.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)
-       %  end
-     
-
-
+         bands_clean_upper=cBand(bands.upper_zp,sf);
+       if ~isempty(bands_clean_upper.x) && ~isempty(bands_clean_upper.y)
+              plot(bands_clean_upper.x,bands_clean_upper.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)  % line width Line size
+             % plot(bands_clean_upper.x,'color',csetn,'LineWidth',0.5,'LineStyle','-','Parent',h_ecp)  % line width Line size
         end
 
+
+          bands_clean_lower=cBand(bands.lower_zp,sf);
+        if ~isempty(bands_clean_lower.x) && ~isempty(bands_clean_lower.y)
+            plot(bands_clean_lower.x,bands_clean_lower.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)
+        end
+
+
+
+         end
+
     function bands_clean=cBand(bzp,sf)
-        bands_clean.x=bzp(1,:)./bzp(3,:);
-        bands_clean.y=bzp(2,:)./bzp(3,:);
-
-        bands_clean.y=bands_clean.y(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
-        bands_clean.x=bands_clean.x(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
-
-        bands_clean.x=bands_clean.x(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
-        bands_clean.y=bands_clean.y(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
-
         
+
+
+        % % Problem of duplicate bands on one side 
+        % bands_clean.x=bzp(1,:)./bzp(3,:);
+        % bands_clean.y=bzp(2,:)./bzp(3,:);
+        % bands_clean.y=bands_clean.y(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
+        % bands_clean.x=bands_clean.x(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
+        % 
+        % bands_clean.x=bands_clean.x(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
+        % bands_clean.y=bands_clean.y(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
+
+       
+    x = bzp(1,:) ./ bzp(3,:);
+    y = bzp(2,:) ./ bzp(3,:);
+
+    % Create joint mask to filter only valid (x,y) pairs
+    mask = x >= sf.xmin & x <= sf.xmax & ...
+           y >= sf.ymin & y <= sf.ymax;
+
+    % Apply the mask once, preserving pairing
+    bands_clean.x = x(mask);
+    bands_clean.y = y(mask);
+
+
 
     end
 
