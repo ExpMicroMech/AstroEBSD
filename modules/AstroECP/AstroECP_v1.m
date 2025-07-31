@@ -18,14 +18,15 @@
 clear; home; close all;
 
 %% set up the file locations and voltage
-Input_Data.astro_location='D:\Lukas_Astro\AstroEBSD_v2-pca_lukas\';
+
+Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD';
 Input_Data.mtex_location='D:\Lukas_Astro\mtex-5.10.2\'; %working with 5.10.2
-Input_Data.V_in=10E3; %voltage in V - energy keV
+Input_Data.V_in=20E3; %voltage in V - energy keV
 
 %ECP - Tescan loader
 Input_Data.image_frame=1; % for selecting the image frame from a grouped image of multiple detectors. 1 if only have one frame. 
-Input_Data.image_folder='D:\My TESCAN Data\Si_ECP_Collection';
-Input_Data.image_name='Si_ECP_WD4mm_2.tif';
+Input_Data.image_folder='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD\modules\AstroECP';
+Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 
 addpath (Input_Data.image_folder)
 Input_Data.ExpImage_Image = fullfile(Input_Data.image_folder,Input_Data.image_name);
@@ -46,9 +47,10 @@ setMTEXpref('zAxisDirection','outofPlane');     %aztec
 
 %% Pattern info
 Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
-Input_Data.PC_in=[0.5 0.5 0.8]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
+Input_Data.PC_in=[0.5 0.5 3]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
 Input_Data.Stage_in=[0 0 0]; % stage rotations, in degrees [Rx, Ry, Rz]
-Input_Data.eangs=[0 0 0];
+Input_Data.eangs=[0 0 0]; % [phi1, Phi, phi2]
+Input_Data.DeltaRs=[0.5 0.5 2]; % delta values for controlling tilts etc, in degrees
 
 %% Experimental pattern load
 if isfield(Input_Data,'ExpImage_Image')
@@ -68,9 +70,6 @@ if isfield(Input_Data,'ExpImage_Image')
    end
 end
 %% 
-Input_Data.PC_in=[0.5 0.5 3.88]; % starting PC - AstroEBSD convention
-Input_Data.eangs=[0  0  0]; % [phi1, Phi, phi2]
-Input_Data.DeltaRs=[0.1 0.1 2]; % delta values for controlling tilts etc, in degrees
 
 %provide the rotation matricies you want to use
 Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
@@ -81,7 +80,6 @@ Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)];
 Input_Data.Detector_tilt=eye(3);
 
 %used to calculate wavelengths
-
 Input_Data.lattice_param_scale=1E-10; %lattice paramters are provided in this unit, often Angstrom (1E-10);
 
 %% Deal with the wavelegnth
@@ -93,8 +91,8 @@ Input_Data.lambda_p=Input_Data.lambda/Input_Data.lattice_param_scale; %lambda no
 
 Input_Data.cset=[1,0,0; 0,1,0; 0,0,1; 0,1,1; 1,0,1;1,1,0];
 Input_Data.cset=[Input_Data.cset;Input_Data.cset*0.5];
-Input_Data.Phase_Input{1}='SrRuO3_10kV_Pnma';
-Input_Data.crystal_shape='orthorhombic'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic' 
+Input_Data.Phase_Input{1}='Si';
+Input_Data.crystal_shape='cube'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic' 
 Input_Data.miller1=[0 0 1]; %miller indicies for PF plot
 Input_Data.miller2=[1 1 0]; %miller indicies for PF plot
 Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
@@ -125,7 +123,6 @@ Input_Data.Settings_Cor_refine.size=pattern_info.size;
 
 %% Run the GUI
 [Output_Data]=f_AstroECP(Input_Data);
-
 
 function [Output_Data]=f_AstroECP(Input_Data)
 
@@ -213,8 +210,6 @@ h_phases=uicontrol('style','popupmenu','String',phases_list,...
     'position',[xstart+3*xsep ystart+5*ysep xwid*1.5 yhig],'Callback',@Phase_Update);
 h_phases.Units='normalized';
 
-
-
 try
     phase_val=find(logical(1-cellfun('isempty',strfind(phases_list,Input_Data.Phase_Input{1}))) == true);
     if isempty(phase_val)
@@ -226,8 +221,6 @@ end
 
 h_phases.Value=phase_val(1);
 [Crystal_UCell,Crystal_Family,screen_int,Family_List,RTM_info]=phase_data(Input_Data);
-
-
 
 %% stage rotations (useful for ECP analysis)
 
@@ -997,7 +990,7 @@ end
                     cS=crystalShape.hex(cs_phase);
               
                 elseif  strcmpi(Input_Data.crystal_shape,'orthorhombic')
-                cs_phase = crystalSymmetry.load(RTM_info.cif_file) %load cif file 
+                cs_phase = crystalSymmetry.load(RTM_info.cif_file); %load cif file 
                   
                 
                 mm = Miller({1,0,0},cs_phase);  
