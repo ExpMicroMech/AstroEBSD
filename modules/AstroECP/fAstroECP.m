@@ -974,6 +974,13 @@ h_refine.Callback=@refine;
 
             catch
                 warning('Unit Cell Plot failed - you can copy "AstroEBSD\modules\AstroECP\plotCS_Update.m" to the folder "\mtex-5.11.1\geometry\@crystalShape" and replace plot.m with this alternative version')
+                
+                fileLocation=which('plotCS_Update.m');
+                disp('Copying file automatically')
+                copyfile([Input_Data.mtex_location 'geometry\@crystalShape\plot.m'],[Input_Data.mtex_location 'geometry\@crystalShape\plot_old.m']);
+                copyfile(fileLocation,[Input_Data.mtex_location 'geometry\@crystalShape\plot.m']);
+                
+
             end
 
             try
