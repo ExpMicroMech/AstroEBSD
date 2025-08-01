@@ -1,7 +1,8 @@
 /utils/gmail.m
 /testing/*
 /outputs/*
-
+/modules/refinement_results/*
+/modules/refinement_results/
 
 # Logs and databases #
 ######################
@@ -29,12 +30,12 @@ Thumbs.db
 *.fig
 
 # Phase folders
-/phases/cifs
-/phases/cifs/*
-/phases/dynamic_templates
-/phases/dynamic_templates/*
-/phases/phasefiles
-/phases/phasefiles/*
+#/phases/cifs
+#/phases/cifs/*
+#/phases/dynamic_templates
+#/phases/dynamic_templates/*
+#/phases/phasefiles
+#/phases/phasefiles/*
 
 # Phase folders - deprecated
 /phases/masterpatterns

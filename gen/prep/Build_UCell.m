@@ -178,9 +178,36 @@ try
             plane_double(n,:)=[a1,a2,a3];
 
         end
+
         UCell.reflectors=plane_double;
         UCell.max_fam=size(UCell.reflectors,1);
+        
+        %deal with voltage
+        ix=array_num(contains(PhaseRaw,'$voltage','IgnoreCase',true));
+        if isempty(ix)
+            UCell.voltage=20E03; % default 20 kV
+        else 
+            UCell.voltage=str2double(PhaseRaw{ix+1});
+            UCell.voltage=UCell.voltage*1E3;
+        end
+        
+        ix=array_num(contains(PhaseRaw,'$lattice_param_scale','IgnoreCase',true));
+        if isempty(ix)
+            UCell.lattice_param_scale = 1E-10;
+        else
+            UCell.lattice_param_scale=str2double(PhaseRaw{ix+1});
+        end
 
+        %calculate lambda
+        %constants
+        h=6.626E-34; %Planck constant in Js
+        me=9.1E-31; %mass of electron in kg
+        e_charge=1.602E-19; %charge of an electron in C
+        c=2.998E8; %speed of light in m/s
+
+        %equation with relativistic correction
+        UCell.lambda = ( h / sqrt(2 * me * e_charge * UCell.voltage) ) / (sqrt(1 + e_charge * UCell.voltage /2/me/c^2)); % in m
+        UCell.lambda_p=UCell.lambda/UCell.lattice_param_scale;
     end
 catch
     %use the old function - depreceiated

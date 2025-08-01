@@ -28,24 +28,24 @@ function [pc_out,eangs,peakhight] =optimize_pc_ori(pc_in,eangs,PatternIn,Setting
 % Settings_Cor.SquareCrop=0;
 % eangs=extractions.(tile_name).oris(p_cur,:);
 % eangs=conv_G_to_EA(gmatrix_pseudo);
-mode='fmincon'
+mode='fmincon';
 for i=1:size(varargin)
     if(strcmp(varargin{i},'Mode'))
-        mode=varargin{i+1}
+        mode=varargin{i+1};
     end
 
 end
 pcx_in=double(pc_in(1));
 pcy_in=double(pc_in(2));
 pcz_in=double(pc_in(3));
-fields={'max_var_pc_x','max_var_pc_y','max_var_pc_y'}
+fields={'max_var_pc_x','max_var_pc_y','max_var_pc_y'};
 if any(isfield(Settings_Cor,fields))
     try
     var_pcx=Settings_Cor.max_var_pc_x;
     var_pcy=Settings_Cor.max_var_pc_y;
     var_pcz=Settings_Cor.max_var_pc_z;
     catch
-        error('you have spacefied a constrained for one pc variblae but not all of them')
+        error('you have specified a constrained for one pc variblae but not all of them')
     end
 else
     var_pcx=Settings_Cor.max_var_pc;

@@ -20,6 +20,7 @@ function plot_refinementHQ(PatternIn, Settings_Cor, PatternInfo, screen_int, pc_
     eangs_ref_i = conv_G_to_EA(gmatrix_ref) / degree;
     eangs_hough_i = conv_G_to_EA(gmatrix) / degree;
 
+    [Pat_inBG] = EBSP_BGCor(PatternIn, Settings_Cor);
     %% Plot and export, so we can have a look at it later.
     f = figure('Position', [20, 20, 1200, 800]);
 
@@ -34,7 +35,7 @@ function plot_refinementHQ(PatternIn, Settings_Cor, PatternInfo, screen_int, pc_
     % scatter(0, 0, 100, [0 1 1], 'pentagram', 'filled');
     scatter(0, 0, 100, [0 1 1],'wo', 'LineWidth', 1, 'MarkerEdgeColor', 'k');  scatter(0, 0, 100, [0 1 1], 'kx');
     subplot(2, 3, 2);
-    pPattern(PatternIn, EBSD_geometry);
+    pPattern(Pat_inBG, EBSD_geometry);
     axis off;
     axis equal;
     hold on;
@@ -98,7 +99,8 @@ function plot_refinementHQ(PatternIn, Settings_Cor, PatternInfo, screen_int, pc_
     plot_name=fullfile(output_folder,Input_Data.image_name);
     
     exportgraphics(f, plot_name, 'Resolution', '600');
-    fprintf('Plot saved to : %s', Input_Data.image_name);
+    fprintf('Plot saved to : %s', Input_Data.image_name );
+    fprintf('\n');
 
 
 
@@ -138,7 +140,9 @@ function EBSP2=normalize_radius(EBSP2,Settings_Cor)
     ygrid=double(ygrid);
     r_grid=sqrt(double(xgrid-size(EBSP2,2)/2).^2+double(ygrid-size(EBSP2,1)/2).^2);
     EBSP2(r_grid>=r_thresh) = 0;
-    EBSP2(r_grid<r_thresh)=  normalize(EBSP2(r_grid<r_thresh));
+    % EBSP2(r_grid<r_thresh)=  normalize(EBSP2(r_grid<r_thresh));
+    EBSP2(r_grid<r_thresh)=  (EBSP2(r_grid<r_thresh)); %normaliztion turned off, TBB 2025-08-01
+
 
 end
 
