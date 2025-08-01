@@ -86,6 +86,8 @@ addpath([Astro_FP,link, 'modules',link,'rtm',link,'logsample']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'runRTM']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'misc_refine']);
 
+addpath([Astro_FP,link, 'modules',link,'AstroECP']);
+
 addpath([Astro_FP,link, 'utils']);
 addpath([Astro_FP,link, 'phases']);
 addpath([Astro_FP,link, 'testing']);
