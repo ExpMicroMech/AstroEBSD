@@ -28,7 +28,7 @@ Input_Data.mtex_location='C:\Users\Administrator\Documents\Matlab\mtex-5.11.1\';
 
 Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
 Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
-Input_Data.image_frame=1;     %frame number for TFS data, this variable should not exist for other file types
+Input_Data.image_frame=1;     %frame number for Tescan data, this variable should not exist for other file types
 
 %values for the example data
 Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
