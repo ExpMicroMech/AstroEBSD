@@ -18,27 +18,27 @@
 clear; home; close all;
 
 %% set up the file locations 
-Input_Data.astro_location='C:\Users\Administrator\Documents\Matlab\AstroEBSD\';
+Input_Data.astro_location='C:\Users\Administrator\Documents\GitHub\AstroEBSD\';
 Input_Data.mtex_location='C:\Users\Administrator\Documents\Matlab\mtex-5.11.1\'; %working with 5.10.2
 
 %ECP locations
 % Input_Data.image_frame=1; % for selecting the specific detector frame within the tescan images, when multiple detectors are used 
-% Input_Data.image_folder='C:\Users\Administrator\Documents\Matlab\AstroEBSD\modules\AstroECP';
-% Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
+Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
+Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
+Input_Data.image_frame=1;     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
+
 % 
 % Input_Data.image_folder='C:\Users\Administrator\Documents\Matlab\AstroEBSD\modules\AstroECP';
 % Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 
-Input_Data.image_folder='C:\Users\Administrator\Documents\Matlab\AstroEBSD\modules\AstroECP\';
-Input_Data.image_name='20keV_3.2nA_Ref.tif';
 
 %% ECP information 
 
 Input_Data.Stage_in=[0 0 0]; % stage rotation settings, in degrees [Rx, Ry, Rz]
 
 %values for the example data
-% Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
-% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern
+Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
+Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern
 
 %starting values - example Tescan data
 % Input_Data.PC_in=[0.5 0.5 3.8]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
@@ -48,14 +48,18 @@ Input_Data.Stage_in=[0 0 0]; % stage rotation settings, in degrees [Rx, Ry, Rz]
 Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
 
 
-% TFS inputs
-Input_Data.PC_in=[0.5 0.5 5.715];
-Input_Data.eangs=[-90.5846,1.6043,85.6572]; % for the example pattern
+% TFS inputs example inputs
+% Input_Data.image_folder='C:\Users\Public\Desktop\SharedData\Haroon\2025\0806_SAECP_Alignments';
+% Input_Data.image_name='20250806_Si_Grid_T1_3.2nA_20.00kV_10.00µs_Tilt_minus2.tif';
+
+% Input_Data.PC_in=[0.5 0.5 5.715];
+% Input_Data.eangs=[-83.881,1.6043,74.9429]; % for the example pattern
+
+
 
 %% Crystal information
 
 Input_Data.Phase_Input{1}='Si_20kV'; %pick the phase - this should be in \AstroEBSD\phases\phasefiles
-% Input_Data.Phase_Input{1}='GaAs_30kV'; %pick the phase - this should be in \AstroEBSD\phases\phasefiles
 
 Input_Data.crystal_shape='cube'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic'
 Input_Data.miller1=[0 0 1]; %miller indicies for PF plot of the crystal

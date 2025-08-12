@@ -981,8 +981,8 @@ h_refine.Callback=@refine;
                 
                 fileLocation=which('plotCS_Update.m');
                 disp('Copying file automatically')
-                copyfile([Input_Data.mtex_location 'geometry\@crystalShape\plot.m'],[Input_Data.mtex_location 'geometry\@crystalShape\plot_old.m']);
-                copyfile(fileLocation,[Input_Data.mtex_location 'geometry\@crystalShape\plot.m']);
+                copyfile(fullpath(Input_Data.mtex_location, 'geometry\@crystalShape\plot.m'),fullpath(Input_Data.mtex_location,'geometry\@crystalShape\plot_old.m'));
+                copyfile(fileLocation,fullpath(Input_Data.mtex_location,'geometry\@crystalShape\plot.m'));
                 
 
             end
