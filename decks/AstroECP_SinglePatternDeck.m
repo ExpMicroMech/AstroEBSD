@@ -50,28 +50,9 @@ Input_Data.eangs=[-95.9131,1.6043,92.9911]; % for the example pattern
 %set the greyscale colorlim for the ECP
 Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
 
-
-
-%% ECP information 
+%% Other ECP information 
 
 Input_Data.Stage_in=[0 0 0]; % stage rotation settings, in degrees [Rx, Ry, Rz]
-
-
-%starting values - example Tescan data
-% Input_Data.PC_in=[0.5 0.5 3.8]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
-% Input_Data.eangs=[90,1,-99]; % for the example pattern
-
-
-
-
-
-% TFS inputs example inputs
-% Input_Data.image_folder='C:\Users\Public\Desktop\SharedData\Haroon\2025\0806_SAECP_Alignments';
-% Input_Data.image_name='20250806_Si_Grid_T1_3.2nA_20.00kV_10.00µs_Tilt_minus2.tif';
-
-% Input_Data.PC_in=[0.5 0.5 5.715];
-% Input_Data.eangs=[-83.881,1.6043,74.9429]; % for the example pattern
-
 
 
 %% Crystal information
