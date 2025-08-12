@@ -26,6 +26,7 @@ Input_Data.mtex_location='C:\Users\Administrator\Documents\Matlab\mtex-5.11.1\';
 
 %%  Tescan Data - comment out this block if you want to run TFS data
 
+Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
 Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 Input_Data.image_frame=1;     %frame number for TFS data, this variable should not exist for other file types
 
