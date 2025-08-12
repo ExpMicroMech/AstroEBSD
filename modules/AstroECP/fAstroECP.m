@@ -898,7 +898,11 @@ h_refine.Callback=@refine;
             xlabel('Intensity, a.u', FontSize=6);
             ylabel('Frequency, a.u.', FontSize=6);
 
-            xlim(h_exp2, [min(ECP_data(:)), max(ECP_data(:))]);  % Set x-axis limits
+            try
+                xlim(h_exp2, [min(ECP_data(:)), max(ECP_data(:))]);  % Set x-axis limits
+            catch
+                warning('Histogram range did not load properly, letting matlab do this')
+            end
 
             ylim(h_exp2, [0 50000]);
             % ylim auto     % Automatically adjust y-axis limits
