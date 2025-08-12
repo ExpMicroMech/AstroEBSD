@@ -118,7 +118,7 @@ h_close.Callback=@closefun;
 
 if isfield(Input_Data,'miller1')
     miller1_text=[num2str(Input_Data.miller1(1)) ',' num2str(Input_Data.miller1(2)) ',' num2str(Input_Data.miller1(3)) ];
-    miller1_textui=uicontrol('style','text','string',miller1_text,'Units','normalized','Position',[0.2 0.85 0.1 0.02],'BackgroundColor','w');
+    miller1_textui=uicontrol('style','text','string',miller1_text,'Units','normalized','Position',[0.2 0.85 0.1 0.02],'BackgroundColor','w'); %#ok<*NASGU>
 end
 
 if isfield(Input_Data,'miller2')
@@ -144,12 +144,13 @@ try
     end
 catch
     warning('Phase not found, trying to load silicon 20 kV patterns')
-    phase_val=find(logical(1-cellfun('isempty',strfind(phases_list,'Si_20kV'))) == true);
+    phase_val=find(logical(1-cellfun('isempty',strfind(phases_list,'Si_20kV'))) == true); %#ok<STRCL1>
     % phase_val=1;
 end
 
 h_phases.Value=phase_val(1);
-[Crystal_UCell,Crystal_Family,screen_int,Family_List,RTM_info]=phase_data(Input_Data);
+
+[Crystal_UCell,Crystal_Family,screen_int,Family_List,RTM_info]=phase_data(Input_Data); %#ok<*SETNU>
 
 %% stage rotations (useful for ECP analysis)
 
@@ -400,15 +401,15 @@ h_drz_plus.Units='normalized';
 
 h_band_labels = gobjects(10,1);  % or in your handles struct, etc.
 
-for i = 1:10
+for ii = 1:10
 
-    h_band_labels(i) = uicontrol('Style', 'text', ...
-        'Position', [xstart-(xsep/4), ystart + yhig*(12 - i), xwid/2, yhig], ...
+    h_band_labels(ii) = uicontrol('Style', 'text', ...
+        'Position', [xstart-(xsep/4), ystart + yhig*(12 - ii), xwid/2, yhig], ...
         'FontSize', 10, ...
         'FontWeight', 'bold', ...
         'BackgroundColor', 'w', ...
         'String', '');  % empty initially
-    h_band_labels(i).Units = 'normalized';
+    h_band_labels(ii).Units = 'normalized';
 end
 
 %% plot the Experimental EBSP/ECP
@@ -518,7 +519,7 @@ h_refine=uicontrol('style','pushbutton','string','Refine',...
 h_refine.Units='normalized';
 h_refine.Callback=@refine;
 
-    function refine(~,eventdata)
+    function refine(~,eventdata) %#ok<*INUSD>
         psize=size(ECP_Pat.pattern);
         PatternInfo.ScreenWidth=psize(1);
         PatternInfo.ScreenHeight=psize(2);
@@ -636,7 +637,7 @@ h_refine.Callback=@refine;
 
 
         % stage rotations
-        sX=str2num(get(h_s_xe,'String'));
+        sX=str2num(get(h_s_xe,'String')); %#ok<*ST2NM>
         sY=str2num(get(h_s_ye,'String'));
         sZ=str2num(get(h_s_ze,'String'));
 
@@ -704,12 +705,15 @@ h_refine.Callback=@refine;
             %reusing the previous method
             % Plot_EBSPAnnotated_TZ( Pattern_Sim,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_ecp, Input_Data.V_in);
 
-
+            if ~isfield(Crystal_UCell{1},'lambda_p')
+                Crystal_UCell{1}.lambda_p=0.0859;
+            end
 
             if ~isempty(Family_List)
                 for n=1:size(Family_List,1)
                     HKLs=Family_List{n}(:,2:4);
-
+                    
+                
                     for p=1:size(HKLs,1)
                         %calculate the bands
                         [bands] = Cone_Build(HKLs(p,:),Crystal_UCell{1}.Astar,Crystal_UCell{1}.lambda_p,RotMat,cone_params);
@@ -787,7 +791,7 @@ h_refine.Callback=@refine;
                             % %calculate the bands
                             [bands] = Cone_Build(HKLs(p,:),Crystal_UCell{1}.Astar,Crystal_UCell{1}.lambda_p,RotMat,cone_params);
                             % %plot them on the EBSP/ECP
-                            pBand(bands,cset(n,:),h_exp,sf)
+                            pBand(bands,cset(n,:),h_exp,sf);
 
                         end
 
@@ -1068,7 +1072,7 @@ h_refine.Callback=@refine;
     end
 
     function deactivate_buttons
-        h_ring.Enable='off';
+        h_ring.Enable='off'; %#ok<STRNU>
         h_update.Enable='off';
         h_drx_minus.Enable='off';
         h_dry_minus.Enable='off';
@@ -1081,7 +1085,7 @@ h_refine.Callback=@refine;
     end
 
     function activate_buttons
-        h_ring.Enable='on';
+        h_ring.Enable='on'; %#ok<STRNU>
         h_update.Enable='on';
         h_drx_minus.Enable='on';
         h_dry_minus.Enable='on';
@@ -1240,7 +1244,7 @@ h_refine.Callback=@refine;
         folder_files={folder_dir.name};
 
         %find the pha names
-        pha_names=folder_files(logical(1-cellfun('isempty',strfind(folder_files,'pha'))));
+        pha_names=folder_files(logical(1-cellfun('isempty',strfind(folder_files,'pha')))); %#ok<STRCL1>
         for n=1:size(pha_names,2)
             pha_names{n}=pha_names{n}(1:end-4);
         end
@@ -1456,24 +1460,70 @@ h_navigate.Enable = 'off';
 % end
 
 %% Display info from the loaded ECP hdr file
-ftif = Input_Data.image_name;
+
+try
+    ftif = Input_Data.image_name;
 variables_to_extract = ["OrigFileName", "ScanMode", "AcceleratorVoltage", "WD", "DwellTime", "PixelSizeX", "PredictedBeamCurrent", "StageRotation", "StageTilt", "StageTiltY'" ];
 
 % Call the function header_read_tescan
-[data1, table_data] = header_read_tescan(ftif, variables_to_extract);
+[data1, table_data] = header_read_tescan(ftif, variables_to_extract); %#ok<*ASGLU>
+% [text_retrieved] = fReadTFSHeaderPair(text_to_find,tif_info_string);
+if data1 == 0
+    try %lets try to load a TFS data set
+        info1 = imfinfo(fullfile(Input_Data.image_folder,Input_Data.image_name));
+        i1_text=info1.UnknownTags.Value;
+        i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
+        nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
+        i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
+        t=1;
+        data1=cell(1,10);
+        data1{1}=Input_Data.image_name;
+        data1{2}=fReadTFSHeaderPair('UseCase',i1_text_pairs_full);
+        data1{3}=str2double(fReadTFSHeaderPair('HV',i1_text_pairs_full))/1000; % in kV
+        data1{4}=str2double(fReadTFSHeaderPair('WD',i1_text_pairs_full))*1000; % in mm;
+        data1{5}=str2double(fReadTFSHeaderPair('BeamCurrent',i1_text_pairs_full))*1E9; % in nA;
+        data1{6}=str2double(fReadTFSHeaderPair('FrameTime',i1_text_pairs_full)); %in s
+        data1{7}=str2double(fReadTFSHeaderPair('AngularFieldWidth',i1_text_pairs_full))*180/pi;
+        data1{8}=str2double(fReadTFSHeaderPair('StageT',i1_text_pairs_full))*180/pi;
+        data1{9}=str2double(fReadTFSHeaderPair('StageR',i1_text_pairs_full))*180/pi;
+        data1{10}=str2double(fReadTFSHeaderPair('ScanRotation',i1_text_pairs_full))*180/pi;
+        
+        %do some rounding for the display
+        data1{4}=round(data1{4}*10)/10;
+        data1{7}=round(data1{7}*100)/100;
+        data1{8}=round(data1{8}*10)/10;
+        data1{9}=round(data1{9}*10)/10;
+        data1{10}=round(data1{10}*10)/10;
+
+        % Display data with proper formatting
+        data2 = sprintf('File Name: %s\n\nUse Case: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nBeam Current: %s nA\nFrameTime: %s S\nAngularField: %s deg\n\nMICROSCOPE SETUP \nStage Tilt: %s°\nStage Rot: %s°\nScan Rot: %s°', ...
+        data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+
+    catch %it messed up, so just populate with unknown
+        data2=['Loaded pattern, but no added info'];
+    end
+else %it was tescan data
+    data1{3} = num2str(str2double(data1{3}) / 1000);
+    data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
+    data1{5} = num2str(str2double(data1{5}) * 100000);
+    data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
+    data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
+    data1{8} = sprintf('%.3f', data1{8});
+
+    % Display data with proper formatting
+    data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
+        data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+
+end
+
 
 % change the units
 
-data1{3} = num2str(str2double(data1{3}) / 1000);
-data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
-data1{5} = num2str(str2double(data1{5}) * 100000);
-data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
-data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
-data1{8} = sprintf('%.3f', data1{8});
 
-% Display data with proper formatting
-data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
-    data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+catch
+
+end
+
 
 data2 = strtrim(data2); % Remove newline characters
 
@@ -1511,24 +1561,24 @@ h_ecp_info.Units = 'normalized';
         % Miller indices
         millerIndices = cell(size(lines));
         lineText = cell(size(lines));
-        for i = 1:numel(lines)
-            v = sscanf(lines{i}, '%d,%d,%d');
+        for iis = 1:numel(lines)
+            v = sscanf(lines{iis}, '%d,%d,%d');
             if numel(v) == 3
-                millerIndices{i} = v(:)';
-                lineText{i} = sprintf('{%d %d %d}', v);
+                millerIndices{iis} = v(:)';
+                lineText{iis} = sprintf('{%d %d %d}', v);
 
             end
         end
 
         % Update label text & color
         maxLabels = min(numel(lineText), 10);
-        for i = 1:10
-            if i <= maxLabels
-                set(h_band_labels(i), ...
-                    'String', lineText{i}, ...
-                    'ForegroundColor', Input_Data.cset(i,:), 'BackgroundColor', '#B4B4B4');
+        for iis = 1:10
+            if iis <= maxLabels
+                set(h_band_labels(iis), ...
+                    'String', lineText{iis}, ...
+                    'ForegroundColor', Input_Data.cset(iis,:), 'BackgroundColor', '#B4B4B4');
             else
-                set(h_band_labels(i), ...
+                set(h_band_labels(iis), ...
                     'String', '', ...
                     'ForegroundColor', 'w', 'BackgroundColor', 'w');  % or gray it out
             end

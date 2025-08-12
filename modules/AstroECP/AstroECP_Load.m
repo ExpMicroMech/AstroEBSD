@@ -16,14 +16,39 @@ try
         ECP_Pat.filename=ECP_Pat;
         ECP_Pat.size = size(ExpImage_Image); %size of the library patterns and the resize of the raw EBSP
     else
-        %load this frame - normal image loader
-        ExpImage_Image=imread(ExpImage_Filename);
-        if size(ExpImage_Image,3) == 3
-            ExpImage_Image=rgb2gray(Input_Data.ECP_Pat);
+        try %try to load it as a TFS frame
+            ExpImage_Image=imread(ExpImage_Filename);
+            info1 = imfinfo(ExpImage_Filename);
+            i1_text=info1.UnknownTags.Value;
+            i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
+
+            if size(i1_text_pairs,2) > 2 %assume that this is a TFS file if this loader works
+                nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
+                i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
+
+                % [ResolutionX] =
+                % str2double(fReadTFSHeaderPair('ResolutionX',i1_text_pairs_full));
+                % %not needed
+                [ResolutionY] = str2double(fReadTFSHeaderPair('ResolutionY',i1_text_pairs_full));
+                ExpImage_Image=ExpImage_Image(1:ResolutionY,:); %crop the data bar
+
+                ECP_Pat.pattern=double(flipud(ExpImage_Image));
+                ECP_Pat.size =size(ECP_Pat.pattern);
+                ECP_Pat.frame=0;
+            end
+
+        catch
+
+            %load this frame - normal image loader
+            warning('An image is loaded with limited other information')
+            ExpImage_Image=imread(ExpImage_Filename);
+            if size(ExpImage_Image,3) == 3
+                ExpImage_Image=rgb2gray(Input_Data.ECP_Pat);
+            end
+            ECP_Pat.pattern=double(flipud(ExpImage_Image));
+            ECP_Pat.size =size(ECP_Pat.pattern);
+            ECP_Pat.frame=0;
         end
-        ECP_Pat.pattern=double(flipud(ExpImage_Image));
-        ECP_Pat.size =size(ECP_Pat.pattern);
-        ECP_Pat.frame=0;
     end
 
 catch

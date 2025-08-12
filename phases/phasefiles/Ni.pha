@@ -22,3 +22,7 @@ $dynamic
 Ni_1024
 $isHex
 0
+$voltage
+20
+$lattice_param_scale
+1E-10

@@ -29,7 +29,8 @@ function [pc_out,eangs,peakhight] =optimize_pc_ori(pc_in,eangs,PatternIn,Setting
 % eangs=extractions.(tile_name).oris(p_cur,:);
 % eangs=conv_G_to_EA(gmatrix_pseudo);
 mode='fmincon';
-for i=1:size(varargin)
+s_vargin=size(varargin);
+for i=1:s_vargin(2)
     if(strcmp(varargin{i},'Mode'))
         mode=varargin{i+1};
     end

@@ -20,3 +20,6 @@ $dynamic
 Ferrite_1024.bin
 $isHex
 0
+20
+$lattice_param_scale
+1E-10

@@ -1,5 +1,6 @@
 function [data1,table_data]=header_read_tescan(ftif,variable)
 
+try
 if numel(ftif) == 1
     ftif=ftif{1};
 end
@@ -44,5 +45,10 @@ end
 
 %% Clear temporary variables
 clear opts
+
+catch
+    data1 = 0;
+    table_data = 0;
+end
 
 end
