@@ -1465,21 +1465,32 @@ h_navigate.Enable = 'off';
 
 %% Display info from the loaded ECP hdr file
 
-try
-    ftif = Input_Data.image_name;
-variables_to_extract = ["OrigFileName", "ScanMode", "AcceleratorVoltage", "WD", "DwellTime", "PixelSizeX", "PredictedBeamCurrent", "StageRotation", "StageTilt", "StageTiltY'" ];
+Input_Data.ECP_typen=0; 
+%determine the input file type
+if strcmpi(Input_Data.ECP_type,'TFS') %thermo
+    Input_Data.ECP_typen=1;
+end
 
-% Call the function header_read_tescan
-[data1, table_data] = header_read_tescan(ftif, variables_to_extract); %#ok<*ASGLU>
-% [text_retrieved] = fReadTFSHeaderPair(text_to_find,tif_info_string);
-if data1 == 0
-    try %lets try to load a TFS data set
+if strcmpi(Input_Data.ECP_type,'TESCAN') %thermo
+    Input_Data.ECP_typen=2;
+end
+
+if strcmpi(Input_Data.ECP_type,'Other') %thermo
+    Input_Data.ECP_typen=0;
+end
+
+switch Input_Data.ECP_typen
+
+    case 1 % TFS
+        %read the info from the image file info
+
         info1 = imfinfo(fullfile(Input_Data.image_folder,Input_Data.image_name));
         i1_text=info1.UnknownTags.Value;
+
         i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
         nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
         i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
-        t=1;
+
         data1=cell(1,10);
         data1{1}=Input_Data.image_name;
         data1{2}=fReadTFSHeaderPair('UseCase',i1_text_pairs_full);
@@ -1491,7 +1502,7 @@ if data1 == 0
         data1{8}=str2double(fReadTFSHeaderPair('StageT',i1_text_pairs_full))*180/pi;
         data1{9}=str2double(fReadTFSHeaderPair('StageR',i1_text_pairs_full))*180/pi;
         data1{10}=str2double(fReadTFSHeaderPair('ScanRotation',i1_text_pairs_full))*180/pi;
-        
+
         %do some rounding for the display
         data1{4}=round(data1{4}*10)/10;
         data1{7}=round(data1{7}*100)/100;
@@ -1501,38 +1512,42 @@ if data1 == 0
 
         % Display data with proper formatting
         data2 = sprintf('File Name: %s\n\nUse Case: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nBeam Current: %s nA\nFrameTime: %s S\nAngularField: %s deg\n\nMICROSCOPE SETUP \nStage Tilt: %s°\nStage Rot: %s°\nScan Rot: %s°', ...
-        data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+            data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
 
-    catch %it messed up, so just populate with unknown
-        data2=['Loaded pattern, but no added info'];
-    end
-else %it was tescan data
-    data1{3} = num2str(str2double(data1{3}) / 1000);
-    data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
-    data1{5} = num2str(str2double(data1{5}) * 100000);
-    data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
-    data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
-    data1{8} = sprintf('%.3f', data1{8});
+        data2 = strtrim(data2); % Remove newline characters
 
-    % Display data with proper formatting
-    data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
-        data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info.Units = 'normalized';
 
+    case 2 % TESCAN
+        ftif = Input_Data.image_name;
+        variables_to_extract = ["OrigFileName", "ScanMode", "AcceleratorVoltage", "WD", "DwellTime", "PixelSizeX", "PredictedBeamCurrent", "StageRotation", "StageTilt", "StageTiltY'" ];
+
+        % Call the function header_read_tescan
+        [data1, table_data] = header_read_tescan(ftif, variables_to_extract); %#ok<*ASGLU>
+        % [text_retrieved] = fReadTFSHeaderPair(text_to_find,tif_info_string);
+
+        data1{3} = num2str(str2double(data1{3}) / 1000);
+        data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
+        data1{5} = num2str(str2double(data1{5}) * 100000);
+        data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
+        data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
+        data1{8} = sprintf('%.3f', data1{8});
+
+        % Display data with proper formatting
+        data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
+            data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+
+        data2 = strtrim(data2); % Remove newline characters
+
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info.Units = 'normalized';
+
+    case 0 % other
+        warning('Pattern was loaded without header data')
 end
 
 
-% change the units
-
-
-catch
-
-end
-
-
-data2 = strtrim(data2); % Remove newline characters
-
-h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
-h_ecp_info.Units = 'normalized';
 
 %% Add Band Labels Legend
 
