@@ -1,0 +1,27 @@
+$Name
+SrRuO3
+$Atoms
+-0.0016,0.0201,0.25;0.5,0,0;0.7225,0.2777,0.0288;0.0541,0.5,0.25;
+$Symmetry
+1
+$Lattice
+5.564,5.530,7.844,90,90,90
+$FFactor
+2,2
+$MaxFam
+7
+$MaxIndex
+8
+$EFac
+100
+$PlaneReflector
+2,0,0; 4,0,0; 2,2,0; 1,1,2; 
+$cif
+SrRuO3.cif
+$dynamic
+SrRuO3_10kV_2k
+$isHex
+0
+
+
+

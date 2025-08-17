@@ -22,3 +22,7 @@ $dynamic
 Titanium
 $isHex
 1
+$voltage
+20
+$lattice_param_scale
+1E-10

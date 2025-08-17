@@ -22,3 +22,7 @@ $dynamic
 Si_10kv.bin
 $isHex
 0
+$voltage
+10
+$lattice_param_scale
+1E-10

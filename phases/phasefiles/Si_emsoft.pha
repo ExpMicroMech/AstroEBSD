@@ -24,3 +24,7 @@ $isHex
 0
 $sim_type
 Emsoft
+$voltage
+20
+$lattice_param_scale
+1E-10
