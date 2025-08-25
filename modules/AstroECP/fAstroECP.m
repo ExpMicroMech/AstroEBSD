@@ -164,6 +164,7 @@ h_s_y=uicontrol('style','text','string', ...
     'position',[xstart+xsep*7 ystart-1.6*ysep xwid yhig],'BackgroundColor','w');
 h_s_y.Units = 'normalized';
 
+
 h_s_z=uicontrol('style','text','string', ...
     'Stage Z-rotation',...
     'position',[xstart+xsep*8 ystart-1.6*ysep xwid yhig],'BackgroundColor','w');
@@ -181,10 +182,18 @@ h_s_ye=uicontrol('style','edit','string', ...
     'position',[xstart+xsep*7 ystart-ysep xwid yhig],'Callback',@Update_PC);
 h_s_ye.Units = 'normalized';
 
+
 h_s_ze=uicontrol('style','edit','string', ...
     num2str(round(S_start(3),3)),...
     'position',[xstart+xsep*8 ystart-ysep xwid yhig],'Callback',@Update_PC);
 h_s_ze.Units = 'normalized';
+
+
+if strcmpi(Input_Data.ECP_type, 'TFS') %for Apreo, No Y-tilt
+    h_s_y.Enable='off';
+    h_s_ye.Enable='off';
+end    
+
 
 %% Pattern centre boxes
 h_pc_x=uicontrol('style','text','string', ...
@@ -398,13 +407,14 @@ h_drz_plus.Units='normalized';
 
 
 %% Band Labels
+xsep=80; xstart=50; xwid=70; ystart=100; ysep=-18; yhig=15;
 
 h_band_labels = gobjects(10,1);  % or in your handles struct, etc.
 
 for ii = 1:10
 
     h_band_labels(ii) = uicontrol('Style', 'text', ...
-        'Position', [xstart-(xsep/4), ystart + yhig*(12 - ii), xwid/2, yhig], ...
+        'Position', [xstart+(xsep*4.15), ystart + yhig*(13 - ii), xwid/2, yhig], ...
         'FontSize', 10, ...
         'FontWeight', 'bold', ...
         'BackgroundColor', 'w', ...
@@ -413,7 +423,7 @@ for ii = 1:10
 end
 
 %% plot the Experimental EBSP/ECP
-xsep=80; xstart=50; xwid=70; ystart=100; ysep=-18; yhig=15;
+
 
 h_pc_ye.UserData=Input_Data;
 h_pc_ze.UserData=screen_int;
@@ -475,13 +485,13 @@ draw_pattern;
 
 % label exp and simulated patterns
 h_label_expECP = uicontrol('style', 'text', 'string', 'Experimental SA-ECP', ...
-    'position', [xstart+xsep*5.5 ystart-ysep*4.5 xwid*1.5 yhig], ...
+    'position', [xstart+(xsep*5) ystart-ysep*4.5 xwid*1.5 yhig], ...
     'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold', 'BackgroundColor', 'white');
 h_label_expECP.Units = 'normalized';
 
 
 h_label_simECP = uicontrol('style', 'text', 'string', 'Simulated SA-ECP', ...
-    'position', [xstart+xsep*0.5 ystart-ysep*4.5 xwid*1.5 yhig], ...
+    'position', [xstart+(xsep*2) ystart-ysep*4.5 xwid*1.5 yhig], ...
     'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold', 'BackgroundColor', 'white');
 h_label_simECP.Units = 'normalized';
 
@@ -641,13 +651,17 @@ h_refine.Callback=@refine;
         sY=str2num(get(h_s_ye,'String'));
         sZ=str2num(get(h_s_ze,'String'));
 
-        % use the stage convention - Rz*Rx*Ry - BUT NOTE THAT THE STAG USES -Sy
-        %working before
-        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sY*pi/180)*Input_Data.Rz(-sX*pi/180);
-
-        % g_stage=InputData.Rz(sZ*pi/180)*InputData.Rx(sY*pi/180)*InputData.Rz(-sX*pi/180);
-
-
+        if strcmpi(Input_Data.ECP_type, 'TESCAN')
+        % use the stage convention  Rz*Rx*Ry  BUT NOTE THAT THE TESCAN STAGE USES -Sy
+         g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % TESCAN
+        elseif strcmpi(Input_Data.ECP_type, 'TFS')
+        % use the stage convention  Rz*Rx  BUT NOTE THAT THE TFS STAGE USES -Sx and -Sz
+        g_stage=Input_Data.Rz(-sZ*pi/180)*Input_Data.Rx(-sX*pi/180); % TFS
+        else
+        % assume TESCAN by default
+        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % assume TESCAN    
+        end
+        
         eangs_n=get(h_update,'UserData');
         eangs_n=eangs_n*pi/180;
 
@@ -1027,52 +1041,6 @@ h_refine.Callback=@refine;
 
 
 
-
-        % % display angle subtended
-        %  DD = str2num(get(h_pc_ze, 'String'));
-        %     alpha_rad = 2*atan(1 / (2 * DD));     % radians
-        %     alpha_deg = rad2deg(alpha_rad);
-        %      alpha_str = sprintf('2α = %.2f°', alpha_deg);
-        % set(h_alpha, 'String', alpha_str, 'BackgroundColor', 'w');
-
-        % % Draw angular scale bar
-        %
-        % % --- pick a “nice” step (e.g. 1/5 of total, rounded down to whole degrees) ---
-        % h_alpha_step = floor(alpha_deg / 5);     % e.g. 12.63 → 12°
-        %
-        % % --- recompute bar length in data units so it exactly spans 'h_alpha_step' ---
-        % % xl = h_ecp.XLim;  %defined earlier
-        % fullWidth = xl(2) - xl(1);
-        % barLen_data = (h_alpha_step / alpha_deg) * fullWidth;
-        %
-        % % --- vertical offset (5% up from bottom) ---
-        % % yl = h_ecp.YLim;  %defined earlier
-        % yOffset = 0.05 * (yl(2) - yl(1));
-        %
-        % % --- define start/end X in data coords, with small data‑margin ---
-        % dataMarginX = 0.02 * fullWidth;
-        % x_start = xl(2) - dataMarginX - barLen_data;
-        % x_end   = xl(2) - dataMarginX;
-        % y_line  = yl(1) + yOffset;
-        %
-        % % --- draw the bar ---
-        %  line([x_start, x_end], [y_line, y_line], ...
-        %      'Color','k', 'LineWidth', 2.5, 'Parent', h_ecp_old);
-        %
-        % % --- label it with the rounded-down value --\
-        % text((x_start + x_end)/2, y_line - 0.01*(yl(2) - yl(1)), ...
-        %      sprintf('%d°', h_alpha_step), ...
-        %      'Parent', h_ecp_old, ...
-        %      'HorizontalAlignment', 'center', ...
-        %      'VerticalAlignment', 'top', ...
-        %      'BackgroundColor', 'none', 'FontSize', 12, 'FontWeight', 'bold');
-
-
-
-
-
-
-
     end
 
     function deactivate_buttons
@@ -1284,7 +1252,7 @@ h_refine.Callback=@refine;
 
     function closefun(source,eventdata)
         Update_eangs;
-
+Legen
         Output_Data=struct;
         eangs(1)=round(str2double(get(e_ang_equiv_phi1,'String')),3);
         eangs(2)=round(str2double(get(e_ang_equiv_Phi,'String')),3);
@@ -1382,10 +1350,71 @@ h_navigate = uicontrol('style', 'pushbutton', 'string', 'Navigate to New Point',
 h_navigate.Units='normalized';
 h_navigate.Enable = 'off';
 
-    function navigate(~,~)
-        draw_pattern;
+function navigate(~,~)
+    
+    if strcmpi(Input_Data.ECP_type, 'TFS') %for Apreo
         Update_EA;
 
+        %fetch saved values 
+        x_ref = getappdata(gcf, 'x_ref');  
+        y_ref = getappdata(gcf, 'y_ref');
+        z_ref = getappdata(gcf, 'z_ref');
+        x_nav = getappdata(gcf, 'x_nav');
+        y_nav = getappdata(gcf, 'y_nav');
+        z_nav = getappdata(gcf, 'z_nav');
+
+        rx_ref = str2double(x_ref);
+        ry_ref = str2double(y_ref);
+        rz_ref = str2double(z_ref);
+
+        rx_nav = str2double(x_nav);
+        ry_nav = str2double(y_nav);
+        rz_nav = str2double(z_nav);
+
+        %tilts (degrees) before 
+        alpha = rx_nav + rx_ref;   % total X-tilt (deg)
+        beta  = ry_nav + ry_ref;   % total Y-tilt (deg)
+       
+        % compute equivalent single X-tilt (alpha_prime) and in-plane rotation phi 
+        
+        prod = cosd(alpha) * cosd(beta);
+        prod = max(min(prod, 1.0), -1.0); % numerical safety
+
+        % alpha_prime is the X tilt (deg) that, when combined with a stage rotation,
+        % reproduces the same surface normal that alpha+beta intended.
+        alpha_prime = acosd(prod);
+
+        % compute phi robustly using atan2 (deg)
+        numerator   = sind(beta) .* cosd(alpha);
+        denominator = sind(alpha);   % may be 0 => handle below
+        phi = atan2d(numerator, denominator);
+
+        % if alpha_prime is nearly zero (no tilt) make phi = 0 for stability
+        if abs(alpha_prime) < 1e-6
+            phi = 0;
+        end
+
+        % We add phi to that total rotation so the stage rotation compensates for lack of Y tilt.
+        stage_rotation = rz_nav + rz_ref + phi;
+
+        % stage X tilt is alpha_prime; stage Y tilt is not available (set to 0)
+        stage_x = alpha_prime;
+        stage_y = 0;   
+
+        % stage Z (if you still want to preserve stage_z summation behavior)
+        stage_z = rz_nav + rz_ref;   % keep original z sum if you do not want phi added here
+        % NOTE: stage_rotation is the value we will use for the rotation control (we set it below)
+
+        % feed the results back to stage fields on GUI
+        h_s_xe.String = sprintf('%.3f', stage_x);         % new single X tilt
+        h_s_ye.String = sprintf('%.3f', stage_y);         % no Y tilt available
+        h_s_ze.String = sprintf('%.3f', stage_rotation);
+       
+        eangs = zeros(1,3);
+        draw_pattern;
+
+    else  %assume TESCAN
+        Update_EA;
         %calling back the ref and new positions
         x_ref = getappdata(gcf, 'x_ref');
         y_ref = getappdata(gcf, 'y_ref');
@@ -1406,8 +1435,10 @@ h_navigate.Enable = 'off';
         eangs(1) = '0';
         eangs(2) = '0';
         eangs(3) = '0';
-
+        draw_pattern;
     end
+end
+
 
 %% Create button for loading ECP
 
@@ -1494,7 +1525,7 @@ switch Input_Data.ECP_typen
         data1=cell(1,10);
         data1{1}=Input_Data.image_name;
         data1{2}=fReadTFSHeaderPair('UseCase',i1_text_pairs_full);
-        data1{3}=str2double(fReadTFSHeaderPair('HV',i1_text_pairs_full))/1000; % in kV
+        data1{3}=(str2double(fReadTFSHeaderPair('HV',i1_text_pairs_full)))/1000; % in kV
         data1{4}=str2double(fReadTFSHeaderPair('WD',i1_text_pairs_full))*1000; % in mm;
         data1{5}=str2double(fReadTFSHeaderPair('BeamCurrent',i1_text_pairs_full))*1E9; % in nA;
         data1{6}=str2double(fReadTFSHeaderPair('FrameTime',i1_text_pairs_full)); %in s
@@ -1503,20 +1534,24 @@ switch Input_Data.ECP_typen
         data1{9}=str2double(fReadTFSHeaderPair('StageR',i1_text_pairs_full))*180/pi;
         data1{10}=str2double(fReadTFSHeaderPair('ScanRotation',i1_text_pairs_full))*180/pi;
 
-        %do some rounding for the display
-        data1{4}=round(data1{4}*10)/10;
-        data1{7}=round(data1{7}*100)/100;
-        data1{8}=round(data1{8}*10)/10;
-        data1{9}=round(data1{9}*10)/10;
-        data1{10}=round(data1{10}*10)/10;
+         %do some rounding for the display
+        data1{3}=sprintf('%.2f', (data1{3})); 
+        data1{4}=sprintf('%.2f', (data1{4})); 
+        data1{5}=sprintf('%.2f', (data1{5})); 
+        data1{6}=sprintf('%.2f', (data1{6})); 
+        data1{7}=sprintf('%.2f', (data1{7})); 
+        data1{8}=sprintf('%.2f', (data1{8})); 
+        data1{9}=sprintf('%.2f', (data1{9})); 
+        data1{10}=sprintf('%.2f', (data1{10})); 
 
+        
         % Display data with proper formatting
-        data2 = sprintf('File Name: %s\n\nUse Case: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nBeam Current: %s nA\nFrameTime: %s S\nAngularField: %s deg\n\nMICROSCOPE SETUP \nStage Tilt: %s°\nStage Rot: %s°\nScan Rot: %s°', ...
+        data2 = sprintf('File Name: %s\n\nUse Case: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nBeam Current: %s nA\nFrame Time: %s sec\nAngular Field: %s °\n\nSTAGE SETUP \nStage Tilt: %s°\nStage Rot: %s°\nScan Rot: %s°', ...
             data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
 
         data2 = strtrim(data2); % Remove newline characters
 
-        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
         h_ecp_info.Units = 'normalized';
 
     case 2 % TESCAN
@@ -1540,7 +1575,7 @@ switch Input_Data.ECP_typen
 
         data2 = strtrim(data2); % Remove newline characters
 
-        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
         h_ecp_info.Units = 'normalized';
 
     case 0 % other
