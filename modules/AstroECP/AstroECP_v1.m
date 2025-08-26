@@ -40,14 +40,14 @@ Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
 
 
 %% TFS data - comment this block out if you want to run the Tescan data
-% 
+
 % Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
 % Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 % Input_Data.ECP_type='TFS'; %supported types: 'TESCAN', 'TFS', 'other'
 % 
 % %values for the example data
-% Input_Data.PC_in=[0.5 0.5 5.715];
-% Input_Data.eangs=[-95.9131,1.6043,92.9911]; % for the example pattern
+% Input_Data.PC_in=[0.5 0.5 8.39949];
+% Input_Data.eangs=[-92.4754,1.0886,133.8429]; % for the example pattern
 % 
 % %set the greyscale colorlim for the ECP
 % Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram

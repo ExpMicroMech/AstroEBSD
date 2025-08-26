@@ -148,19 +148,7 @@ if Settings_Cor.rkd == 1 %RKD
 
 end
 
-if Settings_Cor.SquareCrop == 1 %crop the image to a square
-    EBSP_size=min(size(EBSP2));
-    crop.centre = [size(EBSP2, 2)/2 size(EBSP2, 1)/2];
-    s=1:EBSP_size; s=s-nanmean(s);
 
-    sy=s+crop.centre(2)+0.5; 
-    sx=s+crop.centre(1)+0.5;
-    
-    %helps deal with issue with when the patterns are not even in size to start
-    sx=floor(sx);
-    sy=floor(sy);
-    EBSP2=EBSP2(sy,sx);
-end
 
 if Settings_Cor.NaNClean == 1 %NaN correction
     [y,x]=find(isnan(EBSP2)==1);
@@ -238,12 +226,13 @@ EBSP2=fix_mean(EBSP2);
 
 %resize the image
 if Settings_Cor.resize == 1
-    cs=floor([Settings_Cor.size Settings_Cor.size*size(EBSP2,2)/size(EBSP2,1)]);
+    % cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)*size(EBSP2,2)/size(EBSP2,1)]);
+    cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)]);
     EBSP2 = imresize(EBSP2,cs(1:2));
 else
     cs=size(EBSP2);
 end
-Settings_Cor.size=cs;
+
 
 if Settings_Cor.Square == 1
     %square crop on minimum dimension
@@ -253,6 +242,20 @@ if Settings_Cor.Square == 1
     EBSP2=EBSP2(cv(1)+stepv,cv(2)+stepv);
     cs=size(EBSP2);
     Settings_Cor.size=cs;
+end
+
+if Settings_Cor.SquareCrop == 1 %crop the image to a square
+    EBSP_size=min(size(EBSP2));
+    crop.centre = [size(EBSP2, 2)/2 size(EBSP2, 1)/2];
+    s=1:EBSP_size; s=s-nanmean(s);
+
+    sy=s+crop.centre(2)+0.5; 
+    sx=s+crop.centre(1)+0.5;
+    
+    %helps deal with issue with when the patterns are not even in size to start
+    sx=floor(sx);
+    sy=floor(sy);
+    EBSP2=EBSP2(sy,sx);
 end
 
 
@@ -277,6 +280,10 @@ if Settings_Cor.blur == 1
     Iblur = imgaussfilt(EBSP2, Settings_Cor.blurf(1),'filtersize',Settings_Cor.blurf(2));
     EBSP2=EBSP2-Iblur;
 end
+
+%read the image size for radius cropping etc.
+cs=size(EBSP2);
+Settings_Cor.size=cs;
 
 if Settings_Cor.radius == 1
     

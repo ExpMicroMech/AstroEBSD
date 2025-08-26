@@ -169,13 +169,13 @@ h_s_z=uicontrol('style','text','string', ...
     'Stage Z-rotation',...
     'position',[xstart+xsep*8 ystart-1.6*ysep xwid yhig],'BackgroundColor','w');
 h_s_z.Units = 'normalized';
-
+h_s_z.UserData=PC_start;
 
 h_s_xe=uicontrol('style','edit','string', ...
     num2str(round(S_start(1),3)),...
     'position',[xstart+xsep*6 ystart-ysep xwid yhig],'Callback',@Update_PC);
 h_s_xe.Units = 'normalized';
-h_s_xe.UserData=PC_start;
+
 
 h_s_ye=uicontrol('style','edit','string', ...
     num2str(round(S_start(2),3)),...
@@ -531,9 +531,23 @@ h_refine.Callback=@refine;
 
     function refine(~,eventdata) %#ok<*INUSD>
         psize=size(ECP_Pat.pattern);
-        PatternInfo.ScreenWidth=psize(1);
-        PatternInfo.ScreenHeight=psize(2);
+        PatternInfo.ScreenWidth=psize(2); %y value extent
+        PatternInfo.ScreenHeight=psize(1); %x value extent
+
         [PatternIn,SettingsCor]=EBSP_BGCor(ECP_Pat.pattern,ECP_Pat.Settings_Cor_refine);
+        
+        %refine using half the resolution
+        ECP_Pat_Fast=ECP_Pat;
+        ECP_Pat_Fast.Settings_Cor_refine.size=ECP_Pat_Fast.Settings_Cor_refine.size/4;
+
+        % %if the ECP mode is TFS, then set %ToDo
+        % ECP_Pat_Fast.Settings_Cor_refine.SquareCrop=1;
+
+        % ECP_Pat_Fast.Settings_Cor_refine.
+        [PatternIn_Fast,SettingsCor_Fast]=EBSP_BGCor(ECP_Pat_Fast.pattern,ECP_Pat_Fast.Settings_Cor_refine);
+        figure; imagesc(PatternIn_Fast); axis image; axis xy; axis tight; colormap('gray');
+        
+        
         eangs_in=[str2double(e_ang_equiv_phi1.String),str2double(e_ang_equiv_Phi.String),str2double(e_ang_equiv_phi2.String)];
         %%
         pc_in=[str2double(h_pc_xe.String),str2double(h_pc_xe.String),str2double(h_pc_ye.String)];
@@ -547,9 +561,9 @@ h_refine.Callback=@refine;
         disp('Refinement process started - please wait');
         fprintf('\n');
         if isfield(Input_Data,'Mode')
-            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int,'Mode',Input_Data.Mode);
+            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor_Fast,screen_int,'Mode',Input_Data.Mode);
         else
-            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int);
+            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor_Fast,screen_int);
         end
         disp('Refinement process ended');
         fprintf('\n');
@@ -681,7 +695,7 @@ h_refine.Callback=@refine;
         e_ang_equiv_phi2.String=num2str(e_ang_equiv_deg(3));
 
         % gmatrix2=InputData.Rz(e_ang_equiv(3))*InputData.Rx(e_ang_equiv(2))*InputData.Rz(e_ang_equiv(1));
-        PC_start=get(h_pc_xe,'UserData');
+        PC_start=get(h_s_z,'UserData');
 
         [EBSD_Geometry ] = EBSP_Gnom( ECP_Pat,PC_start); %you can change PC_in if you want
 
@@ -951,7 +965,7 @@ h_refine.Callback=@refine;
 
             % axis off; axis equal;
             h_s_xe.UserData=h_pf1;
-            h_s_xe.UserData=h_pf2;
+            h_s_ye.UserData=h_pf2;
 
             try
                 cs_phase=loadCIF(RTM_info.cif_file);
@@ -1130,7 +1144,7 @@ h_refine.Callback=@refine;
         PC_start(1)=round(str2double(get(h_pc_xe,'string')),3);
         PC_start(2)=round(str2double(get(h_pc_ye,'string')),3);
         PC_start(3)=round(str2double(get(h_pc_ze,'string')),3);
-        h_pc_xe.UserData=PC_start;
+        h_s_z.UserData=PC_start;
 
         guidata(f);
     end
