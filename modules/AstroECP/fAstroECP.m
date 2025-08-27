@@ -1366,66 +1366,49 @@ h_navigate.Enable = 'off';
 
 function navigate(~,~)
     
-    if strcmpi(Input_Data.ECP_type, 'TFS') %for Apreo
-        Update_EA;
+if strcmpi(Input_Data.ECP_type, 'TFS') % for Apreo (only X tilt + rotation)
+    Update_EA;
 
-        %fetch saved values 
-        x_ref = getappdata(gcf, 'x_ref');  
-        y_ref = getappdata(gcf, 'y_ref');
-        z_ref = getappdata(gcf, 'z_ref');
-        x_nav = getappdata(gcf, 'x_nav');
-        y_nav = getappdata(gcf, 'y_nav');
-        z_nav = getappdata(gcf, 'z_nav');
+    % fetch saved values (numeric)
+    rx_ref = str2double(getappdata(gcf, 'x_ref'));
+    ry_ref = str2double(getappdata(gcf, 'y_ref'));
+    rz_ref = str2double(getappdata(gcf, 'z_ref'));
+    rx_nav = str2double(getappdata(gcf, 'x_nav'));
+    ry_nav = str2double(getappdata(gcf, 'y_nav'));
+    rz_nav = str2double(getappdata(gcf, 'z_nav'));
 
-        rx_ref = str2double(x_ref);
-        ry_ref = str2double(y_ref);
-        rz_ref = str2double(z_ref);
+    alpha = (rx_nav + rx_ref);      % total X tilt (deg)
+    beta  = - (ry_nav + ry_ref);    % note the minus
 
-        rx_nav = str2double(x_nav);
-        ry_nav = str2double(y_nav);
-        rz_nav = str2double(z_nav);
+    % numeric safety
+    % alpha_prime from z-component equivalence:
+    alpha_prime = acosd( max(min(cosd(alpha) * cosd(beta), 1.0), -1.0) );
 
-        %tilts (degrees) before 
-        alpha = rx_nav + rx_ref;   % total X-tilt (deg)
-        beta  = ry_nav + ry_ref;   % total Y-tilt (deg)
-       
-        % compute equivalent single X-tilt (alpha_prime) and in-plane rotation phi 
-        
-        prod = cosd(alpha) * cosd(beta);
-        prod = max(min(prod, 1.0), -1.0); % numerical safety
+    % phi derived for this rotation order (pre-Rz matching), robust atan2:
+    % phi = atan2( -sin(beta), sin(alpha)*cos(beta) )
+    num = -sind(beta);
+    den = sind(alpha) .* cosd(beta);
+    phi = atan2d( num, den );
 
-        % alpha_prime is the X tilt (deg) that, when combined with a stage rotation,
-        % reproduces the same surface normal that alpha+beta intended.
-        alpha_prime = acosd(prod);
+    % avoid tiny noisy phi
+    if abs(alpha_prime) < 1e-9
+        phi = 0;
+    end
 
-        % compute phi robustly using atan2 (deg)
-        numerator   = sind(beta) .* cosd(alpha);
-        denominator = sind(alpha);   % may be 0 => handle below
-        phi = atan2d(numerator, denominator);
+    % stage outputs for this microscope:
+    stage_x = alpha_prime;                     % the single X tilt to command
+    stage_y = 0;                               % not available on Apreo
+    % combine phi with z-sum to produce rotation command:
+    stage_rotation = rz_nav + rz_ref + phi;
 
-        % if alpha_prime is nearly zero (no tilt) make phi = 0 for stability
-        if abs(alpha_prime) < 1e-6
-            phi = 0;
-        end
+    h_s_xe.String = sprintf('%.2f', -stage_x);        % <- send -Sx if hardware expects -Sx
+    h_s_ye.String = sprintf('%.2f', stage_y);
+    h_s_ze.String = sprintf('%.2f', -stage_rotation); % <- send -Sz if hardware expects -Sz
 
-        % We add phi to that total rotation so the stage rotation compensates for lack of Y tilt.
-        stage_rotation = rz_nav + rz_ref + phi;
+    eangs = zeros(1,3);
+    draw_pattern;
 
-        % stage X tilt is alpha_prime; stage Y tilt is not available (set to 0)
-        stage_x = alpha_prime;
-        stage_y = 0;   
 
-        % stage Z (if you still want to preserve stage_z summation behavior)
-        stage_z = rz_nav + rz_ref;   % keep original z sum if you do not want phi added here
-        % NOTE: stage_rotation is the value we will use for the rotation control (we set it below)
-
-        % feed the results back to stage fields on GUI
-        h_s_xe.String = sprintf('%.3f', stage_x);         % new single X tilt
-        h_s_ye.String = sprintf('%.3f', stage_y);         % no Y tilt available
-        h_s_ze.String = sprintf('%.3f', stage_rotation);
-       
-        eangs = zeros(1,3);
-        draw_pattern;
 
     else  %assume TESCAN
         Update_EA;
@@ -1443,14 +1426,14 @@ function navigate(~,~)
         stage_nav_z = str2double(z_nav) + str2double(z_ref);
 
         %Feeds the navigations to stage controls sx, sy, sz in degrees
-        h_s_xe.String = sprintf('%.3f', stage_nav_x);
-        h_s_ye.String = sprintf('%.3f', stage_nav_y);
-        h_s_ze.String = sprintf('%.3f', stage_nav_z);
+        h_s_xe.String = sprintf('%.2f', stage_nav_x);
+        h_s_ye.String = sprintf('%.2f', stage_nav_y);
+        h_s_ze.String = sprintf('%.2f', stage_nav_z);
         eangs(1) = '0';
         eangs(2) = '0';
         eangs(3) = '0';
         draw_pattern;
-    end
+end
 end
 
 
