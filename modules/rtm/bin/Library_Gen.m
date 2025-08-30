@@ -24,6 +24,10 @@ r = [EBSP.xpts_screen(:), EBSP.ypts_screen(:), EBSP.ypts_screen(:)*0+1].*1./sqrt
 sy=EBSP.size(1);
 sx=EBSP.size(2);
 
+if isfield(SettingsXCF,'single') == 0
+    SettingsXCF.single = 0;
+end
+
 switch XCF_type
     case 1 %NDP library (realspace)
         Test_image=zeros(length(EBSP.y_screen),length(EBSP.x_screen),size(G_all,3));
@@ -56,7 +60,13 @@ switch XCF_type
             P_test=P_test_temp./std(P_test_temp(:));
             
             %Window, FFT, filter the patterns
-            [Test_image(:,:,n),~]  =fROIEx2(P_test,SettingsXCF); %FFT the image
+            [test_fft,~]  =fROIEx2(P_test,SettingsXCF); %FFT the image
+            
+            if SettingsXCF.single == 1
+                Test_image(:,:,n)=single(test_fft);
+            else
+                Test_image(:,:,n)=test_fft;
+            end
         end
 end
 

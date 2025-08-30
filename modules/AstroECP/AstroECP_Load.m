@@ -9,47 +9,47 @@ function [ECP_Pat] = AstroECP_Load(Input_Data)
 try
     ExpImage_Filename=fullfile(Input_Data.image_folder,Input_Data.image_name);
 
-    if isfield(Input_Data,'image_frame')
+    if strcmpi(Input_Data.ECP_type,'TESCAN')
         ECP_Pat.frame=Input_Data.image_frame;
         [ExpImage_Image,data1,td] = TescanFrame_Load(ExpImage_Filename,Input_Data.image_frame);
         ECP_Pat.pattern=flipud(double(ExpImage_Image));
         ECP_Pat.filename=ECP_Pat;
         ECP_Pat.size = size(ExpImage_Image); %size of the library patterns and the resize of the raw EBSP
-    else
-        try %try to load it as a TFS frame
-            ExpImage_Image=imread(ExpImage_Filename);
-            info1 = imfinfo(ExpImage_Filename);
-            i1_text=info1.UnknownTags.Value;
-            i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
+    elseif strcmpi(Input_Data.ECP_type,'TFS')
+        %try to load it as a TFS frame
+        ExpImage_Image=imread(ExpImage_Filename);
+        info1 = imfinfo(ExpImage_Filename);
+        i1_text=info1.UnknownTags.Value;
+        i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
 
-            if size(i1_text_pairs,2) > 2 %assume that this is a TFS file if this loader works
-                nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
-                i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
+        if size(i1_text_pairs,2) > 2 %assume that this is a TFS file if this loader works
+            nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
+            i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
 
-                % [ResolutionX] =
-                % str2double(fReadTFSHeaderPair('ResolutionX',i1_text_pairs_full));
-                % %not needed
-                [ResolutionY] = str2double(fReadTFSHeaderPair('ResolutionY',i1_text_pairs_full));
-                ExpImage_Image=ExpImage_Image(1:ResolutionY,:); %crop the data bar
+            % [ResolutionX] =
+            % str2double(fReadTFSHeaderPair('ResolutionX',i1_text_pairs_full));
+            % %not needed
+            [ResolutionY] = str2double(fReadTFSHeaderPair('ResolutionY',i1_text_pairs_full));
+            ExpImage_Image=ExpImage_Image(1:ResolutionY,:); %crop the data bar
 
-                ECP_Pat.pattern=double(flipud(ExpImage_Image));
-                ECP_Pat.size =size(ECP_Pat.pattern);
-                ECP_Pat.frame=0;
-            end
-
-        catch
-
-            %load this frame - normal image loader
-            warning('An image is loaded with limited other information')
-            ExpImage_Image=imread(ExpImage_Filename);
-            if size(ExpImage_Image,3) == 3
-                ExpImage_Image=rgb2gray(Input_Data.ECP_Pat);
-            end
             ECP_Pat.pattern=double(flipud(ExpImage_Image));
             ECP_Pat.size =size(ECP_Pat.pattern);
             ECP_Pat.frame=0;
         end
+
+    else
+
+        %load this frame - normal image loader
+        warning('An image is loaded with limited other information')
+        ExpImage_Image=imread(ExpImage_Filename);
+        if size(ExpImage_Image,3) == 3
+            ExpImage_Image=rgb2gray(Input_Data.ECP_Pat);
+        end
+        ECP_Pat.pattern=double(flipud(ExpImage_Image));
+        ECP_Pat.size =size(ECP_Pat.pattern);
+        ECP_Pat.frame=0;
     end
+
 
 catch
     warning('Failed to load the experimental ECP, creating a blank frame');
@@ -61,7 +61,7 @@ end
 ECP_Pat.Settings_Cor.gfilt=0; %use a low pass filter
 ECP_Pat.Settings_Cor.gfilt_s=7; %low pass filter sigma
 ECP_Pat.Settings_Cor.radius=0;
-ECP_Pat.Settings_Cor.radius_frac=0.6;  %smaller radius to crop the black portion and to avoid abberation effects on sides 
+ECP_Pat.Settings_Cor.radius_frac=0.6;  %smaller radius to crop the black portion and to avoid abberation effects on sides
 
 ECP_Pat.Settings_Cor.max_var_pc_x=0;
 ECP_Pat.Settings_Cor.max_var_pc_y=0;

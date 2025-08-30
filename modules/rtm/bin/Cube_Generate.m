@@ -26,12 +26,17 @@ function [screen_int,facedata] = Cube_Generate(BinFile,isHex,varargin)
 %Callahan, Patrick G.; Graef, Marc de, Microscopy and
 %microanalysis 19 (2013), 1255-1265 doi:10.1017/S1431927613001840
 %
+resize_on = 0;
+
 normalisation='mean_std';
 for i=1:size(varargin,2)
     if strcmp(varargin{i},'mean_std')
         normalisation='mean_std';
     elseif strcmp(varargin{i},'min_max')
         normalisation='min_max';
+    elseif strcmpi(varargin{i},'resize')
+        resize_on = 1;
+        resize_val = varargin{i+1};
     end
 
 end
@@ -83,6 +88,19 @@ if strcmp(ext,'.bin')||strcmp(ext,'')
         facedata(:,:,4)=fd(:,:,4); %x-
         facedata(:,:,5)=fd(:,:,6); %y-
         facedata(:,:,6)=fd(:,:,2); %z-
+    end
+    
+
+    if resize_on == 1 %resize the interpolant
+        cube_res=resize_val;
+        nface=size(facedata,3);
+        facedata_n=zeros(cube_res+1,cube_res+1,nface);
+        for f=1:nface
+            facedata_n(:,:,f)=imresize(facedata(:,:,1),[cube_res+1 cube_res+1],"bicubic");
+        end
+        % facedata_old=facedata;
+        facedata=facedata_n;
+        
     end
 
     %build the interpolants
