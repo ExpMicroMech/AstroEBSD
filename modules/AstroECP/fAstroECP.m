@@ -572,13 +572,14 @@ BandLabelsLegend();
         h_refine.BackgroundColor=old_color;
         h_refine.Enable='on';
         plot_refinementHQ(PatternIn,SettingsCor,PatternInfo,screen_int,PC_start,PC_refined,eangs_in*degree,eangs_refined, Input_Data)
-
+        
         %% update pc
         h_pc_xe.String=PC_refined(1);
         h_pc_ye.String=PC_refined(2);
         h_pc_ze.String=PC_refined(3);
         Update_PC();
         %% update eangs
+        h_update.UserData=eangs_refined*180/pi;
         e_ang_equiv_phi1.String=eangs_refined(1)/degree;
         e_ang_equiv_Phi.String=eangs_refined(2)/degree;
         e_ang_equiv_phi2.String=eangs_refined(3)/degree;
