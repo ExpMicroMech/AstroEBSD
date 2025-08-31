@@ -1268,7 +1268,9 @@ BandLabelsLegend();
 
     function closefun(source,eventdata)
         Update_eangs;
-Legen
+        draw_pattern;
+        guidata(f);
+        
         Output_Data=struct;
         eangs(1)=round(str2double(get(e_ang_equiv_phi1,'String')),3);
         eangs(2)=round(str2double(get(e_ang_equiv_Phi,'String')),3);
