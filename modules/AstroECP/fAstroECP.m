@@ -504,6 +504,17 @@ h_label_simECP.Position=[h_ecp_old.Position(1) h_ecp_old.Position(2)-0.05 h_labe
 
 h_alpha.Position=[h_alpha.Position(1) h_ecp_old.Position(2)-0.05 h_alpha.Position(3) h_alpha.Position(4)]; 
 
+%%
+
+%%% START %%%%% PCA by LUKAS June2024 %%%%%%
+% modified TBB 2025-08-01
+
+h_refine=uicontrol('style','pushbutton','string','Refine',...
+    'position',[xstart+xsep*5 ystart+5*ysep xwid yhig]);
+
+h_refine.Units='normalized';
+h_refine.Callback=@refine;
+
 %% Make the GUI visible.
 movegui(f,'onscreen')
 drawnow;
@@ -518,16 +529,7 @@ BandLabelsLegend();
 
 
 
-%%
 
-%%% START %%%%% PCA by LUKAS June2024 %%%%%%
-% modified TBB 2025-08-01
-
-h_refine=uicontrol('style','pushbutton','string','Refine',...
-    'position',[xstart+xsep*5 ystart+5*ysep xwid yhig]);
-
-h_refine.Units='normalized';
-h_refine.Callback=@refine;
 
     function refine(~,eventdata) %#ok<*INUSD>
         psize=size(ECP_Pat.pattern);
