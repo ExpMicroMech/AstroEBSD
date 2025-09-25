@@ -963,7 +963,11 @@ BandLabelsLegend();
 
             h_pf1_old=get(h_s_xe,'UserData');
             h_pf2_old=get(h_s_ye,'UserData');
-
+            
+            delete(h_pf1_old);
+            delete(h_pf2_old);
+            delete(h_cry_old);
+            
             h_pf1 = axes('Units','normalized','Position',[0.2 0.8817 0.1 0.1],'Parent',f,'Visible','off');
             hold on;
             h_pf2 = axes('Units','normalized','Position',[0.3 0.8817 0.1 0.1],'Parent',f,'Visible','off');
@@ -971,7 +975,9 @@ BandLabelsLegend();
 
             % axis off; axis equal;
             h_s_xe.UserData=h_pf1;
-            h_s_xe.UserData=h_pf2;
+            h_s_ye.UserData=h_pf2;
+            
+            
 
             try
                 cs_phase=loadCIF(RTM_info.cif_file);
@@ -1047,9 +1053,7 @@ BandLabelsLegend();
             catch
                 warning('MTEX ODF plots not working for this')
             end
-            delete(h_pf1_old);
-            delete(h_pf2_old);
-            delete(h_cry_old);
+            
         end
 
 
