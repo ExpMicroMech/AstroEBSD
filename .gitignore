@@ -4,6 +4,8 @@
 /modules/refinement_results/*
 /modules/refinement_results/
 
+/modules/AstroECP/refinement_results/*
+/modules/AstroECP/refinement_results/
 # Logs and databases #
 ######################
 *.log

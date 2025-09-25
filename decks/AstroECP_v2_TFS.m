@@ -7,7 +7,7 @@
 % AstroEBSD (Britton, Tong et al., 2018) and MTEX v5.10.2 (Bachmann et al., 2010; Hielscher et al., 2019). 
 % AstroECP reads the dynamically calculated Kikuchi reference patterns generated from pattern simulation software 
 % that include: MapSweeper EBSD dynamical patterns (higher quality Bloch Wave Kikuchi Diffraction (BWKD) patterns, 
-% the open-source software EMsoft (Singh, Marc de Graefe et al., 2017) and also Bruker DynamicS. The GUI then 
+% the open-source software EMsoft (Singh, Marc de Graef et al., 2017) and also Bruker DynamicS. The GUI then 
 % reprojects the channeling pattern based upon the crystal orientation and ECP conditions. Manipulation of the 
 % simulation can be performed through virtual movement of the stage and microscope to inform movement of the sample 
 % within the SEM. This helps to effectively orient the crystal for the development of crystallographic contrast with 
@@ -72,7 +72,7 @@ Input_Data.miller2=[1 1 0]; %miller indicies for PF plot of the crystal
 Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
 Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
 
-
+Input_Data.Index=1; %show the Atlas and Index buttons
 %% Start MTEX and AstroEBSD
 try EBSD;
 catch

@@ -224,14 +224,7 @@ end
 %fix the mean and nanstd
 EBSP2=fix_mean(EBSP2);
 
-%resize the image
-if Settings_Cor.resize == 1
-    % cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)*size(EBSP2,2)/size(EBSP2,1)]);
-    cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)]);
-    EBSP2 = imresize(EBSP2,cs(1:2));
-else
-    cs=size(EBSP2);
-end
+
 
 
 if Settings_Cor.Square == 1
@@ -258,6 +251,14 @@ if Settings_Cor.SquareCrop == 1 %crop the image to a square
     EBSP2=EBSP2(sy,sx);
 end
 
+%resize the image
+if Settings_Cor.resize == 1
+    % cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)*size(EBSP2,2)/size(EBSP2,1)]);
+    cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)]);
+    EBSP2 = imresize(EBSP2,cs(1:2));
+else
+    cs=size(EBSP2);
+end
 
 if Settings_Cor.gfilt == 1
     gf=Settings_Cor.gfilt_s*size(EBSP2,1)/100;
