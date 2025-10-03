@@ -1,8 +1,13 @@
 function [PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,EBSP_size)
 %PC_OI_TO_ASTRO Converts OI pattern centre to AstroEBSD pattern centre
 
-PatternInfo.ScreenWidth=EBSP_size(1);
-PatternInfo.ScreenHeight=EBSP_size(2);
+if isstruct(EBSP_size) == 0
+    PatternInfo.ScreenWidth=EBSP_size(2);
+    PatternInfo.ScreenHeight=EBSP_size(1);
+else
+    PatternInfo.ScreenWidth=double(EBSP_size.Pattern_Width);
+    PatternInfo.ScreenHeight=double(EBSP_size.Pattern_Height);
+end
 
 %as per https://github.com/oinanoanalysis/h5oina/blob/master/H5OINAFile.md#ebsd-data
 % Pattern Center X		H5T_NATIVE_FLOAT	(size, 1)	Pattern center X position scaled to the width of the image. This means that an X value of 0.5 is in the middle on the horizontal axis of the image. The origin is in the bottom left corner.

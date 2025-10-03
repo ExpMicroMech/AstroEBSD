@@ -16,22 +16,33 @@ for n=1:num_phases
     phaseN=1+n;
     Space_Group=double(header_data.(['s' file_dset]).phase{n}.Space_Group);
     Lattice_Dimensions=double(header_data.(['s' file_dset]).phase{n}.Lattice_Dimensions);
-    Lattice_Angles=double(header_data.(['s' file_dset]).phase{n}.Lattice_Angles);
-
-    if nargin > 5 && ~isempty(phase_names)
+    if nargin >= 4
         Mineral=phase_names{n};
-        CS{phaseN} = crystalSymmetry('SpaceId',Space_Group, ...
-            Lattice_Dimensions,...
-            Lattice_Angles,...
-            'Mineral',Mineral,'Color',phase_colors{n});
     else
-        Mineral=char(header_data.(['s' file_dset]).phase{1}.Phase_Name);
-
-        CS{phaseN} = crystalSymmetry('SpaceId',Space_Group, ...
-            Lattice_Dimensions,...
-            Lattice_Angles,...
-            'Mineral',Mineral);
+        Mineral=char(header_data.(['s' file_dset]).phase{n}.Phase_Name);
     end
+    Lattice_Angles=double(header_data.(['s' file_dset]).phase{n}.Lattice_Angles);
+    % round(
+    try
+        if nargin < 5
+            CS{phaseN} = crystalSymmetry('SpaceId',Space_Group, ...
+                Lattice_Dimensions,...
+                Lattice_Angles,...
+                'Mineral',Mineral);
+        else
+            CS{phaseN} = crystalSymmetry('SpaceId',Space_Group, ...
+                Lattice_Dimensions,...
+                Lattice_Angles,...
+                'Mineral',Mineral,'Color',phase_colors{n});
+        end
+    catch
+        warning(['Phase ' Mineral ' not loaded properly - try to overwrite via a CIF load - making cubic']);
+        CS{phaseN} = crystalSymmetry('SpaceId',227, ...
+            [1 1 1],...
+            [pi/2 pi/2 pi/2],...
+            'Mineral',[Mineral ' cubic']);
+    end
+
 end
 
 rc = rotation.byEuler(double(header_data.(slice_name).Specimen_Orientation_Euler(:)')*degree); % what definition? Bunge?
@@ -79,7 +90,7 @@ catch
     end
 end
 
-ebsdtemp = EBSD(rot,phase,CS,opt,'unitCell',calcUnitCell([opt.x,opt.y]));
+ebsdtemp = EBSD(rot,double(phase),CS,opt,'unitCell',calcUnitCell([opt.x,opt.y]));
 ebsdtemp.opt.Header = header_data.(slice_name);
 
 end

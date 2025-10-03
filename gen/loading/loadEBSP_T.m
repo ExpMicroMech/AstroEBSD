@@ -11,7 +11,15 @@ pname=h5info(fname).Groups(1).Name;
 % if gnum>else
 % 
 Pat = [pname '/EBSD/Data/Processed Patterns'];
-EBSDpat=double((rot90(shiftdim(h5read(fname,Pat,[1 1 pattern_number],[EBSP_size(1) EBSP_size(2) 1])))));
+if isstruct(EBSP_size)
+    pat_size(1)=double(EBSP_size.Pattern_Width);
+    pat_size(2)=double(EBSP_size.Pattern_Height);
+    EBSDpat=double((rot90(shiftdim(h5read(fname,Pat,[1 1 pattern_number],[pat_size(1) pat_size(2) 1])))));
+else
+    pat_size=EBSP_size;
+    EBSDpat=double((rot90(shiftdim(h5read(fname,Pat,[1 1 pattern_number],[pat_size(1) pat_size(2) 1])))));
+end
+
 if nargout == 2
     try
         UPat = [h5info(fname).Groups(1).Name '/EBSD/Data/Unprocessed Patterns'];
