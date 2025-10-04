@@ -1,4 +1,4 @@
-AstroECP v1 - 2025
+AstroECP v1.1 - 2025
 
 -- REFERENCE --
 The AstroECP GUI is described in:
@@ -23,12 +23,20 @@ After setting up the files as mentioned in SETUP REQUIREMENTS, the user can open
 Input_Data.astro_location='your AstroEBSD folder path';
 Input_Data.mtex_location='your MTEX folder path'; %working with 5.10.2
 Input_Data.image_frame=1; 
-Input_Data.V_in = 20 
+Input_Data.V_in = 20; 
 
 Run AstroECP_v1.m as usual. This should give a full screen GUI.
 
 
 -- FEATURES --
 In addition to projection, initial crystal orientation, and subsequent stage tilt/rotations, the GUI also provides a simple unit cell visualization tool, as well as an overlay of the kinematic band edges to enable Miller family-based indexing of the bands within the Kikuchi pattern. There are a few other features within this software, including phase selection to compare different simulations, pattern matching based refinement of crystal orientation and/or projection parameters, enhanced ECP visualization (i.e. contrast stretching within the histogram), as well as ECP navigation both via ‘point & click’ and manual adjustment through incremental tilt and rotations. The GUI has also been written in such a way that features can also be used within text-based scripts, e.g. for repeat matching experiments. To aid in precise analysis of the ECP, it is possible to directly optimize the match of simulation and experiment via the ‘Refine’ button. This refinement algorithm is based on image correlation, by the interior point algorithm as implemented in the MATLAB fmincon function to maximize the normalized cross-correlation between simulated and experimental patterns, similar to EBSD-based pattern matching approaches (Pang et al., 2020). The software also includes a utility to mark a “reference” crystallographic direction and navigate to a new target orientation, with the required stage motion computed and applied in the GUI to align the crystal in the microscope with a particular [uvw] along the optic axis, so that the ECCI/ECP contrast for a new zone axis or a particular band edge can be explored quickly in the SEM. 
+
+-- v1.1 additions --
+You can now have access to a refined template matching indexing scheme, based upon the algorithm used in EBSD pattern analysis (Foden et al. 2019, Ultramicroscopy). To use this tool, you should know and set your DD value reasonably well prior to performing the search. This is accessed with the 'index' button. There is also an 'atlas' button which will plot a sterographic projection of the dynamically predicted ECP pattern and the reference sphere, to aid searching for orientations that are beyond the gnomonic projection shown in the simulation tool.
+
+To enable these functions, you need to add the following to the input deck - this is included within the updated decks in this release:
+Input_Data.Index=1; %show the Atlas and Index buttons
+
+Full details of this update are found in the updated preprint on the ArXiV.
 
 
