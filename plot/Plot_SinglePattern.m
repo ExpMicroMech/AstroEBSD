@@ -28,6 +28,7 @@ ylim([EBSP_One.PatternGeometry.y_gn_min EBSP_One.PatternGeometry.y_gn_max])
 axis xy;
 
 EBSP_OneFigure.s1(4)=subplot(2,2,4);
+
 Plot_EBSPAnnotated( EBSP_One.PatternCor,EBSP_One.PatternGeometry,EBSP_One.nhat_gnom,EBSP_One.rotdata{Num_Phase}.detector,Crystal_UCell{Num_Phase},Crystal_LUT{Num_Phase}.family_norm_list,EBSP_OneFigure.s1(4));
 title('Indexed Pattern');
 axis image; 

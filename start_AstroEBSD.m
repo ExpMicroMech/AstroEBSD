@@ -97,6 +97,9 @@ addpath([Astro_FP,link, 'plot']);
 
 addpath([Astro_FP,link, 'modules',link,'ded_tkd']);
 
+addpath([Astro_FP,link, 'modules',link,'TFSRKDScripts']);
+addpath([Astro_FP,link, 'modules',link,'TFSRKDScripts',link,'TFSRKDUtils']);
+
 addpath([Astro_FP]);
 
 disp('AstroEBSD file paths loaded');

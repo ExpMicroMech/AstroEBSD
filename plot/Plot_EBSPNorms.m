@@ -12,7 +12,7 @@ end
 
 imagesc(EBSD_Geometry_in.x_screen,EBSD_Geometry_in.y_screen,EBSD_Pattern_norm,'Parent',s1);
     
-for n=1:size(nhat_gnom)
+for n=1:size(nhat_gnom,1)
     hold on;
 %     plot(x1_gnom(n,:),y1_gnom(n,:),'r');
     plot(x2_gnom(n,:),y2_gnom(n,:),':','color','r','LineWidth',2,'Parent',s1);
