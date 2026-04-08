@@ -53,7 +53,7 @@ try
 
 catch
     warning('Failed to load the experimental ECP, creating a blank frame');
-    ECP_Pat.pattern=zeros([100,100]);
+    ECP_Pat.pattern=zeros([512,512]);
     ECP_Pat.size =size(ECP_Pat.pattern);
 end
 
@@ -61,19 +61,19 @@ end
 ECP_Pat.Settings_Cor.gfilt=0; %use a low pass filter
 ECP_Pat.Settings_Cor.gfilt_s=7; %low pass filter sigma
 ECP_Pat.Settings_Cor.radius=0;
-ECP_Pat.Settings_Cor.radius_frac=0.6;  %smaller radius to crop the black portion and to avoid abberation effects on sides
+ECP_Pat.Settings_Cor.radius_frac=0.7;  %smaller radius to crop the black portion and to avoid abberation effects on sides
 
 ECP_Pat.Settings_Cor.max_var_pc_x=0;
 ECP_Pat.Settings_Cor.max_var_pc_y=0;
-ECP_Pat.Settings_Cor.max_var_pc_z=1;
-ECP_Pat.Settings_Cor.max_var_ori=3*degree;
-ECP_Pat.Settings_Cor.pattern_crop_factor=4;  % 1 uses orginal resolution, 2 reduces it to half with faster processing
+ECP_Pat.Settings_Cor.max_var_pc_z=1.5;
+ECP_Pat.Settings_Cor.max_var_ori=10*degree;
+ECP_Pat.Settings_Cor.pattern_crop_factor=2;  % 1 uses orginal resolution, 2 reduces it to half with faster processing
 
 [ECP_Pat.ECP_Pat_BG,Settings_Cor_out] = EBSP_BGCor( ECP_Pat.pattern,ECP_Pat.Settings_Cor );
 
 ECP_Pat.Settings_Cor_refine=Settings_Cor_out;
 ECP_Pat.Settings_Cor_refine.radius=1;
-ECP_Pat.Settings_Cor_refine.radius_frac=0.6;
+ECP_Pat.Settings_Cor_refine.radius_frac=0.7;
 ECP_Pat.Settings_Cor_refine.resize=1;
 
 % ECP_Pat.size=size(Input_Data.ECP_Pat)/pattern_crop_factor;

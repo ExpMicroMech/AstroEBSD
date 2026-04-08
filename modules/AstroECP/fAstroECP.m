@@ -28,7 +28,7 @@ end
 
 if isfield(Input_Data,'Index')
 else
-    Input_Data.Index=0;
+    Input_Data.Index=1;
 end
 
 %default the delta buttons
@@ -190,6 +190,11 @@ h_s_ze=uicontrol('style','edit','string', ...
     num2str(round(S_start(3),3)),...
     'position',[xstart+xsep*8 ystart-ysep xwid yhig],'Callback',@Update_PC);
 h_s_ze.Units = 'normalized';
+
+if strcmpi(Input_Data.ECP_type, 'TFS') %for Apreo, No Y-tilt
+    h_s_y.Enable='off';
+    h_s_ye.Enable='off';
+end    
 
 %% Pattern centre boxes
 h_pc_x=uicontrol('style','text','string', ...
@@ -403,13 +408,14 @@ h_drz_plus.Units='normalized';
 
 
 %% Band Labels
+xsep=80; xstart=50; xwid=70; ystart=100; ysep=-18; yhig=15;
 
 h_band_labels = gobjects(10,1);  % or in your handles struct, etc.
 
 for ii = 1:10
 
     h_band_labels(ii) = uicontrol('Style', 'text', ...
-        'Position', [xstart-(xsep/4), ystart + yhig*(12 - ii), xwid/2, yhig], ...
+        'Position', [xstart+(xsep*4.15), ystart + yhig*(13 - ii), xwid/2, yhig], ...
         'FontSize', 10, ...
         'FontWeight', 'bold', ...
         'BackgroundColor', 'w', ...
@@ -542,11 +548,74 @@ BandLabelsLegend();
 
 
 
+    % function refine(~,eventdata) %#ok<*INUSD>
+    %     psize=size(ECP_Pat.pattern);
+    %     PatternInfo.ScreenWidth=psize(1);
+    %     PatternInfo.ScreenHeight=psize(2);
+    %     [PatternIn,SettingsCor]=EBSP_BGCor(ECP_Pat.pattern,ECP_Pat.Settings_Cor_refine);
+    %     eangs_in=[str2double(e_ang_equiv_phi1.String),str2double(e_ang_equiv_Phi.String),str2double(e_ang_equiv_phi2.String)];
+    %     %%
+    %     pc_in=[str2double(h_pc_xe.String),str2double(h_pc_xe.String),str2double(h_pc_ye.String)];
+    % 
+    %     %% Start the refinement method
+    %     old_color=h_refine.BackgroundColor;
+    %     h_refine.BackgroundColor=[1,0,0];
+    %     h_refine.Enable='off';
+    %     h_index.Enable='off';
+    %     drawnow();
+    % 
+    %     disp('Refinement process started - please wait');
+    %     fprintf('\n');
+    %     if isfield(Input_Data,'Mode')
+    %         [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int,'Mode',Input_Data.Mode);
+    %     else
+    %         [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int);
+    %     end
+    %     disp('Refinement process ended');
+    %     fprintf('\n');
+    %     h_refine.BackgroundColor=old_color;
+    %     h_refine.Enable='on';
+    %     h_index.Enable='on';
+    %     plot_refinementHQ(PatternIn,SettingsCor,PatternInfo,screen_int,PC_start,PC_refined,eangs_in*degree,eangs_refined, Input_Data)
+    %     h_update.UserData=eangs_refined*180/pi;
+    %     %% update pc
+    %     h_pc_xe.String=PC_refined(1);
+    %     h_pc_ye.String=PC_refined(2);
+    %     h_pc_ze.String=PC_refined(3);
+    %     Update_PC();
+    %     %% update eangs
+    %     e_ang_equiv_phi1.String=eangs_refined(1)/degree;
+    %     e_ang_equiv_Phi.String=eangs_refined(2)/degree;
+    %     e_ang_equiv_phi2.String=eangs_refined(3)/degree;
+    % 
+    %     draw_pattern;
+    %     % h_update.String=eangs_refined;
+    %     % Update_eangs();
+    %     % Update_EA();
+    %     fprintf('Your refinement had a normalised cross correlation effect of: %f', peakhight);
+    %     fprintf('\n');
+    % end
+
+
     function refine(~,eventdata) %#ok<*INUSD>
         psize=size(ECP_Pat.pattern);
-        PatternInfo.ScreenWidth=psize(1);
-        PatternInfo.ScreenHeight=psize(2);
+        PatternInfo.ScreenWidth=psize(2); %y value extent
+        PatternInfo.ScreenHeight=psize(1); %x value extent
+
         [PatternIn,SettingsCor]=EBSP_BGCor(ECP_Pat.pattern,ECP_Pat.Settings_Cor_refine);
+        
+        %refine using half the resolution
+        ECP_Pat_Fast=ECP_Pat;
+        ECP_Pat_Fast.Settings_Cor_refine.size=ECP_Pat_Fast.Settings_Cor_refine.size/4;
+
+        % %if the ECP mode is TFS, then set %ToDo
+        % ECP_Pat_Fast.Settings_Cor_refine.SquareCrop=1;
+
+        % ECP_Pat_Fast.Settings_Cor_refine.
+        [PatternIn_Fast,SettingsCor_Fast]=EBSP_BGCor(ECP_Pat_Fast.pattern,ECP_Pat_Fast.Settings_Cor_refine);
+        figure; imagesc(PatternIn_Fast); axis image; axis xy; axis tight; colormap('gray');
+        
+        
         eangs_in=[str2double(e_ang_equiv_phi1.String),str2double(e_ang_equiv_Phi.String),str2double(e_ang_equiv_phi2.String)];
         %%
         pc_in=[str2double(h_pc_xe.String),str2double(h_pc_xe.String),str2double(h_pc_ye.String)];
@@ -555,41 +624,37 @@ BandLabelsLegend();
         old_color=h_refine.BackgroundColor;
         h_refine.BackgroundColor=[1,0,0];
         h_refine.Enable='off';
-        h_index.Enable='off';
         drawnow();
         
         disp('Refinement process started - please wait');
         fprintf('\n');
         if isfield(Input_Data,'Mode')
-            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int,'Mode',Input_Data.Mode);
+            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor_Fast,screen_int,'Mode',Input_Data.Mode);
         else
-            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor,screen_int);
+            [PC_refined,eangs_refined,peakhight] =optimize_pc_ori(PC_start,eangs_in*degree,PatternIn,SettingsCor_Fast,screen_int);
         end
         disp('Refinement process ended');
         fprintf('\n');
         h_refine.BackgroundColor=old_color;
         h_refine.Enable='on';
-        h_index.Enable='on';
         plot_refinementHQ(PatternIn,SettingsCor,PatternInfo,screen_int,PC_start,PC_refined,eangs_in*degree,eangs_refined, Input_Data)
-        h_update.UserData=eangs_refined*180/pi;
+        
         %% update pc
         h_pc_xe.String=PC_refined(1);
         h_pc_ye.String=PC_refined(2);
         h_pc_ze.String=PC_refined(3);
         Update_PC();
         %% update eangs
+        h_update.UserData=eangs_refined*180/pi;
         e_ang_equiv_phi1.String=eangs_refined(1)/degree;
         e_ang_equiv_Phi.String=eangs_refined(2)/degree;
         e_ang_equiv_phi2.String=eangs_refined(3)/degree;
-
-        draw_pattern;
         % h_update.String=eangs_refined;
         % Update_eangs();
         % Update_EA();
         fprintf('Your refinement had a normalised cross correlation effect of: %f', peakhight);
         fprintf('\n');
     end
-
 
 %%% END %%%%% PCA by LUKAS %%%%%% lukas
 
@@ -659,20 +724,22 @@ BandLabelsLegend();
         % use the stage convention - Rz*Rx*Ry - BUT NOTE THAT THE TESCAN STAGE USES -Ry
         g_nudge=InputData.Rz(drZ*pi/180)*InputData.Rx(drX*pi/180)*InputData.Ry(drY*pi/180);
 
-        % changing the convention back to Rz*Rx*Rz
-        % g_nudge=Input_Data.Rz(drZ*pi/180)*Input_Data.Rx(drY*pi/180)*Input_Data.Rz(drX*pi/180);
-
-
+       
         % stage rotations
         sX=str2num(get(h_s_xe,'String')); %#ok<*ST2NM>
         sY=str2num(get(h_s_ye,'String'));
         sZ=str2num(get(h_s_ze,'String'));
 
-        % use the stage convention - Rz*Rx*Ry - BUT NOTE THAT THE STAG USES -Sy
-        %working before
-        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sY*pi/180)*Input_Data.Rz(-sX*pi/180);
-
-        % g_stage=InputData.Rz(sZ*pi/180)*InputData.Rx(sY*pi/180)*InputData.Rz(-sX*pi/180);
+        if strcmpi(Input_Data.ECP_type, 'TESCAN')
+        % use the stage convention Rz*Rx*Ry  BUT NOTE THAT THE TESCAN STAGE USES -Sy
+        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % TESCAN
+        elseif strcmpi(Input_Data.ECP_type, 'TFS')
+        % use the stage convention Rz*Rx  BUT NOTE THAT THE TFS STAGE USES -Sx and -Sz
+        g_stage=Input_Data.Rz(-sZ*pi/180)*Input_Data.Rx(-sX*pi/180); % TFS
+        else
+        % assume TESCAN by default
+        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % assume TESCAN    
+        end
 
 
         eangs_n=get(h_update,'UserData');
@@ -1423,9 +1490,49 @@ h_navigate.Units='normalized';
 h_navigate.Enable = 'off';
 
     function navigate(~,~)
-        draw_pattern;
-        Update_EA;
+    
+if strcmpi(Input_Data.ECP_type, 'TFS') % for Apreo (only X tilt + rotation)
+    Update_EA;
 
+    % fetch saved values 
+    rx_ref = str2double(getappdata(gcf, 'x_ref'));
+    ry_ref = str2double(getappdata(gcf, 'y_ref'));
+    rz_ref = str2double(getappdata(gcf, 'z_ref'));
+    rx_nav = str2double(getappdata(gcf, 'x_nav'));
+    ry_nav = str2double(getappdata(gcf, 'y_nav'));
+    rz_nav = str2double(getappdata(gcf, 'z_nav'));
+
+    alpha = (rx_nav + rx_ref);      % total X tilt (deg)
+    beta  = - (ry_nav + ry_ref);    % note the minus
+
+    % alpha_prime from z-component equivalence:
+    alpha_prime = acosd( max(min(cosd(alpha) * cosd(beta), 1.0), -1.0) );
+
+    % phi = atan2( -sin(beta), sin(alpha)*cos(beta) )
+    num = -sind(beta);
+    den = sind(alpha) .* cosd(beta);
+    phi = atan2d( num, den );
+
+    % avoid tiny noisy phi
+    if abs(alpha_prime) < 1e-5
+        phi = 0;
+    end
+
+    stage_x = alpha_prime;                     
+   
+    % combine phi with z-sum to produce rotation command:
+    stage_rotation = rz_nav + rz_ref + phi;
+    
+    %Feed the navigations to stage controls sx, sy, sz in degrees
+    h_s_xe.String = sprintf('%.2f', -stage_x);        
+    h_s_ze.String = sprintf('%.2f', -stage_rotation); 
+
+    eangs = zeros(1,3);
+    draw_pattern;
+
+
+    else  %assume TESCAN
+        Update_EA;
         %calling back the ref and new positions
         x_ref = getappdata(gcf, 'x_ref');
         y_ref = getappdata(gcf, 'y_ref');
@@ -1439,69 +1546,16 @@ h_navigate.Enable = 'off';
         stage_nav_y = - (str2double(y_nav) + str2double(y_ref));
         stage_nav_z = str2double(z_nav) + str2double(z_ref);
 
-        %Feeds the navigations to stage controls sx, sy, sz in degrees
-        h_s_xe.String = sprintf('%.3f', stage_nav_x);
-        h_s_ye.String = sprintf('%.3f', stage_nav_y);
-        h_s_ze.String = sprintf('%.3f', stage_nav_z);
-        eangs(1) = '0';
-        eangs(2) = '0';
-        eangs(3) = '0';
+        %Feed the navigations to stage controls sx, sy, sz in degrees
+        h_s_xe.String = sprintf('%.2f', stage_nav_x);
+        h_s_ye.String = sprintf('%.2f', stage_nav_y);
+        h_s_ze.String = sprintf('%.2f', stage_nav_z);
+       
+        eangs = zeros(1,3);
+        draw_pattern;
+end
+end
 
-    end
-
-%% Create button for loading ECP
-
-% %corner position
-% h_load_ecp = uicontrol('style', 'pushbutton', 'string', 'Load New ECP',...
-%     'Position', [xstart+xsep*5 ystart-ysep xwid yhig], 'Callback', @load_ecp);
-%
-%     h_load_ecp.Units='normalized';
-%
-%     function load_ecp(~,~)
-% %% Use uiopen to let the user choose a new file
-% [filename, pathname] = uigetfile('*.tif', 'Select an image file');
-%
-% % Check if the user clicked 'Cancel'
-% if isequal(filename,0) || isequal(pathname,0)
-%     disp('User canceled the file selection.')
-%     return;  % Exit the script if the user cancels the file selection
-% end
-% close all;
-% % Update Input_Data.image_folder and Input_Data.image_name with the new values
-% Input_Data.image_folder = pathname;
-% Input_Data.image_name = filename;
-% Input_Data.ExpImage_Image = fullfile(Input_Data.astro_location, Input_Data.image_folder,Input_Data.image_name);
-% Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
-% Input_Data.PC_in=[0.5 0.5 0.8]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
-% Input_Data.Stage_in=[0 0 0]; % stage rotations, in degrees [Rx, Ry, Rz]
-% Input_Data.eangs=[0 0 0];
-%
-% %% Experimental pattern load
-% if isfield(Input_Data,'ExpImage_Image')
-%     if isfield(Input_Data,'image_frame') %a tescan frame
-%         ExpImage_Filename=fullfile(Input_Data.image_folder,Input_Data.image_name);
-%         [Input_Data.ExpImage_Image,data1,td] = TescanFrame_Load(ExpImage_Filename,Input_Data.image_frame);
-%         Input_Data.size = size(Input_Data.ExpImage_Image); %size of the library patterns and the resize of the raw EBSP
-%         Input_Data.ECP_Pat=flipud(double(Input_Data.ExpImage_Image));
-%     else
-%         %load this frame - normal image loader
-%         Input_Data.ECP_Pat=imread(Input_Data.ExpImage_Image);
-%         if size(Input_Data.ECP_Pat,3) == 3
-%             Input_Data.ECP_Pat=rgb2gray(Input_Data.ECP_Pat);
-%         end
-%         Input_Data.ECP_Pat=double(flipud(Input_Data.ECP_Pat));
-%         Input_Data.size =size(Input_Data.ECP_Pat);
-%    end
-% end
-% %%
-% Input_Data.PC_in=[0.5 0.5 3.88]; % starting PC - AstroEBSD convention
-% Input_Data.eangs=[0  0  0]; % [phi1, Phi, phi2]
-% Input_Data.DeltaRs=[0.1 0.1 2]; % delta values for controlling tilts etc, in degrees
-%
-% %% run the GUI
-% [Output_Data]=f_AstroECP(Input_Data);
-%
-% end
 
 %% Display info from the loaded ECP hdr file
 
@@ -1524,6 +1578,8 @@ switch Input_Data.ECP_typen
     case 1 % TFS
         %read the info from the image file info
 
+   
+
         info1 = imfinfo(fullfile(Input_Data.image_folder,Input_Data.image_name));
         i1_text=info1.UnknownTags.Value;
 
@@ -1534,7 +1590,7 @@ switch Input_Data.ECP_typen
         data1=cell(1,10);
         data1{1}=Input_Data.image_name;
         data1{2}=fReadTFSHeaderPair('UseCase',i1_text_pairs_full);
-        data1{3}=str2double(fReadTFSHeaderPair('HV',i1_text_pairs_full))/1000; % in kV
+        data1{3}=(str2double(fReadTFSHeaderPair('HV',i1_text_pairs_full)))/1000; % in kV
         data1{4}=str2double(fReadTFSHeaderPair('WD',i1_text_pairs_full))*1000; % in mm;
         data1{5}=str2double(fReadTFSHeaderPair('BeamCurrent',i1_text_pairs_full))*1E9; % in nA;
         data1{6}=str2double(fReadTFSHeaderPair('FrameTime',i1_text_pairs_full)); %in s
@@ -1547,7 +1603,7 @@ switch Input_Data.ECP_typen
         data2 = sprintf(['File Name: %s\n\nUse Case: %s\n' ,'Beam Energy: %.0f keV\n','Working Distance: %.2f mm\n','Beam Current: %.2f nA\n','Frame Time: %.2f s\n','Angular Field: %.2f deg\n\n','MICROSCOPE SETUP \nStage Tilt: %.2f°\n' , 'Stage Rot: %.2f°\n' ,'Scan Rot: %.2f°'], data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
         data2 = strtrim(data2);
 
-        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
         h_ecp_info.Units = 'normalized';
 
     case 2 % TESCAN
@@ -1571,7 +1627,7 @@ switch Input_Data.ECP_typen
 
         data2 = strtrim(data2); % Remove newline characters
 
-        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart-(xsep/2) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
         h_ecp_info.Units = 'normalized';
 
     case 0 % other
@@ -1643,6 +1699,7 @@ end
         h_refine.Enable='off';
         drawnow();
         % use the RTM indexing method to index the ECP
+        
         [G_Refined_SO3,PH_SO3] = ECP_Index(ECP_Pat,Input_Data,PC_start);
 
         eangs_indexed =conv_G_to_EA(G_Refined_SO3);

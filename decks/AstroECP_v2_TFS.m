@@ -18,17 +18,16 @@
 clear; home; close all;
 
 %% set up the file locations 
-% Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD\';
-% Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; %working with 5.10.2
+Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD\';
+Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; 
 
-Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD\';
-Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; %working with 5.10.2
+% Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD\';
+% Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; 
 
 %% ECP location and information
 
-
 %%  Tescan Data - comment out this block if you want to run TFS data
-% 
+
 % Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
 % Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 % Input_Data.image_frame=1;     %frame number for Tescan data, this variable should not exist for other file types
@@ -36,11 +35,10 @@ Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'
 % 
 % %values for the example data
 % Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
-% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern
+% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern 'Si_SAECP_example.tif'
 % 
 % %set the greyscale colorlim for the ECP
 % Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
-
 
 %% TFS data - comment this block out if you want to run the Tescan data
 
@@ -50,10 +48,10 @@ Input_Data.ECP_type='TFS'; %supported types: 'TESCAN', 'TFS', 'other'
 
 %values for the example data
 Input_Data.PC_in=[0.5 0.5 8.39949];
-Input_Data.eangs=[-92.4754,1.0886,133.8429]; % for the example pattern
+Input_Data.eangs=[-92.4754,1.0886,133.8429]; % for the example pattern '20keV_3.2nA_Ref.tif'
 
 %set the greyscale colorlim for the ECP
-Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
+Input_Data.ECP_Pat_clim=[1 4]; % default settings of histogram
 
 %% Other ECP information 
 
