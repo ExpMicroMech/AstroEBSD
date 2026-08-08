@@ -66,13 +66,12 @@ EBSP_single.PatternInfo.size=size(EBSP_single.ebsp_cor);
 % disp(Settings_Cor)
 %%
 x0=[pcx_in,pcy_in,pcz_in,phi1_in,PHI_in,phi2_in];
-f=@(x)(xcf_optimization(x,screen_int,Settings_Cor,EBSP_single.PatternInfo,EBSP_single.ebsp_cor));
+f=@(x)(dotproduct_optimization(x,screen_int,Settings_Cor,EBSP_single.PatternInfo,EBSP_single.ebsp_cor));
 options = optimoptions('fmincon');%,'Algorithm','quasi-newton');
 options.Display = 'iter';
-options.StepTolerance=1E-4; %add in a step tolerance, this should be in terms of the angular variation and the delta PC for the step
 %%
-l=[pcx_in-var_pcx;pcy_in-var_pcy;pcz_in-var_pcz;phi1_in-var_phi1;PHI_in-var_PHI;phi2_in-var_phi2]; %lower bound of the search
-u=[pcx_in+var_pcx;pcy_in+var_pcy;pcz_in+var_pcz;phi1_in+var_phi1;PHI_in+var_PHI;phi2_in+var_phi2]; %upper bound of the search
+l=[pcx_in-var_pcx;pcy_in-var_pcy;pcz_in-var_pcz;phi1_in-var_phi1;PHI_in-var_PHI;phi2_in-var_phi2];
+u=[pcx_in+var_pcx;pcy_in+var_pcy;pcz_in+var_pcz;phi1_in+var_phi1;PHI_in+var_PHI;phi2_in+var_phi2];
     % < pcx_in < pcx_in+var_pcx;
  % < x(2) < pcy_in+var_pcy;
 % pcz_in-var_pcz < x(3) < pcz_in+var_pcz;
@@ -83,7 +82,7 @@ if mode=='fmincon'
 elseif mode=='fminsearch'
     [x,fval] = fminsearch(f,x0)%,l,u)%,[],options)
 else
-    error('you have specified an unsupported mode')
+    error('you have specified a none supported mode')
 end
 %%
 pc_out=[x(1),x(2),x(3)];
@@ -99,8 +98,8 @@ peakhight=1-fval;
 % %%
 % geometry=EBSP_Gnom(EBSP_single.PatternInfo,[x(1),x(2),x(3)]);
 %%
-[cmap_div]=cbrewer('div','RdBu',30);
-cmap_div(cmap_div<0)=0;
+% [cmap_div]=cbrewer('div','RdBu',30);
+% cmap_div(cmap_div<0)=0;
 % 
 % geometry=EBSP_Gnom(EBSP_single.PatternInfo,[pcx_in,pcy_in,pcz_in]);
 % % % %
@@ -135,8 +134,8 @@ cmap_div(cmap_div<0)=0;
 % [ypeak,xpeak] = find(C==max(C(:)));
 %%
 
-function ndp=xcf_optimization(x,screen_int,Settings_Cor,PatternInfo,Pattern_in)
-    % XCF Optimization
+function ndp=dotproduct_optimization(x,screen_int,Settings_Cor,PatternInfo,Pattern_in)
+    % DOTPRODUCT_OPTIMIZATION
     % internal function, calculates the normalised cross correlation
     % between two input images
     % 
@@ -164,7 +163,7 @@ function ndp=xcf_optimization(x,screen_int,Settings_Cor,PatternInfo,Pattern_in)
     % ndp=1-normdotprod(normalize(Pattern_in),normalize(compare_pat));
 end
 
-function output_pattern=generate_pattern(screen_int,Settings_Cor,PatternInfo,pcx,pcy,pcz,phi1,PHI,phi2)
+    function output_pattern=generate_pattern(screen_int,Settings_Cor,PatternInfo,pcx,pcy,pcz,phi1,PHI,phi2)
     % GENERATE_PATTERN
     % calculates the gnomonic projection based on dynamical simulation and
     % pattern geometry information
@@ -175,12 +174,14 @@ function output_pattern=generate_pattern(screen_int,Settings_Cor,PatternInfo,pcx
     Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
     Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)];
     gmatrix=Rz(phi2)*Rx(PHI)*Rz(phi1);
+    g_dynamics=Rx(pi/2)*Rz(pi/2);  % correction for orthorhombic
     pc=[pcx,pcy,pcz];
     % output_pattern=
     %%
     geometry=EBSP_Gnom(PatternInfo,pc); %you can change PC_in if you want
-    output_pattern= EBSP_gen(geometry,gmatrix,screen_int);
+    output_pattern= EBSP_gen(geometry,g_dynamics*gmatrix,screen_int);
 %     output_pattern= EBSP_BGCor(output_pattern)
+
 end
 
 function ntd=normdotprod(A,B)

@@ -3,19 +3,34 @@ function [ECP_Pat] = AstroECP_Load(Input_Data)
 %
 % Input_Data.image_folder = folder with the image
 % Input_Data.image_frame = file name
-%
-% Set up to load the Tescan data - OR - a regular RGB image
 
 try
     ExpImage_Filename=fullfile(Input_Data.image_folder,Input_Data.image_name);
+     
+    if any(strcmpi(Input_Data.ECP_type,{'TESCAN','CLARA'})) 
+    ECP_Pat.frame = Input_Data.image_frame;
 
-    if strcmpi(Input_Data.ECP_type,'TESCAN')
-        ECP_Pat.frame=Input_Data.image_frame;
-        [ExpImage_Image,data1,td] = TescanFrame_Load(ExpImage_Filename,Input_Data.image_frame);
-        ECP_Pat.pattern=flipud(double(ExpImage_Image));
-        ECP_Pat.filename=ECP_Pat;
-        ECP_Pat.size = size(ExpImage_Image); %size of the library patterns and the resize of the raw EBSP
-    elseif strcmpi(Input_Data.ECP_type,'TFS')
+    % header file is always named: image_name-tif.hdr
+    [~, baseName, ext] = fileparts(Input_Data.image_name);
+    metaFile = fullfile(Input_Data.image_folder, [baseName '-' ext(2:end) '.hdr']);
+
+    if exist(metaFile, 'file')
+        [ExpImage_Image, data1, td] = TescanFrame_Load(ExpImage_Filename, Input_Data.image_frame);
+        ECP_Pat.data1 = data1;
+        ECP_Pat.td = td;
+    else
+        warning('No TESCAN header file found. Loading image directly without meta data');
+        ExpImage_Image = imread(ExpImage_Filename);
+        ECP_Pat.data1 = [];
+        ECP_Pat.td = [];
+    end
+
+    ECP_Pat.pattern = flipud(double(ExpImage_Image));
+    ECP_Pat.filename = ECP_Pat;
+    ECP_Pat.size = size(ExpImage_Image);
+       
+    
+      elseif strcmpi(Input_Data.ECP_type,'TFS')
         %try to load it as a TFS frame
         ExpImage_Image=imread(ExpImage_Filename);
         info1 = imfinfo(ExpImage_Filename);
@@ -58,15 +73,15 @@ catch
 end
 
 % set some default filters
-ECP_Pat.Settings_Cor.gfilt=0; %use a low pass filter
+ECP_Pat.Settings_Cor.gfilt=0; %use a low pass filter. 1 or 0
 ECP_Pat.Settings_Cor.gfilt_s=7; %low pass filter sigma
-ECP_Pat.Settings_Cor.radius=0;
+ECP_Pat.Settings_Cor.radius=1;
 ECP_Pat.Settings_Cor.radius_frac=0.7;  %smaller radius to crop the black portion and to avoid abberation effects on sides
 
 ECP_Pat.Settings_Cor.max_var_pc_x=0;
 ECP_Pat.Settings_Cor.max_var_pc_y=0;
-ECP_Pat.Settings_Cor.max_var_pc_z=1.5;
-ECP_Pat.Settings_Cor.max_var_ori=10*degree;
+ECP_Pat.Settings_Cor.max_var_pc_z=1;
+ECP_Pat.Settings_Cor.max_var_ori=5*degree;
 ECP_Pat.Settings_Cor.pattern_crop_factor=2;  % 1 uses orginal resolution, 2 reduces it to half with faster processing
 
 [ECP_Pat.ECP_Pat_BG,Settings_Cor_out] = EBSP_BGCor( ECP_Pat.pattern,ECP_Pat.Settings_Cor );
@@ -79,3 +94,5 @@ ECP_Pat.Settings_Cor_refine.resize=1;
 % ECP_Pat.size=size(Input_Data.ECP_Pat)/pattern_crop_factor;
 % ECP_Pat.size=uint32(pattern_info.size);
 % ECP_Pat.Settings_Cor_refine.size=pattern_info.size;
+% [ECP_Pat.ECP,~] = EBSP_BGCor( ECP_Pat.pattern,ECP_Pat.Settings_Cor );
+% ECP_Pat.pattern=ECP_Pat.ECP_Pat_BG

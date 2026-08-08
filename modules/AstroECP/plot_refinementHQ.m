@@ -8,13 +8,15 @@ function plot_refinementHQ(PatternIn, Settings_Cor, PatternInfo, screen_int, pc_
     gmatrix = conv_EA_to_G(eangs);
     gmatrix_ref = conv_EA_to_G(eangs_best);
 
+    g_dynamics=Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2); % correction for orthorhombic
+ 
     %% Generate images for plotting
     [EBSD_geometry] = EBSP_Gnom(PatternInfo, pc_in);
-    [Pat_sim_eang] = EBSP_gen(EBSD_geometry, gmatrix, screen_int);
+    [Pat_sim_eang] = EBSP_gen(EBSD_geometry, g_dynamics*gmatrix, screen_int);
     [Pat_sim_eang] = EBSP_BGCor(Pat_sim_eang, Settings_Cor);
 
     [EBSD_geometry_ref] = EBSP_Gnom(PatternInfo, pc_best);
-    [Pat_sim_eang_ref] = EBSP_gen(EBSD_geometry_ref, gmatrix_ref, screen_int);
+    [Pat_sim_eang_ref] = EBSP_gen(EBSD_geometry_ref, g_dynamics*gmatrix_ref, screen_int);
     [Pat_sim_eang_ref] = EBSP_BGCor(Pat_sim_eang_ref, Settings_Cor);
 
     eangs_ref_i = conv_G_to_EA(gmatrix_ref) / degree;

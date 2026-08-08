@@ -26,6 +26,16 @@ else
     Input_Data.cset=cset;
 end
 
+% %band coloring for non-centrosymmetric e.g. GaAs (GaAs_5k_19pt5to20keV_dmin0pt02.pha)
+% if isfield(Input_Data,'cset')
+% else
+%     cset=[1,0,0; 0,1,0; 0,1,0; 0,0,1; 0,0,1; 0,1,1; 0,1,1; 1,0,1; 1,1,0];
+%     cset=[cset;cset*0.5];
+%     Input_Data.cset=cset;
+% end
+
+
+
 if isfield(Input_Data,'Index')
 else
     Input_Data.Index=1;
@@ -105,7 +115,7 @@ end
 %  Create and then hide the GUI as it is being constructed.
 f = figure('Visible','on','Color','w');
 f.OuterPosition = [200, 200, 800, 600];
-f.Name = 'AstroECP v1';
+f.Name = 'AstroECP v2';
 % f.Position = [150,150,800,600];
 f.Units = 'normalized';
 
@@ -123,7 +133,7 @@ h_close.Callback=@closefun;
 
 if isfield(Input_Data,'miller1')
     miller1_text=[num2str(Input_Data.miller1(1)) ',' num2str(Input_Data.miller1(2)) ',' num2str(Input_Data.miller1(3)) ];
-    miller1_textui=uicontrol('style','text','string',miller1_text,'Units','normalized','Position',[0.2 0.85 0.1 0.02],'BackgroundColor','w'); %#ok<*NASGU>
+    miller1_textui=uicontrol('style','text','string',miller1_text,'Units','normalized','Position',[0.2 0.85 0.1 0.02],'BackgroundColor','w'); 
 end
 
 if isfield(Input_Data,'miller2')
@@ -149,13 +159,13 @@ try
     end
 catch
     warning('Phase not found, trying to load silicon 20 kV patterns')
-    phase_val=find(logical(1-cellfun('isempty',strfind(phases_list,'Si_20kV'))) == true); %#ok<STRCL1>
+    phase_val=find(logical(1-cellfun('isempty',strfind(phases_list,'Si_20kV'))) == true); 
     % phase_val=1;
 end
 
 h_phases.Value=phase_val(1);
 
-[Crystal_UCell,Crystal_Family,screen_int,Family_List,RTM_info]=phase_data(Input_Data); %#ok<*SETNU>
+[Crystal_UCell,Crystal_Family,screen_int,Family_List,RTM_info]=phase_data(Input_Data); 
 
 %% stage rotations (useful for ECP analysis)
 
@@ -191,10 +201,12 @@ h_s_ze=uicontrol('style','edit','string', ...
     'position',[xstart+xsep*8 ystart-ysep xwid yhig],'Callback',@Update_PC);
 h_s_ze.Units = 'normalized';
 
-if strcmpi(Input_Data.ECP_type, 'TFS') %for Apreo, No Y-tilt
+if any(strcmpi(Input_Data.ECP_type, {'TFS','CLARA','other'}))
     h_s_y.Enable='off';
     h_s_ye.Enable='off';
-end    
+end
+
+    
 
 %% Pattern centre boxes
 h_pc_x=uicontrol('style','text','string', ...
@@ -548,7 +560,7 @@ BandLabelsLegend();
 
 
 
-    % function refine(~,eventdata) %#ok<*INUSD>
+    % function refine(~,eventdata) 
     %     psize=size(ECP_Pat.pattern);
     %     PatternInfo.ScreenWidth=psize(1);
     %     PatternInfo.ScreenHeight=psize(2);
@@ -597,7 +609,7 @@ BandLabelsLegend();
     % end
 
 
-    function refine(~,eventdata) %#ok<*INUSD>
+    function refine(~,eventdata) 
         psize=size(ECP_Pat.pattern);
         PatternInfo.ScreenWidth=psize(2); %y value extent
         PatternInfo.ScreenHeight=psize(1); %x value extent
@@ -606,14 +618,14 @@ BandLabelsLegend();
         
         %refine using half the resolution
         ECP_Pat_Fast=ECP_Pat;
-        ECP_Pat_Fast.Settings_Cor_refine.size=ECP_Pat_Fast.Settings_Cor_refine.size/4;
+        ECP_Pat_Fast.Settings_Cor_refine.size=ECP_Pat_Fast.Settings_Cor_refine.size/2;
 
         % %if the ECP mode is TFS, then set %ToDo
         % ECP_Pat_Fast.Settings_Cor_refine.SquareCrop=1;
 
         % ECP_Pat_Fast.Settings_Cor_refine.
         [PatternIn_Fast,SettingsCor_Fast]=EBSP_BGCor(ECP_Pat_Fast.pattern,ECP_Pat_Fast.Settings_Cor_refine);
-        figure; imagesc(PatternIn_Fast); axis image; axis xy; axis tight; colormap('gray');
+        % figure; imagesc(PatternIn_Fast); axis image; axis xy; axis tight; colormap('gray');
         
         
         eangs_in=[str2double(e_ang_equiv_phi1.String),str2double(e_ang_equiv_Phi.String),str2double(e_ang_equiv_phi2.String)];
@@ -635,7 +647,7 @@ BandLabelsLegend();
         end
         disp('Refinement process ended');
         fprintf('\n');
-        h_refine.BackgroundColor=old_color;
+        h_refine.BackgroundColor=old_color;      
         h_refine.Enable='on';
         plot_refinementHQ(PatternIn,SettingsCor,PatternInfo,screen_int,PC_start,PC_refined,eangs_in*degree,eangs_refined, Input_Data)
         
@@ -726,19 +738,36 @@ BandLabelsLegend();
 
        
         % stage rotations
-        sX=str2num(get(h_s_xe,'String')); %#ok<*ST2NM>
+        sX=str2num(get(h_s_xe,'String')); 
         sY=str2num(get(h_s_ye,'String'));
         sZ=str2num(get(h_s_ze,'String'));
 
-        if strcmpi(Input_Data.ECP_type, 'TESCAN')
-        % use the stage convention Rz*Rx*Ry  BUT NOTE THAT THE TESCAN STAGE USES -Sy
-        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % TESCAN
-        elseif strcmpi(Input_Data.ECP_type, 'TFS')
-        % use the stage convention Rz*Rx  BUT NOTE THAT THE TFS STAGE USES -Sx and -Sz
-        g_stage=Input_Data.Rz(-sZ*pi/180)*Input_Data.Rx(-sX*pi/180); % TFS
+        if strcmpi(Input_Data.ECP_type,'TESCAN')
+
+        % AmberX. % use the stage convention Rz*Rx*Ry  BUT NOTE THAT THE TESCAN STAGE USES -Sy
+        g_stage = Input_Data.Rz(sZ*pi/180) * ...
+              Input_Data.Rx(sX*pi/180) * ...
+              Input_Data.Ry(-sY*pi/180);
+
+       elseif strcmpi(Input_Data.ECP_type,'TFS')
+
+         % Apreo. % use the stage convention Rz*Rx  BUT NOTE THAT THE TFS STAGE USES -Sx and -Sz
+       g_stage = Input_Data.Rz(-sZ*pi/180) * ...
+              Input_Data.Rx(-sX*pi/180);
+
+      elseif any(strcmpi(Input_Data.ECP_type,{'CLARA','other'}))
+
+    % Clara
+    g_stage = Input_Data.Rz(sZ*pi/180) * ...
+              Input_Data.Rx(sX*pi/180);
+
         else
-        % assume TESCAN by default
-        g_stage=Input_Data.Rz(sZ*pi/180)*Input_Data.Rx(sX*pi/180)*Input_Data.Ry(-sY*pi/180); % assume TESCAN    
+
+    % default = AmberX/TESCAN
+    g_stage = Input_Data.Rz(sZ*pi/180) * ...
+              Input_Data.Rx(sX*pi/180) * ...
+              Input_Data.Ry(-sY*pi/180);
+
         end
 
 
@@ -812,7 +841,9 @@ BandLabelsLegend();
                         %calculate the bands
                         [bands] = Cone_Build(HKLs(p,:),Crystal_UCell{1}.Astar,Crystal_UCell{1}.lambda_p,RotMat,cone_params);
                         %plot them on the EBSP/ECP
+                         % pBand_with_Labels(bands,cset(n,:),h_ecp,EBSD_Geometry,HKLs(p,:))      % band labels
                         pBand(bands,cset(n,:),h_ecp,sf)
+                        
 
                     end
                 end
@@ -874,7 +905,9 @@ BandLabelsLegend();
 
 
                 % Plot_EBSPAnnotated_TZ( ECP_data,EBSD_Geometry,[],RotMat,Crystal_UCell{1},Crystal_Family{1},h_exp, Input_Data.V_in);
-
+            if ~isfield(Crystal_UCell{1},'lambda_p')
+                Crystal_UCell{1}.lambda_p=0.0859;
+            end
 
 
                 if ~isempty(Family_List)
@@ -1076,6 +1109,7 @@ BandLabelsLegend();
             %plot the unit crystal
             try
                 h_cry = axes('Units','normalized','Position',[0.1 0.8817 0.1 0.1],'Parent',f);
+                % f3 = figure;  h_cry = axes('Units','normalized','Parent',f3);       % separate out unit cell shape
                 h_drx_plus.UserData=h_cry;
                 axis on; axis equal; hold on;
 
@@ -1092,8 +1126,8 @@ BandLabelsLegend();
                 
                 fileLocation=which('plotCS_Update.m');
                 disp('Copying file automatically')
-                copyfile(fullpath(Input_Data.mtex_location, 'geometry\@crystalShape\plot.m'),fullpath(Input_Data.mtex_location,'geometry\@crystalShape\plot_old.m'));
-                copyfile(fileLocation,fullpath(Input_Data.mtex_location,'geometry\@crystalShape\plot.m'));
+                copyfile(fullfile(Input_Data.mtex_location, 'geometry\@crystalShape\plot.m'),fullfile(Input_Data.mtex_location,'geometry\@crystalShape\plot_old.m'));
+                copyfile(fileLocation,fullfile(Input_Data.mtex_location,'geometry\@crystalShape\plot.m'));
                 
 
             end
@@ -1142,7 +1176,7 @@ BandLabelsLegend();
 
         % % Draw angular scale bar
         %
-        % % --- pick a “nice” step (e.g. 1/5 of total, rounded down to whole degrees) ---
+        % % --- pick a "nice" step (e.g. 1/5 of total, rounded down to whole degrees) ---
         % h_alpha_step = floor(alpha_deg / 5);     % e.g. 12.63 → 12°
         %
         % % --- recompute bar length in data units so it exactly spans 'h_alpha_step' ---
@@ -1181,7 +1215,7 @@ BandLabelsLegend();
     end
 
     function deactivate_buttons
-        h_ring.Enable='off'; %#ok<STRNU>
+        h_ring.Enable='off'; 
         h_update.Enable='off';
         h_drx_minus.Enable='off';
         h_dry_minus.Enable='off';
@@ -1194,7 +1228,7 @@ BandLabelsLegend();
     end
 
     function activate_buttons
-        h_ring.Enable='on'; %#ok<STRNU>
+        h_ring.Enable='on'; 
         h_update.Enable='on';
         h_drx_minus.Enable='on';
         h_dry_minus.Enable='on';
@@ -1215,14 +1249,14 @@ BandLabelsLegend();
 
         bands_clean_upper=cBand(bands.upper_zp,sf);
         if ~isempty(bands_clean_upper.x) && ~isempty(bands_clean_upper.y)
-            plot(bands_clean_upper.x,bands_clean_upper.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)  % line width Line size
+            plot(bands_clean_upper.x,bands_clean_upper.y,'color',csetn,'LineWidth',2,'LineStyle','-','Parent',h_ecp)  % line width Line size
             % plot(bands_clean_upper.x,'color',csetn,'LineWidth',0.5,'LineStyle','-','Parent',h_ecp)  % line width Line size
         end
 
 
         bands_clean_lower=cBand(bands.lower_zp,sf);
         if ~isempty(bands_clean_lower.x) && ~isempty(bands_clean_lower.y)
-            plot(bands_clean_lower.x,bands_clean_lower.y,'color',csetn,'LineWidth',1,'LineStyle','-','Parent',h_ecp)
+            plot(bands_clean_lower.x,bands_clean_lower.y,'color',csetn,'LineWidth',2,'LineStyle','-','Parent',h_ecp)
         end
 
 
@@ -1353,7 +1387,7 @@ BandLabelsLegend();
         folder_files={folder_dir.name};
 
         %find the pha names
-        pha_names=folder_files(logical(1-cellfun('isempty',strfind(folder_files,'pha')))); %#ok<STRCL1>
+        pha_names=folder_files(logical(1-cellfun('isempty',strfind(folder_files,'pha')))); 
         for n=1:size(pha_names,2)
             pha_names{n}=pha_names{n}(1:end-4);
         end
@@ -1490,11 +1524,12 @@ h_navigate.Units='normalized';
 h_navigate.Enable = 'off';
 
     function navigate(~,~)
-    
+
 if strcmpi(Input_Data.ECP_type, 'TFS') % for Apreo (only X tilt + rotation)
+
     Update_EA;
 
-    % fetch saved values 
+    % fetch saved values
     rx_ref = str2double(getappdata(gcf, 'x_ref'));
     ry_ref = str2double(getappdata(gcf, 'y_ref'));
     rz_ref = str2double(getappdata(gcf, 'z_ref'));
@@ -1518,42 +1553,87 @@ if strcmpi(Input_Data.ECP_type, 'TFS') % for Apreo (only X tilt + rotation)
         phi = 0;
     end
 
-    stage_x = alpha_prime;                     
-   
+    stage_x = alpha_prime;
+
     % combine phi with z-sum to produce rotation command:
     stage_rotation = rz_nav + rz_ref + phi;
-    
+
     %Feed the navigations to stage controls sx, sy, sz in degrees
-    h_s_xe.String = sprintf('%.2f', -stage_x);        
-    h_s_ze.String = sprintf('%.2f', -stage_rotation); 
+    h_s_xe.String = sprintf('%.2f', -stage_x);
+    h_s_ze.String = sprintf('%.2f', -stage_rotation);
 
     eangs = zeros(1,3);
     draw_pattern;
 
 
-    else  %assume TESCAN
-        Update_EA;
-        %calling back the ref and new positions
-        x_ref = getappdata(gcf, 'x_ref');
-        y_ref = getappdata(gcf, 'y_ref');
-        z_ref = getappdata(gcf, 'z_ref');
-        x_nav = getappdata(gcf, 'x_nav');
-        y_nav = getappdata(gcf, 'y_nav');
-        z_nav = getappdata(gcf, 'z_nav');
+elseif any(strcmpi(Input_Data.ECP_type, {'CLARA','other'})) % for Clara (only X tilt + rotation)
 
-        %Calculations for navigation
-        stage_nav_x = str2double(x_nav) + str2double(x_ref);
-        stage_nav_y = - (str2double(y_nav) + str2double(y_ref));
-        stage_nav_z = str2double(z_nav) + str2double(z_ref);
+    Update_EA;
 
-        %Feed the navigations to stage controls sx, sy, sz in degrees
-        h_s_xe.String = sprintf('%.2f', stage_nav_x);
-        h_s_ye.String = sprintf('%.2f', stage_nav_y);
-        h_s_ze.String = sprintf('%.2f', stage_nav_z);
-       
-        eangs = zeros(1,3);
-        draw_pattern;
+    % fetch saved values
+    rx_ref = str2double(getappdata(gcf, 'x_ref'));
+    ry_ref = str2double(getappdata(gcf, 'y_ref'));
+    rz_ref = str2double(getappdata(gcf, 'z_ref'));
+    rx_nav = str2double(getappdata(gcf, 'x_nav'));
+    ry_nav = str2double(getappdata(gcf, 'y_nav'));
+    rz_nav = str2double(getappdata(gcf, 'z_nav'));
+
+    alpha = (rx_nav + rx_ref);      % total X tilt (deg)
+    beta  = - (ry_nav + ry_ref);    % note the minus
+
+    % alpha_prime from z-component equivalence:
+    alpha_prime = acosd( max(min(cosd(alpha) * cosd(beta), 1.0), -1.0) );
+
+    % phi = atan2( -sin(beta), sin(alpha)*cos(beta) )
+    num = -sind(beta);
+    den = sind(alpha) .* cosd(beta);
+    phi = atan2d( num, den );
+
+    % avoid tiny noisy phi
+    if abs(alpha_prime) < 1e-5
+        phi = 0;
+    end
+
+    stage_x = alpha_prime;
+
+    % combine phi with z-sum to produce rotation command:
+    stage_rotation = rz_nav + rz_ref + phi;
+
+    %Feed the navigations to stage controls sx, sy, sz in degrees
+    h_s_xe.String = sprintf('%.2f', stage_x);
+    h_s_ze.String = sprintf('%.2f', stage_rotation);
+
+    eangs = zeros(1,3);
+    draw_pattern;
+
+
+else  %assume TESCAN
+
+    Update_EA;
+
+    %calling back the ref and new positions
+    x_ref = getappdata(gcf, 'x_ref');
+    y_ref = getappdata(gcf, 'y_ref');
+    z_ref = getappdata(gcf, 'z_ref');
+    x_nav = getappdata(gcf, 'x_nav');
+    y_nav = getappdata(gcf, 'y_nav');
+    z_nav = getappdata(gcf, 'z_nav');
+
+    %Calculations for navigation
+    stage_nav_x = str2double(x_nav) + str2double(x_ref);
+    stage_nav_y = - (str2double(y_nav) + str2double(y_ref));
+    stage_nav_z = str2double(z_nav) + str2double(z_ref);
+
+    %Feed the navigations to stage controls sx, sy, sz in degrees
+    h_s_xe.String = sprintf('%.2f', stage_nav_x);
+    h_s_ye.String = sprintf('%.2f', stage_nav_y);
+    h_s_ze.String = sprintf('%.2f', stage_nav_z);
+
+    eangs = zeros(1,3);
+    draw_pattern;
+
 end
+
 end
 
 
@@ -1565,11 +1645,15 @@ if strcmpi(Input_Data.ECP_type,'TFS') %thermo
     Input_Data.ECP_typen=1;
 end
 
-if strcmpi(Input_Data.ECP_type,'TESCAN') %thermo
+if strcmpi(Input_Data.ECP_type,'TESCAN') %AmberX
     Input_Data.ECP_typen=2;
 end
 
-if strcmpi(Input_Data.ECP_type,'Other') %thermo
+if strcmpi(Input_Data.ECP_type,'CLARA') %CLARA
+    Input_Data.ECP_typen=2;
+end
+
+if strcmpi(Input_Data.ECP_type,'Other') 
     Input_Data.ECP_typen=0;
 end
 
@@ -1611,24 +1695,29 @@ switch Input_Data.ECP_typen
         variables_to_extract = ["OrigFileName", "ScanMode", "AcceleratorVoltage", "WD", "DwellTime", "PixelSizeX", "PredictedBeamCurrent", "StageRotation", "StageTilt", "StageTiltY'" ];
 
         % Call the function header_read_tescan
-        [data1, table_data] = header_read_tescan(ftif, variables_to_extract); %#ok<*ASGLU>
-        % [text_retrieved] = fReadTFSHeaderPair(text_to_find,tif_info_string);
+        [data1, table_data] = header_read_tescan(ftif, variables_to_extract); 
 
-        data1{3} = num2str(str2double(data1{3}) / 1000);
-        data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
-        data1{5} = num2str(str2double(data1{5}) * 100000);
-        data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
-        data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
-        data1{8} = sprintf('%.3f', data1{8});
+if isequal(data1, 0)
+    data1 = repmat({''}, 1, 10);
+    data1{1} = ftif;
+    data1{2} = 'No metadata available';
+else
+    data1{3} = num2str(str2double(data1{3}) / 1000);
+    data1{4} = sprintf('%.2f', str2double(data1{4}) * 1e3);
+    data1{5} = num2str(str2double(data1{5}) * 100000);
+    data1{6} = sprintf('%.1f', str2double(data1{6}) * 1e9);
+    data1{7} = sprintf('%.1f', str2double(data1{7}) * 1e9);
+    data1{8} = sprintf('%.3f', data1{8});
+end
 
-        % Display data with proper formatting
-        data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
-            data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
+% Display data with proper formatting
+data2 = sprintf('File Name: %s\n\nScan Mode: %s\nBeam Energy: %s keV\nWorking Distance: %s mm\nDwell Time: %s µs\nPixel Size: %s nm\nBeam Current: %s nA\n\nMICROSCOPE SETUP \nStage Rotation: %s°\nStage Tilt X: %s°\nStage Tilt Y: %s°', ...
+    data1{1}, data1{2}, data1{3}, data1{4}, data1{5}, data1{6}, data1{7}, data1{8}, data1{9}, data1{10});
 
-        data2 = strtrim(data2); % Remove newline characters
+data2 = strtrim(data2);
 
-        h_ecp_info=uicontrol('style','text','string', data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
-        h_ecp_info.Units = 'normalized';
+h_ecp_info=uicontrol('style','text','string',data2,'position',[xstart+(xsep*3.9) ystart+yhig*15 xwid yhig*8],'BackgroundColor', 'white', 'FontSize', 8);
+h_ecp_info.Units = 'normalized';
 
     case 0 % other
         warning('Pattern was loaded without header data')

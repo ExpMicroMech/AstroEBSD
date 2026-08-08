@@ -1,6 +1,12 @@
 function [rotmat_best,RegFinal] = refine5(EBSP_ref,EBSP_geometry,PC_average,rotmat_in,SettingsXCF,screen_int,isHex,RTM_setup)
-%[ corrCo, best_rotmat ] = refine2( Detector, i, screensize, R_x, R_y, rotmat_best_SO3, shift_x, shift_y, XCF_type, f, EBSP_ref, LPTsize, correction, SettingsXCF2, Rz, SettingsXCF, Detector2, iterations )
+%[ best_rotmat,corrCo  ] = refine2( Detector, i, screensize, R_x, R_y, rotmat_best_SO3, shift_x, shift_y, XCF_type, f, EBSP_ref, LPTsize, correction, SettingsXCF2, Rz, SettingsXCF, Detector2, iterations )
 %REFINE Refine the orientation
+%corrCo = [Xshift, YShift, XC Val, XC Val Norm]
+
+if isfield(RTM_setup,'debug') == 0
+    RTM_setup.debug=0;
+end
+
 screensize=EBSP_geometry.size(1);
 iterations=RTM_setup.iterations;
 LPTsize=RTM_setup.LPTsize;
@@ -53,12 +59,23 @@ correction.ycen=SettingsXCF.ycen;
 
 p=1;
 
+if RTM_setup.debug == 1
+figure;
+nexttile;
+RegOut1=[0 0 0 1];
+end
+
 while p < iterations
     
     %cross correlate this pattern in X and Y to get shifts
     %generate a new pattern
     [ EBSP_iter ] = EBSP_gen( EBSP_geometry,rotmat_best,screen_int,isHex ); %generate the EBSP for this iteration
-    
+    if RTM_setup.debug == 1
+    pPattern(EBSP_iter,EBSP_geometry);
+    t_string=['iteration ' num2str(p) ' xcf=' sprintf('%1.03f',RegOut1(4))];
+    title(t_string)
+    nexttile
+    end
     %FFT it
     %     [EBSP_FFT,XCF_data_fill]  =fROIEx2(EBSP_iter,SettingsXCF);
     [EBSP_iter_r,XCF_data_fill] = refine_prep(EBSP_iter,SettingsXCF,RTM_setup);
@@ -146,6 +163,13 @@ end
 
 %Cross correlate to get an x and y shift
 RegFinal = fReg( FFTData_Ref,FFTData_final,SettingsXCF.roisize,SettingsXCF.mesh,datafill_final); %RegOut = [Xshift, Yshift, fullXCFheight, normXCFheight]
+
+if RTM_setup.debug == 1
+  pPattern(EBSP_final,EBSP_geometry);
+    t_string=['iteration ' num2str(p) ' xcf=' sprintf('%1.03f',RegFinal(4))];
+    title(t_string);
+end
+
 
 end
 
