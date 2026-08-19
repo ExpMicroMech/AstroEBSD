@@ -1265,35 +1265,18 @@ BandLabelsLegend();
 
     function bands_clean=cBand(bzp,sf)
 
-
-
         % % Problem of duplicate bands on one side
-        % bands_clean.x=bzp(1,:)./bzp(3,:);
-        % bands_clean.y=bzp(2,:)./bzp(3,:);
-        % bands_clean.y=bands_clean.y(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
-        % bands_clean.x=bands_clean.x(bands_clean.x>=sf.xmin & bands_clean.x<=sf.xmax);
-        %
-        % bands_clean.x=bands_clean.x(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
-        % bands_clean.y=bands_clean.y(bands_clean.y>=sf.ymin & bands_clean.y<=sf.ymax);
-
-
         x = bzp(1,:) ./ bzp(3,:);
         y = bzp(2,:) ./ bzp(3,:);
+        % Mask points outside the plotting area
+        mask = x >= sf.xmin & x <= sf.xmax & y >= sf.ymin & y <= sf.ymax;
 
-        % Create joint mask to filter only valid (x,y) pairs
-        mask = x >= sf.xmin & x <= sf.xmax & ...
-            y >= sf.ymin & y <= sf.ymax;
+        x(~mask) = NaN;
+        y(~mask) = NaN;
 
-        % Apply the mask once, preserving pairing
-        bands_clean.x = x(mask);
-        bands_clean.y = y(mask);
-
-
-
+        bands_clean.x = x;
+        bands_clean.y = y;
     end
-
-
-
 
     function Update_PC(source,eventdata)
         Update_eangs
