@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>RTM_multiphase_deck</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-08-11">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="RTM_multiphase_deck.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -138,19 +138,13 @@ InputUser.Astro_loc=<span class="string">'C:\Users\tpm416\Documents\GitHub\Astro
 <pre class="codeinput">run(fullfile(InputUser.MTEX_loc,<span class="string">'startup_mtex.m'</span>)); <span class="comment">%start MTEX</span>
 run(fullfile(InputUser.Astro_loc,<span class="string">'start_AstroEBSD.m'</span>)); <span class="comment">%start astro</span>
 </pre>
-<pre class="codeoutput error">Error using run
-C:\Communal_MatlabPlugins\mtex-5.2.beta2\startup_mtex.m not found.
-
-Error in RTM_multiphase_deck (line 32)
-run(fullfile(InputUser.MTEX_loc,'startup_mtex.m')); %start MTEX
-</pre>
 <h2 id="4">Inputs</h2>
 <pre class="codeinput">InputUser.HDF5_folder=<span class="string">'E:\Tom'</span>; <span class="comment">%folder location for the BCF/HDF5 file</span>
 InputUser.HDF5_file = <span class="string">'SuperalloyExample.h5'</span>; <span class="comment">%name of the BCF/HDF5 file</span>
-InputUser.Phases  = {<span class="string">'Ni'</span>};<span class="comment">%,'M6C','ZrC'}; %name of the phase you are indexing</span>
+InputUser.Phases  = {<span class="string">'Ni'</span>,<span class="string">'ZrC'</span>}; <span class="comment">%name of the phase you are indexing</span>
 
 RTM.screensize = 128; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
-RTM.Sampling_Freq=8; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.Sampling_Freq=7; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
 RTM.iterations = 4;<span class="comment">%Set the number of iterations to do in the refinement step</span>
 RTM.LPTsize = 500; <span class="comment">%LPT size used in pixels</span>
 </pre>
@@ -173,7 +167,7 @@ Settings_CorX.SplitBG=1; <span class="comment">%deal with a split screen</span>
 </pre>
 <h2 id="6">now run the code</h2>
 <pre class="codeinput">RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
-RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'masterpatterns'</span>); <span class="comment">%location of the binary files used for RTM</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
 RTM.parsearch=2;
 
 [MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );
@@ -209,7 +203,7 @@ Astro_IPF_plot(EBSD_template,printing);
 </pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>
@@ -253,10 +247,10 @@ run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m')); %start astro
 
 InputUser.HDF5_folder='E:\Tom'; %folder location for the BCF/HDF5 file
 InputUser.HDF5_file = 'SuperalloyExample.h5'; %name of the BCF/HDF5 file
-InputUser.Phases  = {'Ni'};%,'M6C','ZrC'}; %name of the phase you are indexing
+InputUser.Phases  = {'Ni','ZrC'}; %name of the phase you are indexing
 
 RTM.screensize = 128; %size of the library patterns and the resize of the raw EBSPs
-RTM.Sampling_Freq=8; %Set the SO(3) sampling freq in degrees
+RTM.Sampling_Freq=7; %Set the SO(3) sampling freq in degrees
 RTM.iterations = 4;%Set the number of iterations to do in the refinement step
 RTM.LPTsize = 500; %LPT size used in pixels
 
@@ -279,7 +273,7 @@ Settings_CorX.SplitBG=1; %deal with a split screen
 
 %% now run the code
 RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
-RTM.Bin_loc = fullfile(RTM.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
 RTM.parsearch=2;
 
 [MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );

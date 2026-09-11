@@ -55,4 +55,6 @@ docs/build
 .venv/
 __*__.rst
 docs/source/*.html
+docs/build
+docs/source/**/*.html
 

@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>SinglePatchEBSP_Plus_SNR</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2026-07-10">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="SinglePatchEBSP_Plus_SNR.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -130,8 +130,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <p>Suitable for TFS TruePix system</p>
 <pre class="codeinput">home; clear; close <span class="string">all</span>;
 </pre>
-<pre class="codeinput">InputUser.Astro_loc=<span class="string">'C:\Users\bbritt01\Documents\GitHub\AstroEBSD_v2'</span>;
-InputUser.mtex_location=<span class="string">'D:\MTEX\mtex-5.11.2'</span>;
+<pre class="codeinput">InputUser.Astro_loc=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD'</span>;
+InputUser.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
 
 <span class="comment">%</span>
 <span class="comment">%start mtex if needed</span>
@@ -146,17 +146,17 @@ InputUser.mtex_location=<span class="string">'D:\MTEX\mtex-5.11.2'</span>;
     run(fullfile(InputUser.Astro_loc,<span class="string">"start_AstroEBSD.m"</span>));
 <span class="keyword">end</span>
 </pre>
-<pre class="codeoutput">AstroEBSD v1 is already added to the path
-</pre>
 <h2 id="3">file locations</h2>
-<pre class="codeinput">TFSProjectLocation_ExpTime = <span class="string">"D:\Ben\2025-08-14T13_03_51_Tianbi_Res_Map_ExpTime"</span>;  <span class="comment">%Exposure series Data</span>
-TFSProjectPath_SR = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_28_18"</span>; <span class="comment">%Super Resolution Data</span>
-TFSProjectPath_Spatial = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T13_02_16"</span>; <span class="comment">%Higher spatial magnification pattern data</span>
-TFSProjectPath_Zoom = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_46_24"</span>; <span class="comment">%zoomed in data (detector retracted)</span>
+<pre class="codeinput">TFSProjectPath = <span class="string">"C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map"</span>;
+
+TFSProjectLocation_ExpTime = <span class="string">"C:\Users\benja\Documents\EBSD\TFS_SuperRes\ExpTime"</span>;  <span class="comment">%Exposure series Data</span>
+TFSProjectPath_SR = <span class="string">"C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T11_28_18"</span>; <span class="comment">%Super Resolution Data</span>
+TFSProjectPath_Spatial = <span class="string">"C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T13_02_16"</span>; <span class="comment">%Higher spatial magnification pattern data</span>
+TFSProjectPath_Zoom = <span class="string">"C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T11_46_24"</span>; <span class="comment">%zoomed in data (detector retracted)</span>
 
 InputUser.Phase_Input  = {<span class="string">'Si_20kv_HR2'</span>}; <span class="comment">%the phase for Radon and pattern matching etc.</span>
 
-ResultsDir=[<span class="string">'C:\Users\bbritt01\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'</span>];
+ResultsDir=[<span class="string">'C:\Users\benja\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'</span>];
 
 <span class="comment">%pattern file data info - exposure series</span>
 rawPatFileName = <span class="string">"f_00000.pak"</span>;
@@ -172,13 +172,6 @@ RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'
 
 <span class="comment">% initial pattern centre, big patterns</span>
 PC_In_Start=[0.4948186 0.3136417 0.4913804]; <span class="comment">%this is for the TFSProjectPath_SR data</span>
-</pre>
-<pre class="codeoutput error">Error using mkdir
-Zugriff verweigert&#13;
-
-
-Error in SinglePatchEBSP_Plus_SNR (line 37)
-    mkdir(ResultsDir)
 </pre>
 <h2 id="4">Choose some settings</h2>
 <p>Define signal and noise radial bands (in pixels) - use for the SNR calculations these are selected assumping that a 256 pixel pattern is being used so half of the range is 128</p>
@@ -571,7 +564,7 @@ set(gca, <span class="string">'FontSize'</span>, 20);
 legend([<span class="string">"Super Resolution"</span> <span class="string">"Single Pattern"</span> <span class="string">"Frame Integration"</span>], <span class="string">"Location"</span>,<span class="string">"northwest"</span>);
 grid <span class="string">on</span>;
 
-saveas(fig_lineplot,fullfile(ResultsDir,<span class="string">'SNR_Graph.tif'</span>))
+<span class="comment">% saveas(fig_lineplot,fullfile(ResultsDir,'SNR_Graph.tif'))</span>
 </pre>
 <h2 id="11">Plot the functions for the warping</h2>
 <pre class="codeinput">
@@ -707,7 +700,7 @@ EBSP_superres_Radon.PC=PC_In_Start;
 [ EBSP_superres_Radon.nhat_gnom] = EBSP_NormConv( EBSP_superres_Radon.Peak_Centre,size(EBSP_superres_Radon.PatternIn),EBSP_superres_Radon.PC);
 
 <span class="comment">% Index</span>
-[EBSP_superres_Radon.rotdata,EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
+[EBSP_superres_Radon.rotdata{1},EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
 
 <span class="comment">%generate the geometry for analysis</span>
 [ EBSP_superres_Radon.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_superres_Radon.PC );
@@ -757,7 +750,7 @@ RTM.WindowOff=1;
 [Pat_Ref_r] = refine_prep(EBSP_superres_RTM1.PatternIn,SettingsXCF,RTM);
 
 <span class="comment">%refine - using the Radon index to start</span>
-[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata{1}.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
 </pre>
 <h2 id="16">Use pattern matching to refine the PC</h2>
 <pre class="codeinput">disp(<span class="string">'Pattern matching - PC refinement started'</span>)
@@ -778,7 +771,7 @@ Refine.PHTol=1E-7; <span class="comment">%refinement threshold to stop, if the P
 <h2 id="17">Simulate patterns</h2>
 <pre class="codeinput">
 <span class="comment">%simulate the pattern</span>
-[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata.detector,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata{1}.detector,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
 
 [ EBSP_sim_R1 ] = EBSP_gen( EBSP_superres_RTM1.PatternGeometry,G_Refined1,screen_int ); <span class="comment">%generate the EBSP for this iteration</span>
 [ EBSP_sim_R2 ] = EBSP_gen( EBSP_superres_RTM2.PatternGeometry,G_Refined2,screen_int ); <span class="comment">%generate the EBSP for this iteration</span>
@@ -819,7 +812,7 @@ disp(<span class="string">'Code finished'</span>)
 </pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>
@@ -830,8 +823,8 @@ disp(<span class="string">'Code finished'</span>)
 home; clear; close all;
 
 %%
-InputUser.Astro_loc='C:\Users\bbritt01\Documents\GitHub\AstroEBSD_v2';
-InputUser.mtex_location='D:\MTEX\mtex-5.11.2';
+InputUser.Astro_loc='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD';
+InputUser.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
 
 %
 %start mtex if needed
@@ -847,14 +840,17 @@ catch
 end
 
 %% file locations
-TFSProjectLocation_ExpTime = "D:\Ben\2025-08-14T13_03_51_Tianbi_Res_Map_ExpTime";  %Exposure series Data
-TFSProjectPath_SR = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_28_18"; %Super Resolution Data
-TFSProjectPath_Spatial = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T13_02_16"; %Higher spatial magnification pattern data
-TFSProjectPath_Zoom = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_46_24"; %zoomed in data (detector retracted)
+
+TFSProjectPath = "C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map";
+
+TFSProjectLocation_ExpTime = "C:\Users\benja\Documents\EBSD\TFS_SuperRes\ExpTime";  %Exposure series Data
+TFSProjectPath_SR = "C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T11_28_18"; %Super Resolution Data
+TFSProjectPath_Spatial = "C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T13_02_16"; %Higher spatial magnification pattern data
+TFSProjectPath_Zoom = "C:\Users\benja\Documents\EBSD\TFS_SuperRes\Res_Map\2025-08-14T11_46_24"; %zoomed in data (detector retracted)
 
 InputUser.Phase_Input  = {'Si_20kv_HR2'}; %the phase for Radon and pattern matching etc.
 
-ResultsDir=['C:\Users\bbritt01\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'];
+ResultsDir=['C:\Users\benja\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'];
 
 %pattern file data info - exposure series
 rawPatFileName = "f_00000.pak";
@@ -1267,7 +1263,7 @@ set(gca, 'FontSize', 20);
 legend(["Super Resolution" "Single Pattern" "Frame Integration"], "Location","northwest");
 grid on;
 
-saveas(fig_lineplot,fullfile(ResultsDir,'SNR_Graph.tif'))
+% saveas(fig_lineplot,fullfile(ResultsDir,'SNR_Graph.tif'))
 %% Plot the functions for the warping
 
 %plot this data
@@ -1403,7 +1399,7 @@ EBSP_superres_Radon.PC=PC_In_Start;
 [ EBSP_superres_Radon.nhat_gnom] = EBSP_NormConv( EBSP_superres_Radon.Peak_Centre,size(EBSP_superres_Radon.PatternIn),EBSP_superres_Radon.PC);
    
 % Index
-[EBSP_superres_Radon.rotdata,EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
+[EBSP_superres_Radon.rotdata{1},EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
 
 %generate the geometry for analysis
 [ EBSP_superres_Radon.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_superres_Radon.PC );
@@ -1455,7 +1451,7 @@ RTM.WindowOff=1;
 [Pat_Ref_r] = refine_prep(EBSP_superres_RTM1.PatternIn,SettingsXCF,RTM);
 
 %refine - using the Radon index to start
-[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata{1}.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
 
 %% Use pattern matching to refine the PC
 
@@ -1476,7 +1472,7 @@ Refine.PHTol=1E-7; %refinement threshold to stop, if the PH doesn't change by mo
 
 %% Simulate patterns
 %simulate the pattern
-[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata.detector,screen_int); %generate the EBSP for this iteration 
+[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata{1}.detector,screen_int); %generate the EBSP for this iteration 
 
 [ EBSP_sim_R1 ] = EBSP_gen( EBSP_superres_RTM1.PatternGeometry,G_Refined1,screen_int ); %generate the EBSP for this iteration 
 [ EBSP_sim_R2 ] = EBSP_gen( EBSP_superres_RTM2.PatternGeometry,G_Refined2,screen_int ); %generate the EBSP for this iteration 

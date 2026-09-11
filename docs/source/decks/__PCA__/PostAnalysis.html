@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>PCA &amp; RTM postanalysis - TPM 25/10/19</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-08-11">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="PostAnalysis.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -97,7 +97,7 @@ run([InputUser.MTEX_loc,<span class="string">'\startup_mtex'</span>]);
 run([InputUser.Astro_loc,<span class="string">'\start_AstroEBSD'</span>]);
 
 <span class="comment">% Can provide a list of files, or just specify a directory</span>
-list={<span class="string">'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'</span>};
+list={<span class="string">'I:\TomMcA\PCA_output\SuperalloyExample_EBSD+EDS'</span>};
 
 <span class="comment">%folders=["I:\TomMcA\PCA_output\trialCr+Ti_EBSD+EDS"];</span>
 <span class="comment">%cd(folders)</span>
@@ -107,7 +107,7 @@ list={<span class="string">'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'</span>};
 <pre class="codeinput">
 <span class="comment">%inds=1;%comment this out if you want to run for all datasets in list, otherwise it will just do this index</span>
 
-namesetting=<span class="string">'weighting1_vt0,1'</span>; <span class="comment">%the name of the analyses you want to do on this list</span>
+namesetting=<span class="string">'weighting1_vt0,1_Guo_rad3'</span>; <span class="comment">%the name of the analyses you want to do on this list</span>
 
 <span class="comment">%analyse single tile? Unless you specifically want to do this keep as 0.</span>
 post.singletile=0; <span class="comment">%0 by default ; May need to be turned on for older PCA</span>
@@ -141,7 +141,7 @@ PCA_postanalysis <span class="comment">%runs the postanalysis</span>
 </pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>
@@ -168,7 +168,7 @@ run([InputUser.MTEX_loc,'\startup_mtex']);
 run([InputUser.Astro_loc,'\start_AstroEBSD']);
 
 % Can provide a list of files, or just specify a directory
-list={'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'};
+list={'I:\TomMcA\PCA_output\SuperalloyExample_EBSD+EDS'};
 
 %folders=["I:\TomMcA\PCA_output\trialCr+Ti_EBSD+EDS"];
 %cd(folders)
@@ -178,7 +178,7 @@ list={'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'};
 %%
 %inds=1;%comment this out if you want to run for all datasets in list, otherwise it will just do this index
 
-namesetting='weighting1_vt0,1'; %the name of the analyses you want to do on this list
+namesetting='weighting1_vt0,1_Guo_rad3'; %the name of the analyses you want to do on this list
 
 %analyse single tile? Unless you specifically want to do this keep as 0.
 post.singletile=0; %0 by default ; May need to be turned on for older PCA
@@ -210,9 +210,6 @@ cmap=cbrewer('qual','Dark2',15); %can be useful to change the number in here dep
 %%%%%
 PCA_postanalysis %runs the postanalysis
 
-%%
-
-     
 
 ##### SOURCE END #####
 -->

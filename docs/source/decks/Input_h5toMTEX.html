@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>Input_h5toMTEX</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2026-07-10">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="Input_h5toMTEX.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -105,12 +105,6 @@ MTEX_settings.grainangle=5; <span class="comment">%grain boundary in degrees</sp
 MTEX_settings.xpref=<span class="string">'west'</span>;
 MTEX_settings.ypref=<span class="string">'outOfPlane'</span>;
 </pre>
-<pre class="codeoutput error">Error using bReadHDF5
-E:\Ben\Demo_Ben.h5 H5 file cannot be found
-
-Error in Input_h5toMTEX (line 12)
-[MapInfo_S.MapData,MicroscopeData,PhaseData,MapInfo_S.EBSPData ]=bReadHDF5( InputUser );
-</pre>
 <h2 id="2">Create the ebsd container and grains container</h2>
 <pre class="codeinput">[ebsd] = h5_to_MTEX(MapInfo_S.Data_InputMap,MTEX_settings,{<span class="string">'notIndexed'</span>,cs});
 <span class="comment">% calc the grains</span>
@@ -127,7 +121,7 @@ hold <span class="string">on</span>; plot(grains(phase_to_plot).boundary,<span c
 </pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>

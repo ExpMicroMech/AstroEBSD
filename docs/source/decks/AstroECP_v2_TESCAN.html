@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>AstroECP_v2_TESCAN</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2026-07-10">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="AstroECP_v2_TESCAN.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -133,16 +133,13 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 clear; home; close <span class="string">all</span>;
 </pre>
 <h2 id="2">set up the file locations</h2>
-<pre class="codeinput">Input_Data.astro_location=<span class="string">'D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\'</span>;
-Input_Data.mtex_location=<span class="string">'D:\OneDrive - UBC\MatLab\mtex-5.11.2\'</span>;
-
-<span class="comment">% Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';</span>
-<span class="comment">% Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\';</span>
+<pre class="codeinput">Input_Data.astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD\'</span>;
+Input_Data.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'</span>;
 </pre>
 <h2 id="3">ECP location and information</h2>
 <h2 id="4">Tescan Data - comment out this block if you want to run TFS data</h2>
 <pre class="codeinput">Input_Data.image_folder=[Input_Data.astro_location <span class="string">'\modules\AstroECP'</span>];
-Input_Data.image_name=<span class="string">'Si_SAECP_example.tif'</span>;     <span class="comment">%https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP</span>
+Input_Data.image_name=<span class="string">'Si_SAECP_example.tif'</span>;     <span class="comment">%available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/</span>
 Input_Data.image_frame=1;     <span class="comment">%frame number for Tescan data, this variable should not exist for other file types</span>
 Input_Data.ECP_type=<span class="string">'TESCAN'</span>; <span class="comment">%supported types: 'TESCAN', 'TFS', 'other'</span>
 
@@ -150,13 +147,15 @@ Input_Data.ECP_type=<span class="string">'TESCAN'</span>; <span class="comment">
 Input_Data.PC_in=[0.5 0.5 3.9031]; <span class="comment">% starting PC - AstroEBSD convention [PCx, PCy, DD]</span>
 Input_Data.eangs=[87.4431,0.674269,-96.3694]; <span class="comment">% for the example pattern 'Si_SAECP_example.tif'</span>
 
+
 <span class="comment">%set the greyscale colorlim for the ECP</span>
-Input_Data.ECP_Pat_clim=[2 5]; <span class="comment">% default settings of histogram</span>
+<span class="comment">% Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram - regular patterns</span>
+Input_Data.ECP_Pat_clim=[-0.5 1]; <span class="comment">% default settings of histogram - used for the BG corrected one</span>
 </pre>
 <h2 id="5">TFS data - comment this block out if you want to run the Tescan data</h2>
 <pre class="codeinput">
 <span class="comment">% Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];</span>
-<span class="comment">% Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP</span>
+<span class="comment">% Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/</span>
 <span class="comment">% Input_Data.ECP_type='TFS'; %supported types: 'TESCAN', 'TFS', 'other'</span>
 <span class="comment">%</span>
 <span class="comment">% %values for the example data</span>
@@ -194,8 +193,6 @@ Input_Data.Index=1; <span class="comment">%show the Atlas and Index buttons</spa
     run(fullfile(Input_Data.astro_location,<span class="string">"start_AstroEBSD.m"</span>));
 <span class="keyword">end</span>
 </pre>
-<pre class="codeoutput">AstroEBSD v1 is already added to the path
-</pre>
 <h2 id="9">set some MTEX preferences</h2>
 <pre class="codeinput">setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
 setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofPlane'</span>);
@@ -208,21 +205,9 @@ setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'o
 <span class="comment">% Now Run the AstroECP GUI</span>
 [Output_Data]=fAstroECP(Input_Data,ECP_Pat);
 </pre>
-<pre class="codeoutput">Warning: Failed to load the experimental ECP, creating a blank frame 
-</pre>
-<pre class="codeoutput error">Error using fAstroECP/phasefolder_read
-The folder D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\phases does not
-exist
-
-Error in fAstroECP (line 136)
-phases_list=phasefolder_read(Input_Data);
-
-Error in AstroECP_v2_TESCAN (line 95)
-[Output_Data]=fAstroECP(Input_Data,ECP_Pat);
-</pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>
@@ -248,18 +233,15 @@ Error in AstroECP_v2_TESCAN (line 95)
 clear; home; close all;
 
 %% set up the file locations 
-Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\';
-Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; 
-
-% Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';
-% Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; 
+Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD\';
+Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; 
 
 %% ECP location and information
 
 %%  Tescan Data - comment out this block if you want to run TFS data
 
 Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
-Input_Data.image_name='Si_SAECP_example.tif';     %https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP
+Input_Data.image_name='Si_SAECP_example.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 Input_Data.image_frame=1;     %frame number for Tescan data, this variable should not exist for other file types
 Input_Data.ECP_type='TESCAN'; %supported types: 'TESCAN', 'TFS', 'other'
 
@@ -267,13 +249,15 @@ Input_Data.ECP_type='TESCAN'; %supported types: 'TESCAN', 'TFS', 'other'
 Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
 Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern 'Si_SAECP_example.tif'
 
+
 %set the greyscale colorlim for the ECP
-Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
+% Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram - regular patterns
+Input_Data.ECP_Pat_clim=[-0.5 1]; % default settings of histogram - used for the BG corrected one
 
 %% TFS data - comment this block out if you want to run the Tescan data
 
 % Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
-% Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP
+% Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
 % Input_Data.ECP_type='TFS'; %supported types: 'TESCAN', 'TFS', 'other'
 % 
 % %values for the example data

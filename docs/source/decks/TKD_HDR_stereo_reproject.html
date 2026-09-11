@@ -7,9 +7,9 @@ This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
       -->
 <title>TKD_HDR_stereo_reproject</title>
-<meta name="generator" content="MATLAB 23.2">
+<meta name="generator" content="MATLAB 26.1">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2026-07-10">
+<meta name="DC.date" content="2026-09-11">
 <meta name="DC.source" content="TKD_HDR_stereo_reproject.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -172,12 +172,6 @@ path1= <span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\Al_HDR\Dem
 
 run(fullfile(location_astro,<span class="string">'start_AstroEBSD.m'</span>));
 run(fullfile(location_mtex,<span class="string">'startup.m'</span>));
-</pre>
-<pre class="codeoutput error">Error using run
-C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD\start_AstroEBSD.m not found.
-
-Error in TKD_HDR_stereo_reproject (line 31)
-run(fullfile(location_astro,'start_AstroEBSD.m'));
 </pre>
 <h2 id="4">load the pattern + Figure 1</h2>
 <pre class="codeinput">pat1=double(flipud(imread(fullfile(path1,<span class="string">'stitched_flat_gaus.tif'</span>)))); <span class="comment">% this is the demo TKP</span>
@@ -805,7 +799,7 @@ plot(x_c,y_c,<span class="string">'g'</span>)
 </pre>
 <p class="footer">
 <br>
-<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2026a</a>
 <br>
 </p>
 </div>

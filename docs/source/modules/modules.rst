@@ -1,11 +1,15 @@
 Modules
 ====
 
+.. include:: __modules_TOC__.rst
 
-.. toctree::
-    :maxdepth: 4
 
-    modules/rtm/rtm
+
+
+
+..    :maxdepth: 4
+..
+..    modules/rtm/rtm
     modules/gen/loading
     gen/loading
     rtm/rtm

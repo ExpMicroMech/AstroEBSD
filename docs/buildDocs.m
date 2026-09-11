@@ -6,22 +6,23 @@
 %
 
 %% Get all files from the decks directory
-deckScriptFolders= dir("../decks/**/*.*")
+deckScriptFolders= dir("../decks/**")
 deckFolders = deckScriptFolders([deckScriptFolders.isdir])
+%
 generateSourceFolders(deckFolders,'decks')
 %%
 % deckScriptFolders= dir("../decks/**/*.*")
 % deckFolders = deckScriptFolders([deckScriptFolders.isdir])
 % generateSourceFolders(deckFolders,splitString)
 %%
-deckScriptFiles= dir("../decks/**")
+deckScriptFiles= dir("../decks/**/")
 generateScriptDocs(deckScriptFiles,'decks')
 
 %%
-deckScriptFolders= dir("../modules/**/*.*")
+deckScriptFolders= dir("../modules/**/")
 deckFolders = deckScriptFolders([deckScriptFolders.isdir])
-generateSourceFolders(deckFolders,'decks')
-generateFunctionDocs (deckFolders,'modules')
+generateSourceFolders(deckFolders,'modules')
+generateFunctionDocs (deckScriptFolders,'modules')
 %% Function Definitions
 
 
@@ -49,29 +50,40 @@ function addRSTforModules(folder,splitString)
     lowestLevelFolder = strsplit(parentFolder,'/')
     lowestLevelFolder = lowestLevelFolder{end}
     try
-        lowestLevelFolder = sprintf("%s_TOC__",lowestLevelFolder(1:end-2))
+        if isempty(lowestLevelFolder)
+            lowestLevelFolder = sprintf("__%s_TOC__",splitString)
+        else
+            lowestLevelFolder = sprintf("%s_TOC__",lowestLevelFolder(1:end-2))
+        end
     end
+    try
     % strsplit(deckScriptFiles(fileNum).name,'.')   
-    writeName = folder.name;
-    % htmlName = replace(writeName,'.m','.html')
-    writeName = replace(writeName,'.m','')
-    %heading
-    writelines( folder.name,sprintf("%s/__%s__.rst",(parentFolder),writeName));
-    writelines('================',sprintf("%s/__%s__.rst",(parentFolder),writeName),WriteMode='append') ;
+        writeName = folder.name;
+        htmlName = replace(writeName,'.m','.html')
+        writeName = replace(writeName,'.m','')
+        %heading
+        writelines( folder.name,sprintf("%s/__%s__.rst",(parentFolder),writeName));
+        writelines('================',sprintf("%s/__%s__.rst",(parentFolder),writeName),WriteMode='append') ;
+        
+        %include raw html files %NOTE: the doc says that this is potentially
+        %insecure, but for now it is the easiest way for us.
+        
+        writelines('.. raw:: html'...
+                ,sprintf("%s/__%s__.rst",parentFolder,writeName),WriteMode='append') ;
     
-    %include raw html files %NOTE: the doc says that this is potentially
-    %insecure, but for now it is the easiest way for us.
-    
-    writelines('.. raw:: html'...
-            ,sprintf("%s/__%s__.rst",parentFolder,writeName),WriteMode='append') ;
+        writelines(sprintf('\t:file: %s',htmlName)...
+                ,sprintf("%s/__%s__.rst",parentFolder,writeName), WriteMode='append') ;
 
-    writelines(sprintf('\t:file: %s',htmlName)...
-            ,sprintf("%s/__%s__.rst",parentFolder,writeName), WriteMode='append') ;
-    % exportFolder = sprintf()
-    % tryToPublish(folder,parentFolder)
-    % % folderName = sprintf("%s__%s__",tocParentFolder,writeName);
-    % writelines(sprintf("\t%s", folderName),sprintf('%s/%s.rst',parentFolder,lowestLevelFolder),WriteMode='append');
-    %%
+         folderName = sprintf("__%s__",writeName);
+        writelines(sprintf("\t%s", folderName),sprintf('%s/%s.rst',parentFolder,lowestLevelFolder),WriteMode='append');
+    
+        % exportFolder = sprintf()
+        tryToPublish(folder,parentFolder)
+    catch
+         warning('could not generate rst file for %s', writeName)
+    end
+    % folderName = sprintf("%s__%s__",tocParentFolder,writeName);
+        %%
 end
 
 
@@ -99,7 +111,11 @@ function addRSTforScripts(folder,splitString)
     lowestLevelFolder = strsplit(parentFolder,'/');
     lowestLevelFolder = lowestLevelFolder{end};
     try
-        lowestLevelFolder = sprintf("%s_TOC__",lowestLevelFolder(1:end-2));
+        if isempty(lowestLevelFolder)
+            lowestLevelFolder = sprintf("__%s_TOC__",splitString);
+        else
+            lowestLevelFolder = sprintf("%s_TOC__",lowestLevelFolder(1:end-2));
+        end
     end
     try
     % strsplit(deckScriptFiles(fileNum).name,'.')   
@@ -119,10 +135,12 @@ function addRSTforScripts(folder,splitString)
     writelines(sprintf('\t:file: %s',htmlName)...
             ,sprintf("%s/__%s__.rst",parentFolder,writeName), WriteMode='append') ;
     % exportFolder = sprintf()
-    tryToPublish(folder,parentFolder)
-    folderName = sprintf("%s__%s__",tocParentFolder,writeName);
+    folderName = sprintf("__%s__",writeName);
+    % folderName = writeName
     writelines(sprintf("\t%s", folderName),sprintf('%s/%s.rst',parentFolder,lowestLevelFolder),WriteMode='append');
-    catch
+
+    tryToPublish(folder,parentFolder)
+       catch
         warning('could not generate rst file for %s', writeName)
     end
     %%
@@ -143,9 +161,15 @@ end
 %% Handle Tocs
 
 
-function makeTocEntry(folder,tocParentFolder,splitString)
-            folderName = sprintf("%s%s/%s",tocParentFolder,getExportFolderName(folder),getExportFolderName(folder));
-            writelines(sprintf("\t%s", folderName), sprintf('source/%s/__%s_TOC__.rst',splitString,splitString),WriteMode='append');
+function makeTocEntry(folder,tocParentFolder,splitString,tocEntry)
+            % nesting = count(tocParentFolder,"/")
+            % nesting_tabs = ""
+            % for i =1:nesting
+            %     nesting_tabs = sprintf("%s\t",nesting_tabs)
+            % end
+            
+            folderName = sprintf("%s/%s",getExportFolderName(folder),getExportFolderName(folder));
+            writelines(sprintf("\t%s", folderName), sprintf('source/%s/__%s_TOC__.rst',splitString,tocEntry),WriteMode='append');
 end
 
 
@@ -167,7 +191,7 @@ end
 
 %% General Fucntions for folder hierarchy
 
-function [parentFolder, tocParentFolder] = getParentFolders(folder,splitString)
+function [parentFolder, tocParentFolder,tocFileNameFolder] = getParentFolders(folder,splitString)
     parentFolder = strsplit(folder.folder,splitString);
    
     % disp(folder.name)
@@ -177,16 +201,40 @@ function [parentFolder, tocParentFolder] = getParentFolders(folder,splitString)
     if numel(parentFolder)>=2
         %%
         parentFolder =parentFolder{2};
-        try
+      try
             if strcmp(parentFolder(1),'/') || strcmp(parentFolder(1),'\')
-                parentFolder = parentFolder(2:end);
-                parentFolder = sprintf('__%s__',parentFolder)
+                parentFolder = parentFolder(2:end)
+                parentFolder2 = strsplit(parentFolder,'\')
+                parentFolder2 = strsplit(parentFolder,'/')
+                parentFolder = []
+                for fileNum = 1:numel(parentFolder2)
+                    inputParentFolder = parentFolder2{fileNum}
+                    while strcmp(inputParentFolder(1:2),'__')
+                        inputParentFolder = inputParentFolder(3:end)
+                    end
+                    while strcmp(inputParentFolder(1:2),'__')
+                        inputParentFolder = inputParentFolder(1:end-3)
+                    end
+                    parentFolder=sprintf('%s/__%s__',parentFolder,inputParentFolder)
+                end
+                parentFolder = char(parentFolder)
+                %
+                parentFolder = parentFolder(2:end)
+                %
+                % parentFolder = sprintf('__%s__',parentFolder)
+                
             end
         catch
 
         end
         tocParentFolder = sprintf("%s",parentFolder);
-        tocParentFolder = tocParentFolder(2:end);
+        % tocParentFolderStem = tocParentFolder(2:end);
+        % tocParentFolder = tocParentFolder(2:end);
+        % if ~ strcmp(tocParentFolder, "")
+        %     tocParentFolder = sprintf('%s/',tocParentFolder) ;
+        % end
+        tocFileNameFolder = strsplit(folder.folder,splitString);
+        tocFileNameFolder = tocFileNameFolder{end}
         parentFolder = sprintf('source/%s/%s',splitString, parentFolder) ;
         % parentFolder = parentFolder(1:end-1)
         % we only need the relative path behind decks as we 
@@ -206,13 +254,32 @@ function generateSourceFolders(deckFolders,splitString)
     for folderNum = 1:numel(deckFolders)
         folder = deckFolders(folderNum);
         
-        if ~ ( strcmp(folder.name,'.') | strcmp(folder.name, '..'))
-            [parentFolder,tocParentFolder] = getParentFolders(folder,splitString);
+        if ~ ( strcmp(folder.name, '.') | strcmp(folder.name, '..')) 
+            [parentFolder,tocParentFolder,tocFileNameFolder] = getParentFolders(folder,splitString);
+            if ~isempty(strfind(folder.name,"pycache")) | ~isempty(strfind(folder.name,"dump")) ~isempty(strfind(parentFolder,"dump"))
+                continue
+            end
             % Build the TOC for docs.rst
             % hint: the docs.rst includes a .rst file that only lists all
             % decks as docs
             % folderName = fullfile(parentFolder,folder.name);
-            makeTocEntry(folder,tocParentFolder,splitString)
+            % if 
+            % if isempty(tocParentFolder)
+%%
+
+            if strcmp(tocParentFolder,"")
+                makeTocEntry(folder,tocParentFolder,splitString,splitString)
+            else
+                tocRootFile = strsplit(folder.folder,"/");
+                tocRootFile = tocRootFile{end};
+                makeTocEntry(folder,tocParentFolder,sprintf("%s/%s",splitString,tocParentFolder),tocRootFile)
+            end
+            % if newUniqueRoot
+            %     writelines(" .. automodule:: modules.rtm")
+            % 
+            %     :members:
+            % end
+
             createTocRstFiles(folder,parentFolder)
             
             %
