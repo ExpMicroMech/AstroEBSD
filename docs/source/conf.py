@@ -8,10 +8,10 @@
 import os
 import sys
 
-project = 'AstroEBSD_v2'
-copyright = '2025, T.B Britton, A. Foden, T. McAuliffe, T. Zhang, L. Berners.'
+project = 'AstroEBSD'
+copyright = '2026, T.B Britton, A. Foden, T. McAuliffe, T. Zhang, L. Berners.'
 author = 'T.B Britton, A. Foden, T. McAuliffe, T. Zhang, L. Berners.'
-release = 'v2'
+release = 'v1.7'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
