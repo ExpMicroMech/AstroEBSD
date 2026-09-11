@@ -15,6 +15,8 @@ See `decks/ILSstudy` for details
 
 - Added real-space based refinement with multiple optimisation algorithms and routines under `modules/rtm/direct_space`
 
+- EXPERIMENTAL: Adding functionallity to build matlab documentation for decks and functions (currently half broken)
+
 Principal contributions from L. Berners
 
 
