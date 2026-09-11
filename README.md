@@ -35,7 +35,7 @@ For an (incomplete) list of updates, please refer to CHANGELOG.
 Loaders of data from a few different EBSD instrument vendors are available: Bruker, TSL/EDAX, Thermo Fisher Scientific, Oxford Instrument, as well as our in-house DED-based modular stages.
 
 
-## Building the documentation using sphinx and matlab build in "publish" command
+### Documentation Build
 
 create a virtual env  and install the requirements
 
