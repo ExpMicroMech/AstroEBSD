@@ -48,11 +48,15 @@ py -m pip install -r requirements.txt
 For Linux:
 ```
 python -m venv .venv
-source .\venv\Scripts\activate
-python -m pip install -r requirements.txt
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
+Nvigate to the `docs` and run the buildDocs.m script (in Matlab)
+This will automaticall create reSampledText (.rtf) documents that are used by sphinx during the build process.
 
+after this run
 
-_ToDo:_
-navigate to the docs Folder and run the buildDocs.m script
-This will automaticall create reSampledText documents that are used by sphinx during the build process. and will call the sphinx make html command in the end.
+```
+sphinx-build -M html docs/source docs/build
+
+```
