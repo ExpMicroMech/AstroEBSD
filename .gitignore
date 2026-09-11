@@ -46,3 +46,13 @@ modules/AstroECP/refinement_results/Si_SAECP_example.tif
 *.tif
 modules/AstroECP/refinement_results/refinement_results.txt
 modules/AstroECP/refinement_results/Si_SAECP_example.tif
+
+# Sphinx documentation
+docs/build
+#	docs/source/**/
+
+# Python
+.venv/
+__*__.rst
+docs/source/*.html
+

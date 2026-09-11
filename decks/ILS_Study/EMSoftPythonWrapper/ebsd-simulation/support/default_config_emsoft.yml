@@ -1,0 +1,31 @@
+mccldata:
+  platid: 3
+  devid:  1
+  numsx:  501
+  totnum_el:  2000000000
+  ekev: 20.0
+  ehistmin: 12.0
+  
+  ebinsize: 1.0
+  depthmax: 100.0
+  depthstep:  1.0
+  dataname: MCoutput.h5
+
+ebsdmastervars:
+  dmin: 0.05
+  npx:  500
+  nthreads: 24
+  energyfile: MCOutput.h5
+
+bethelist:
+   c1: 4.0
+
+bashscripts:
+  email: berners@imm.rwth-aachen.de
+  acc: rwth1308
+  memory_mc: 16G
+  memory_master: 32G
+  num_cpu_mc: 1
+  num_cpu_master: 24
+  hours_master: '1:00:00'
+  hours_mc: '1:00:00'

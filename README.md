@@ -45,6 +45,13 @@ py -m venv .venv
 .\venv\Scripts\activate
 py -m pip install -r requirements.txt
 ```
+For Linux:
+```
+python -m venv .venv
+source .\venv\Scripts\activate
+python -m pip install -r requirements.txt
+```
+
 
 _ToDo:_
 navigate to the docs Folder and run the buildDocs.m script

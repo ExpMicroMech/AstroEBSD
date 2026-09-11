@@ -1,0 +1,5 @@
+.venv
+.venv_rocky9
+rdm
+dump
+core*
