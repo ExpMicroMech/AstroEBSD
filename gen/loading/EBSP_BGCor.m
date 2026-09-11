@@ -51,6 +51,9 @@ EBSP2=EBSP;
 if ~isfield(Settings_Cor,'NaNClean')
    Settings_Cor.NaNClean=0;
 end
+if ~isfield(Settings_Cor,'InvSquareCrop')
+   Settings_Cor.InvSquareCrop=0;
+end
 if ~isfield(Settings_Cor,'MeanCentre')
     Settings_Cor.MeanCentre=0;
 end
@@ -74,6 +77,7 @@ end
 if ~isfield(Settings_Cor,'hot_thresh')
     Settings_Cor.hot_thresh=0;
 end
+
 
 if ~isfield(Settings_Cor,'gfilt_s')
     Settings_Cor.gfilt_s=0;
@@ -99,6 +103,9 @@ if ~isfield(Settings_Cor,'gfilt')
     Settings_Cor.gfilt=0;
 end
 
+if ~isfield(Settings_Cor,'gfiltQuad')
+    Settings_Cor.gfiltQuad= 0;
+end
 if ~isfield(Settings_Cor,'SplitBG')
     Settings_Cor.SplitBG=0;
 end
@@ -122,36 +129,69 @@ end
 if ~isfield(Settings_Cor,'MeanCentre')
    Settings_Cor.LineError=0; 
 end
+if ~isfield(Settings_Cor,'cross')
+   Settings_Cor.cross=0; 
+end
+if ~isfield(Settings_Cor,'gaussBlur')
+    Settings_Cor.gaussBlur=0;
+end
+
+if ~isfield(Settings_Cor,'gaussian_range')
+    Settings_Cor.gaussian_range=0;
+end
+if ~isfield(Settings_Cor,'quadrants')
+   Settings_Cor.quadrants=0; 
+end
 
 if ~isfield(Settings_Cor,'rkd')
     Settings_Cor.rkd=0;
 end
 
+
+
 %% Start the corrections
+% if Settings_Cor
+if Settings_Cor.SquareCrop == 1 %crop the image to a square
+    EBSP_size=min(size(EBSP2));
+    crop.centre = [size(EBSP2, 2)/2 size(EBSP2, 1)/2];
+    s=1:EBSP_size; s=s-mean(s,"omitnan");
 
-if Settings_Cor.rkd == 1 %RKD
-
-    pat2=EBSP2(2:end-1,2:end-1);
-
-    pat2_q1=pat2(1:253,1:218);
-    pat2_q2=pat2(1:218,225:end);
-    pat2_q3=pat2(260:end,1:253);
-    pat2_q4=pat2(225:end,260:end);
-
-    pat_std=std([pat2_q1(:);pat2_q2(:);pat2_q3(:);pat2_q4(:)]);
-    pat_mean=mean([pat2_q1(:);pat2_q2(:);pat2_q3(:);pat2_q4(:)]);
-    EBSP2=randn(size(pat2))*pat_std+pat_mean;
-    EBSP2(1:253,1:218)=pat2_q1;
-    EBSP2(1:218,225:end)=pat2_q2;
-    EBSP2(260:end,1:253)=pat2_q3;
-    EBSP2(225:end,260:end)=pat2_q4;
-
+    sy=s+crop.centre(2)+0.5; 
+    sx=s+crop.centre(1)+0.5;
+    
+    %helps deal with issue with when the patterns are not even in size to start
+    sx=floor(sx);
+    sy=floor(sy);
+    EBSP2=EBSP2(sy,sx);
 end
-
-
-
+%%
+if Settings_Cor.InvSquareCrop == 1 %crop the image to a square
+    [EBSP_size,xvsy]=max(size(EBSP));
+    crop.centre = [size(EBSP, 2)/2 size(EBSP, 1)/2];
+    s=1:EBSP_size; s=s-mean(s,"omitnan");
+    s2=(max(size(EBSP))-min(size(EBSP)))/2+1:min(size(EBSP))+(max(size(EBSP))-min(size(EBSP)))/2;
+    % s2=s2-mean(s2,"omitnan");
+    if xvsy==2
+        sy=s2;
+        sx=s+crop.centre(1)+0.5;
+    else
+        sy=crop.centre(2)+0.5; 
+        sx=s2;
+    end
+    
+    %helps deal with issue with when the patterns are not even in size to start
+    sx=floor(sx);
+    sy=floor(sy);
+    %%
+    EBSP2=ones(EBSP_size,EBSP_size);
+    %%
+    % EBSP2=EBSP2*mean(EBSP)
+    EBSP2(sy,sx)=EBSP;
+end
+%%
+%%
 if Settings_Cor.NaNClean == 1 %NaN correction
-    [y,x]=find(isnan(EBSP2)==1);
+    [y,x]=find(isnan(EBSP2));
     
     [threexthreey,threexthreex]=meshgrid(-1:1,-1:1);
     
@@ -175,15 +215,16 @@ if Settings_Cor.NaNClean == 1 %NaN correction
     end
     
 end
-
+%%
 if Settings_Cor.SatCor == 1 %saturation correction
     I_noise= imnoise(zeros(size(EBSP2)),'gaussian');
-    I_noise=nanmean(EBSP2(:))+nanstd(EBSP2(:))*I_noise;
+    I_noise=mean(EBSP2(:),"omitnan")+std(EBSP2(:),"omitnan")*I_noise;
     mvals=find(EBSP2 == max(EBSP2(:)));
     EBSP2(mvals)=I_noise(mvals);
 end
-
+%%
 if Settings_Cor.RealBG == 1
+    % EBSP2=fix_mean(EBSP2);
     EBSP2=EBSP2./Settings_Cor.EBSP_bg;
 end
 
@@ -206,11 +247,11 @@ if Settings_Cor.hotpixel == 1
     [EBSP2,Settings_Cor.hotpixl_num]=cor_hotpix(EBSP2,Settings_Cor.hot_thresh);
 end
 
-
+%%
 if Settings_Cor.LineError==1
     
-    meanval=nanmean(EBSP2(:));
-    patstd=nanstd(EBSP2(:));
+    meanval=mean(EBSP2(:),"omitnan");
+    patstd=std(EBSP2(:),"omitnan");
     
     loc1=floor(0.9667*size(EBSP,1));
     loc2=ceil(0.98*size(EBSP,1));
@@ -220,13 +261,24 @@ if Settings_Cor.LineError==1
         EBSP2(i,:)=meanval+line.*(3*patstd)-3*patstd./2;
     end
 end
-
+%%
 %fix the mean and nanstd
 EBSP2=fix_mean(EBSP2);
+%%
+%resize the image
+if Settings_Cor.resize == 1
+    if isscalar(Settings_Cor.size)
+        Settings_Cor.size(2)=Settings_Cor.size(1);
+    end
 
-
-
-
+    cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)*size(EBSP2,2)/size(EBSP2,1)]);
+    EBSP2 = imresize(EBSP2,cs(1:2));
+    cs=size(EBSP2);
+else
+    cs=size(EBSP2);
+end
+Settings_Cor.size=cs;
+%%
 if Settings_Cor.Square == 1
     %square crop on minimum dimension
     ms=min(Settings_Cor.size);
@@ -236,37 +288,17 @@ if Settings_Cor.Square == 1
     cs=size(EBSP2);
     Settings_Cor.size=cs;
 end
-
-if Settings_Cor.SquareCrop == 1 %crop the image to a square
-    EBSP_size=min(size(EBSP2));
-    crop.centre = [size(EBSP2, 2)/2 size(EBSP2, 1)/2];
-    s=1:EBSP_size; s=s-nanmean(s);
-
-    sy=s+crop.centre(2)+0.5; 
-    sx=s+crop.centre(1)+0.5;
-    
-    %helps deal with issue with when the patterns are not even in size to start
-    sx=floor(sx);
-    sy=floor(sy);
-    EBSP2=EBSP2(sy,sx);
-end
-
-%resize the image
-if Settings_Cor.resize == 1
-    % cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)*size(EBSP2,2)/size(EBSP2,1)]);
-    cs=floor([Settings_Cor.size(1) Settings_Cor.size(2)]);
-    EBSP2 = imresize(EBSP2,cs(1:2));
-else
-    cs=size(EBSP2);
-end
+%%
 
 if Settings_Cor.gfilt == 1
+    EBSP2=EBSP2-min(EBSP2(:))+1;
     gf=Settings_Cor.gfilt_s*size(EBSP2,1)/100;
     EBSP2B = imgaussfilt(EBSP2,gf);
     EBSP2 = EBSP2./EBSP2B;
+    EBSP2=fix_mean(EBSP2);
 end
 
-
+%%
 if Settings_Cor.gaussfit == 1
     
     EBSPData.PW=size(EBSP2,2);
@@ -275,33 +307,44 @@ if Settings_Cor.gaussfit == 1
     EBSP2=EBSP2./bg2;
     EBSP2=fix_mean(EBSP2);
 end
-
+%%
 if Settings_Cor.blur == 1
     ix=size(EBSP2,2);
     Iblur = imgaussfilt(EBSP2, Settings_Cor.blurf(1),'filtersize',Settings_Cor.blurf(2));
     EBSP2=EBSP2-Iblur;
 end
+if Settings_Cor.gaussBlur ~=0
+    % ix=size(EBSP2,2);
+    EBSP2 = imgaussfilt(EBSP2, Settings_Cor.gaussBlur);
+    % EBSP2=EBSP2-Iblur;
+end
 
-%read the image size for radius cropping etc.
-cs=size(EBSP2);
-Settings_Cor.size=cs;
+
 
 if Settings_Cor.radius == 1
-    
+    %%
+    % EBSP2=fix_mean(EBSP2);
     r_thresh=Settings_Cor.radius_frac*4/3*cs(1)/2;
     
     [xgrid,ygrid]=meshgrid(1:cs(2),1:cs(1));
-    xgrid=int32(xgrid);
-    ygrid=int32(ygrid);
-    root_values=(xgrid-size(EBSP2,2)/2).^2+(ygrid-size(EBSP2,1)/2).^2;
-    r_grid=sqrt(double(root_values));
+    xgrid=double(xgrid);
+    ygrid=double(ygrid);
+    r_grid=sqrt(double(xgrid-size(EBSP2,2)/2).^2+double(ygrid-size(EBSP2,1)/2).^2);
     %%
-    EBSP2(r_grid>=double(r_thresh)) = 0;
-    EBSP2(r_grid<double(r_thresh))=  EBSP2(r_grid<double(r_thresh))-nanmean(EBSP2(r_grid<double(r_thresh)));
+    EBSP2(r_grid>=r_thresh) = 0 ;
+    % EBSP2(r_grid>=r_thresh) = mean(EBSP2(:)) ;
+    % 
+    %
+    % EBSP2(r_grid<r_thresh)=  (EBSP2(r_grid<r_thresh)-mean(EBSP2(r_grid<r_thresh),"omitnan"))/std(EBSP2(r_grid<r_thresh),"omitnan");
+    EBSP2(r_grid<r_thresh)=  (EBSP2(r_grid<r_thresh)-min(EBSP2(r_grid<r_thresh)))/max(EBSP2(r_grid<r_thresh));
+    % EBSP2(r_grid>=r_thresh) = 0 ;
+    % EBSP2(r_grid>=r_thresh) = 0.5 ;
+    %%
+    % normalize
 else
     EBSP2=fix_mean(EBSP2);
 end
-
+%%
 if Settings_Cor.TKDBlur2 == 1
     gf=Settings_Cor.gfilt_s*size(EBSP2,1)/200;
     EBSP2B = imgaussfilt(EBSP2,gf);
@@ -313,10 +356,92 @@ if Settings_Cor.TKDBlur2 == 1
     end
 %     EBSP2=fix_mean(EBSP2);
 end
+%%
+if Settings_Cor.MeanCentre==1
+    %taken from fix fixmean function, without the make positive part
+    EBSP2=(EBSP2-mean(EBSP2(:),"omitnan"))/std(EBSP2(:),"omitnan");
+end
+
+%%
+if Settings_Cor.quadrants==1
+    %%
+    cross_size=Settings_Cor.cross;
+    center=uint16(size(EBSP2)/2);
+    mask=zeros(size(EBSP2));
+    mask2 = mask;
+    mask2(ceil(center(1)/3):center(1)-cross_size+1 , ceil(center(2)/3):center(2)-cross_size+1)=1;
+    mask(1:center(1)-cross_size+1 , 1:center(2)-cross_size+1)=1;
+    quadDims = [center(1)-cross_size+1,center(2)-cross_size+1];
+    EBSP2 = rescale(EBSP2);
+    for i=1:4
+        % disp(i)
+        
+       
+        % figure
+        % imagesc(mask)
+        
+        if Settings_Cor.gfiltQuad == 1
+            gf=Settings_Cor.gfilt_s*size(EBSP2,1)/50;
+            filtImage = reshape(EBSP2(~mask==0),quadDims(1),quadDims(2));
+            EBSP2B = imgaussfilt(filtImage,gf,'Padding','replicate');
+            EBSP2B=reshape(EBSP2B,quadDims(1),quadDims(2));
+            EBSP2(~mask==0) = filtImage./EBSP2B;
+        end
+      EBSP2(~mask==0)=(EBSP2(~mask==0)-mean(EBSP2(~mask2==0),"omitnan"))/std(EBSP2(~mask2==0),"omitnan");
+         mask=rot90(mask);
+        mask2 = rot90(mask2);
+         % figure
+    % imagesc(EBSP2)
+    % clim([-3 3])
+    % axis xy
+    % axis equal
+    % colormap gray
+    end
+    EBSP2=(EBSP2-mean(EBSP2(:),"omitnan"))/std(EBSP2(:),"omitnan");
+    
+    % if Settings_Cor.gfilt == 1
+    % gf=Settings_Cor.gfilt_s*size(EBSP2,1)/100;
+    % EBSP2B = imgaussfilt(EBSP2,gf);
+    % EBSP2 = EBSP2./EBSP2B;
+    % end
+    % if Settings_Cor.MeanCentre==1
+    % %taken from fix fixmean function, without the make positive part
+    % EBSP2=(EBSP2-mean(EBSP2(:),"omitnan"))/std(EBSP2(:),"omitnan");
+
+    % end
+end
+
+
+
+
+if Settings_Cor.gaussian_range>0
+
+    gaussian_range=Settings_Cor.gaussian_range*max(size(EBSP2))/2;
+    mask =  gauss2d(size(EBSP2),gaussian_range);
+    mask = rescale(mask);
+    % figure
+    % imagesc(mask)
+    % size(mask)
+    % colorbar();
+    EBSP2 = mask.*EBSP2;
+end
+
+if Settings_Cor.cross>=1
+    cross_size=Settings_Cor.cross;
+    center=uint16(size(EBSP2)/2);
+    % slice=[center(1)-cross_size:center(1)+cross_size,center(2)-cross_size,center(2)+cross_size]
+    % EBSP2(slice)=0;
+    % EBSP2=(EBSP2-mean(EBSP2(:),"omitnan"))/std(EBSP2(:),"omitnan");
+    mask=ones(size(EBSP2));
+    mask(center(1)-cross_size+1:center(1)+cross_size,:)=0;
+    mask(:,center(2)-cross_size+1:center(2)+cross_size)=0;
+    % EBSP2(slice)=0;
+    
+end
 
 if Settings_Cor.MeanCentre==1
     %taken from fix fixmean function, without the make positive part
-    EBSP2=(EBSP2-nanmean(EBSP2(:)))/nanstd(EBSP2(:));
+    EBSP2=(EBSP2-mean(EBSP2(:),"omitnan"))/std(EBSP2(:),"omitnan");
 end
 
 Settings_Cor_out=Settings_Cor;
@@ -335,14 +460,18 @@ h_pix=find(abs(EBSP-EBSP_med)>hthresh); %1000 is chosen as an arbitary number
 EBSP2=EBSP;
 EBSP2(h_pix)=EBSP_med(h_pix);
 num_hot=size(h_pix);
-
+%%
 end
+
+
+
 
 function EBSP2=fix_mean(EBSP)
 %zero mean & fix stdev
-EBSP2=(EBSP-nanmean(EBSP(:)))/nanstd(EBSP(:));
+% EBSP2=(EBSP-nanmean(EBSP(:)))/nanstd(EBSP(:));
+EBSP2=(EBSP-trimmean(EBSP(:),10))/nanstd(EBSP(:));
 %make positive
-EBSP2=EBSP2-min(EBSP2(:))+1;
+% EBSP2=EBSP2-min(EBSP2(:))+1;
 end
 
 function [bg2,params1]=bg_fit(EBSP2,EBSPData)
@@ -380,3 +509,36 @@ bg(:,1:xsize/2)=params(5)*bg(:,1:xsize/2)+params(6);
 bg(:,xsize/2+1:end)=params(7)*bg(:,xsize/2+1:end)+params(8);
 
 end
+
+  function G = gauss2d(size2,sigma)
+
+  %% 2d "classic" gauss filter
+        [X, Y] = meshgrid(1:size2(1), 1:size2(2));
+        A=1/sqrt(2*pi*sigma^2);
+        G = 1*exp(-1/(sigma^2)*((Y-size2(1)/2).^2 + (X-size2(2)/2).^2));
+  end
+  
+  function G=gauss2_disc(size2,sigma,disc_size)
+
+  %% circular gauss filter
+     G = zeros(size2(1),size2(2));
+     r_thresh=disc_size*min(size2)/2;
+     [xgrid,ygrid]=meshgrid(1:size2(1),1:size2(2));
+     xgrid=double(xgrid);
+     ygrid=double(ygrid);
+     r_grid=sqrt(double(xgrid-size2(1)/2).^2+double(ygrid-size2(2)/2).^2);
+     G(r_grid<=r_thresh) = 1;
+     G=imgaussfilt(G,sigma);
+  end
+
+
+  function G=gauss2_square(size2,sigma,disc_size)
+
+  %% square gauss filter
+     G = zeros(size2(1),size2(2));
+     G( uint16(size2(1)*(1-disc_size)/2) : uint16(size2(1)*(1-(1-disc_size)/2)) ,uint16( size2(2)*(1-disc_size)/2) : uint16( size2(2)*(1-(1-disc_size)/2)) ) = 1;
+     
+%%
+     G=imgaussfilt(G,sigma);
+%      Y(size(2)*(disc_size/2):size(2)*(1-disc_size/2)=1
+  end

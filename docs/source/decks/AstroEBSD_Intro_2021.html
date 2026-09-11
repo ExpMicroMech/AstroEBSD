@@ -1,0 +1,977 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>AstroEBSD_Intro_2021</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="AstroEBSD_Intro_2021.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Toolbox locations for AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#3">run Astro and EBSD to start</a>
+</li>
+<li>
+<a href="#4">Analyse a single pattern</a>
+</li>
+<li>
+<a href="#5">Load in the GUI</a>
+</li>
+<li>
+<a href="#6">Do the indexing offline</a>
+</li>
+<li>
+<a href="#7">Now read a H5 file</a>
+</li>
+<li>
+<a href="#8">Read the EBSD patterns into the RAM - this takes 0.5GB of RAM, but makes every thing else easier</a>
+</li>
+<li>
+<a href="#9">Now we can start playing</a>
+</li>
+<li>
+<a href="#10">plot a dummy argus image</a>
+</li>
+<li>
+<a href="#11">Now process the patterns</a>
+</li>
+<li>
+<a href="#12">Extract data from 1 pixel</a>
+</li>
+<li>
+<a href="#13">From a map, plot the EBSP</a>
+</li>
+<li>
+<a href="#14">Use the astro settings as before to find the PC &amp; index</a>
+</li>
+<li>
+<a href="#15">Find the pattern centre for one pattern</a>
+</li>
+<li>
+<a href="#16">Do this for a whole map</a>
+</li>
+<li>
+<a href="#17">Write data to a h5 file</a>
+</li>
+<li>
+<a href="#18">Create stuff in MTEX</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear
+home
+close <span class="string">all</span>
+
+<span class="comment">% This script was created to kick off discussions at the 2019 EBSD meeting</span>
+<span class="comment">% and it contains basic functionality that may be useful within the</span>
+<span class="comment">% AstroEBSD toolbox</span>
+<span class="comment">%</span>
+<span class="comment">% You can fetch the demo h5 data set from https://doi.org/10.5281/zenodo.2609220</span>
+<span class="comment">%</span>
+<span class="comment">% Works with MTEX 5.2</span>
+</pre>
+<h2 id="2">Toolbox locations for AstroEBSD and MTEX</h2>
+<pre class="codeinput">location_astro=<span class="string">'C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'</span>; <span class="comment">%Change this to your AstroEBSD location</span>
+location_mtex=<span class="string">'C:\Communal_MatlabPlugins\mtex-5.2.beta2'</span>; <span class="comment">%Change this to where you keep your MTEX folder</span>
+</pre>
+<h2 id="3">run Astro and EBSD to start</h2>
+<pre class="codeinput">run(fullfile(location_astro,<span class="string">'start_AstroEBSD.m'</span>));
+run(fullfile(location_mtex,<span class="string">'startup_mtex.m'</span>));
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD.m not found.
+
+Error in AstroEBSD_Intro_2021 (line 19)
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+</pre>
+<h2 id="4">Analyse a single pattern</h2>
+<pre class="codeinput">pattern1=flipud(double(imread(<span class="string">'pattern1.tif'</span>))); <span class="comment">%Make sure pattern1.tif is saved in your current working directory</span>
+
+<span class="comment">% Normalise intensities</span>
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( pattern1,[]);
+Settings_Cor.radius=1;
+Settings_Cor.radius_frac=0.95;
+
+<span class="comment">%build the phases</span>
+InputUser.Phase_Folder = fullfile(location_astro,<span class="string">'phases\phasefiles'</span>);
+InputUser.Phase_Input  = {<span class="string">'Si'</span>}; <span class="comment">%Si, Ferrite</span>
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+
+<span class="comment">%Set up the radon transform peak finder</span>
+Settings_Rad.theta_range=[-10 180 1]; <span class="comment">%theta min, theta max, theta step - in degrees</span>
+
+<span class="comment">%peak hunt</span>
+Settings_Rad.max_peaks=12; <span class="comment">%max number of peaks to return</span>
+Settings_Rad.num_peak=20; <span class="comment">%number of peaks to search for - peaks will be rejected</span>
+Settings_Rad.theta_search_pix=6; <span class="comment">%search size in theta steps</span>
+Settings_Rad.rho_search_per=0.2; <span class="comment">%radon search in fractions</span>
+Settings_Rad.min_peak_width=0.002; <span class="comment">%min rseperation of the peak width, in pixels</span>
+</pre>
+<h2 id="5">Load in the GUI</h2>
+<pre class="codeinput">
+<span class="comment">%play with the GUI</span>
+<span class="comment">%Close the GUI to have the code continue automatically</span>
+Settings_PCin.start=[0.5,0.3,0.6];
+Astro_EBSPset(EBSP_One,Settings_Cor,Settings_Rad,Settings_PCin,InputUser);
+</pre>
+<h2 id="6">Do the indexing offline</h2>
+<pre class="codeinput">
+<span class="comment">%This is the example</span>
+EBSP_One.PC=[0.5,0.3,0.6]; <span class="comment">%known</span>
+
+<span class="comment">%Radon transform</span>
+[ EBSP_One.Peak_Centre,EBSP_One.Single.Peak_Set_All,EBSP_One.Peak_Set_All,<span class="keyword">...</span>
+            EBSP_One.R_EBSP,EBSP_One.R_Edge,EBSP_One.R_rho,EBSP_One.R_theta ] <span class="keyword">...</span>
+            = EBSP_RadHunt( EBSP_One.PatternIn,Settings_Rad);
+
+<span class="comment">% Convert the bands to normal space</span>
+[ EBSP_One.nhat_gnom] = EBSP_NormConv( EBSP_One.Peak_Centre,size(EBSP_One.PatternIn),EBSP_One.PC);
+
+<span class="comment">% Index</span>
+[EBSP_One.rotdata,EBSP_One.banddata]=EBSP_Index(EBSP_One.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3)); <span class="comment">%#ok&lt;PFBNS&gt;</span>
+</pre>
+<h2 id="7">Now read a H5 file</h2>
+<pre class="codeinput">InputUser.HDF5_folder=<span class="string">'E:\Ben\'</span>; <span class="comment">%Change this to the file location in whch you have saved the example data</span>
+InputUser.HDF5_file=<span class="string">'Demo_Ben_16bin.h5'</span>;
+InputUser.Phase_Input  = {<span class="string">'Ferrite'</span>};
+Settings_PCin.start=[0.5010 0.4510 0.5870]; <span class="comment">%Fe</span>
+
+<span class="comment">%Read the h5 data</span>
+[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+<span class="comment">%Read an EBSP</span>
+[ EBSP_FeR ] = bReadEBSP(EBSPData,1);
+EBSP_Fe.PatternIn=EBSP_FeR;
+
+<span class="comment">%background correction settings</span>
+
+<span class="comment">%gaussian flatten (removes the low frequency bg)</span>
+Settings_Cor_Fe.gfilt=1; <span class="comment">%use a low pass filter (do you mean high pass?)</span>
+Settings_Cor_Fe.gfilt_s=4; <span class="comment">%low pass filter sigma</span>
+
+<span class="comment">%radius mask (crops to a circle)</span>
+Settings_Cor_Fe.radius=1; <span class="comment">%use a radius mask</span>
+Settings_Cor_Fe.radius_frac=0.98; <span class="comment">%fraction of the pattern width to use as the mask</span>
+
+<span class="comment">%split BG fix (removes vertical seam)</span>
+Settings_Cor_Fe.SplitBG=1;
+
+<span class="comment">%inspect the pattern &amp; give settings back to the user</span>
+[Settings_Corout,Settings_Radout,Settings_PCout]=Astro_EBSPset(EBSP_Fe,Settings_Cor_Fe,Settings_Rad,Settings_PCin,InputUser);
+</pre>
+<h2 id="8">Read the EBSD patterns into the RAM - this takes 0.5GB of RAM, but makes every thing else easier</h2>
+<pre class="codeinput">
+<span class="comment">%read in serial patterns</span>
+
+<span class="comment">% EBSP_all=zeros([size(EBSP_FeR) MicroscopeData.NPoints]);</span>
+<span class="comment">% for p=1:MicroscopeData.NPoints</span>
+<span class="comment">%     [ EBSP_all(:,:,p) ] = bReadEBSP(EBSPData,p); %This can take a minute or two so be patient if it doesn't seem to work straighht away</span>
+<span class="comment">% end</span>
+
+<span class="comment">%read the whole array (beware of RAM issues)</span>
+EBSP_all=bReadEBSP(EBSPData);
+</pre>
+<h2 id="9">Now we can start playing</h2>
+<pre class="codeinput">EBSP_sum=zeros(MicroscopeData.NPoints,1);
+<span class="keyword">for</span> p=1:MicroscopeData.NPoints
+    EBSP_sum(p)=sum(EBSP_all(:,:,p),<span class="string">'all'</span>);
+<span class="comment">% EBSP_sum(p)=sum(sum(EBSP_all(:,:,p))); % There are two versions of this here because of a bug fix, R2018b onwards can use the first verion, earlier versions need the second</span>
+<span class="keyword">end</span>
+
+<span class="comment">%sort this into a 2D Map</span>
+[Map_EBSP_sum] = bMapSort(MapData,MicroscopeData,EBSP_sum);
+
+<span class="comment">%Map the EBSD scanning coords</span>
+Map_XSample=bMapSort(MapData,MicroscopeData,MapData.XSample);
+Map_YSample=bMapSort(MapData,MicroscopeData,MapData.YSample);
+
+<span class="comment">%plot the secondary electron map</span>
+figure;
+sp1=subplot(1,1,1); <span class="comment">%creates an axis</span>
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_sum); <span class="comment">%plots the data</span>
+axis <span class="string">image</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">ij</span>; sp1.XDir=<span class="string">'reverse'</span>; <span class="comment">%sets the axis to how they are expected</span>
+</pre>
+<h2 id="10">plot a dummy argus image</h2>
+<pre class="codeinput">
+<span class="comment">%create zeros</span>
+EBSP_sumR=zeros(MicroscopeData.NPoints,1);
+EBSP_sumG=zeros(MicroscopeData.NPoints,1);
+EBSP_sumB=zeros(MicroscopeData.NPoints,1);
+
+<span class="comment">%sum three horizontal strips from the EBSP</span>
+<span class="keyword">for</span> p=1:MicroscopeData.NPoints
+    EBSP_sumR(p)=sum(EBSP_all(1:25,:,p),<span class="string">'all'</span>);
+    EBSP_sumG(p)=sum(EBSP_all(25:50,:,p),<span class="string">'all'</span>);
+    EBSP_sumB(p)=sum(EBSP_all(51:75,:,p),<span class="string">'all'</span>);
+
+<span class="comment">%     EBSP_sumR(p)=sum(sum(EBSP_all(1:25,:,p))); %There are two versions of this because of the same versioning issue earlier</span>
+<span class="comment">%     EBSP_sumG(p)=sum(sum(EBSP_all(25:50,:,p)));</span>
+<span class="comment">%     EBSP_sumB(p)=sum(sum(EBSP_all(51:75,:,p)));</span>
+<span class="keyword">end</span>
+
+<span class="comment">%convert into maps</span>
+[Map_EBSP_sumR] = bMapSort(MapData,MicroscopeData,EBSP_sumR);
+[Map_EBSP_sumG] = bMapSort(MapData,MicroscopeData,EBSP_sumG);
+[Map_EBSP_sumB] = bMapSort(MapData,MicroscopeData,EBSP_sumB);
+
+<span class="comment">%normalise the channels</span>
+<span class="comment">%zero mean</span>
+Map_EBSP_sumR=Map_EBSP_sumR-mean(Map_EBSP_sumR(:));
+Map_EBSP_sumG=Map_EBSP_sumG-mean(Map_EBSP_sumG(:));
+Map_EBSP_sumB=Map_EBSP_sumB-mean(Map_EBSP_sumB(:));
+
+<span class="comment">%fix the STDev</span>
+Map_EBSP_sumR=Map_EBSP_sumR./std(Map_EBSP_sumR(:));
+Map_EBSP_sumG=Map_EBSP_sumG./std(Map_EBSP_sumG(:));
+Map_EBSP_sumB=Map_EBSP_sumB./std(Map_EBSP_sumB(:));
+
+<span class="comment">%normalise the histogram channels</span>
+Map_EBSP_sumR_eq=histeq(Map_EBSP_sumR);
+Map_EBSP_sumG_eq=histeq(Map_EBSP_sumG);
+Map_EBSP_sumB_eq=histeq(Map_EBSP_sumB);
+
+<span class="comment">%put into a RGB array</span>
+Map_EBSP_sum_RGB=Map_EBSP_sumR_eq;
+Map_EBSP_sum_RGB(:,:,2)=Map_EBSP_sumG_eq;
+Map_EBSP_sum_RGB(:,:,3)=Map_EBSP_sumB_eq;
+
+<span class="comment">%plot the final figure</span>
+figure;
+sp1=subplot(1,1,1); <span class="comment">%creates an axis</span>
+image(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_sum_RGB); axis <span class="string">image</span>;
+axis <span class="string">image</span>; axis <span class="string">tight</span>;  axis <span class="string">ij</span>; sp1.XDir=<span class="string">'reverse'</span>; <span class="comment">%sets the axis to how they are expected</span>
+</pre>
+<h2 id="11">Now process the patterns</h2>
+<pre class="codeinput">EBSP_BG=zeros([size(EBSP_FeR) MicroscopeData.NPoints]);
+
+<span class="keyword">for</span> p=1:MicroscopeData.NPoints
+    [EBSP_BG(:,:,p),~ ] = EBSP_BGCor( EBSP_all(:,:,p),Settings_Cor); <span class="comment">%Background correct the patterns</span>
+
+        <span class="comment">%provide some feedback</span>
+    <span class="keyword">if</span> 1000*round(p/1000) == p
+        disp([<span class="string">'Pattern '</span> int2str(p) <span class="string">' of '</span> int2str(MicroscopeData.NPoints) <span class="string">' patterns corrected'</span>]);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre>
+<h2 id="12">Extract data from 1 pixel</h2>
+<pre class="codeinput">figure;
+imagesc(EBSP_BG(:,:,3131)); axis <span class="string">image</span>; axis <span class="string">xy</span>; title(<span class="string">'Click somewhere to plot the intensity of this pixel'</span>);
+colormap(<span class="string">'gray'</span>)
+<span class="comment">%take a mouse input</span>
+[x,y]=ginput(1);
+<span class="comment">%round to a whole pixel location</span>
+x=round(x); y=round(y);
+<span class="comment">%plot this location</span>
+hold <span class="string">on</span>; scatter(x,y,<span class="string">'m'</span>);
+
+<span class="comment">%extract this pixel from the EBSP data</span>
+EBSP_pixel=EBSP_BG(y,x,:);
+<span class="comment">%shift the dimensions from (1,1,NUMPTS) to (NUMPTS,1);</span>
+EBSP_pixel=shiftdim(EBSP_pixel,2);
+
+<span class="comment">%turn into a map</span>
+Map_EBSP_pixel=bMapSort(MapData,MicroscopeData,EBSP_pixel);
+
+<span class="comment">%plot the map</span>
+figure;
+sp1=subplot(1,1,1); <span class="comment">%creates an axis</span>
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_pixel); <span class="comment">%plots the data</span>
+axis <span class="string">image</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">ij</span>; sp1.XDir=<span class="string">'reverse'</span>; <span class="comment">%sets the axis to how they are expected</span>
+</pre>
+<h2 id="13">From a map, plot the EBSP</h2>
+<pre class="codeinput">figure; <span class="comment">%crete new figure</span>
+sp1=subplot(1,1,1); <span class="comment">%creates an axis</span>
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_pixel); <span class="comment">%plots the data</span>
+axis <span class="string">image</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">ij</span>; sp1.XDir=<span class="string">'reverse'</span>; <span class="comment">%sets the axis to how they are expected</span>
+[EBSP_x,EBSP_y]=ginput(1); <span class="comment">%one mouse input</span>
+hold <span class="string">on</span>; scatter(EBSP_x,EBSP_y,<span class="string">'m'</span>); <span class="comment">%plot this point</span>
+
+<span class="comment">%calculate the pythagorian distance</span>
+Map_Distance_XY=(Map_XSample-EBSP_x).^2+(Map_YSample-EBSP_y).^2;
+
+<span class="comment">%calculate the minimum from a 2D array</span>
+[~,ii]=min(Map_Distance_XY(:));
+[IY,IX]=ind2sub(size(Map_Distance_XY),ii);
+
+<span class="comment">%plot back on the image, to show which pixel is being selected</span>
+XI=Map_XSample(IY,IX);
+YI=Map_YSample(IY,IX);
+scatter(XI,YI,5,<span class="string">'b'</span>,<span class="string">'filled'</span>)
+
+<span class="comment">%convert the pattern mapping into a 2D array to index</span>
+Map_PNum=bMapSort(MapData,MicroscopeData,MapData.PMap);
+
+<span class="comment">%index this map for that pattern</span>
+pattern_number=Map_PNum(IY,IX);
+
+<span class="comment">%plot this pattern</span>
+figure; <span class="comment">%crete new figure</span>
+sp1=subplot(1,1,1); <span class="comment">%creates an axis</span>
+imagesc(EBSP_BG(:,:,pattern_number)); axis <span class="string">image</span>; axis <span class="string">xy</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>);
+</pre>
+<h2 id="14">Use the astro settings as before to find the PC &amp; index</h2>
+<pre class="codeinput">EBSP_Fe_One.PatternIn=EBSP_BG(:,:,pattern_number);
+EBSP_Fe_One.PC=[0.5010 0.4510 0.5870]; <span class="comment">%Fe</span>
+
+InputUser.Phase_Folder = fullfile(location_astro,<span class="string">'phases\phasefiles'</span>);
+InputUser.Phase_Input  = {<span class="string">'Ferrite'</span>};
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder( InputUser.Phase_Input,InputUser.Phase_Folder );
+
+<span class="comment">%Radon transform</span>
+[ EBSP_Fe_One.Peak_Centre,EBSP_Fe_One.Single.Peak_Set_All,EBSP_Fe_One.Peak_Set_All,<span class="keyword">...</span>
+            EBSP_Fe_One.R_EBSP,EBSP_Fe_One.R_Edge,EBSP_Fe_One.R_rho,EBSP_Fe_One.R_theta ] <span class="keyword">...</span>
+            = EBSP_RadHunt( EBSP_Fe_One.PatternIn,Settings_Rad);
+
+<span class="comment">% Convert the bands to normal space</span>
+[ EBSP_Fe_One.nhat_gnom] = EBSP_NormConv( EBSP_Fe_One.Peak_Centre,size(EBSP_Fe_One.PatternIn),EBSP_Fe_One.PC);
+
+R_x=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)];
+rot_det=R_x(MicroscopeData.TotalTilt);
+
+<span class="comment">% Index this pattern</span>
+[EBSP_Fe_One.rotdata{1},EBSP_Fe_One.banddata{1}]=EBSP_Index(EBSP_Fe_One.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},rot_det); <span class="comment">%#ok&lt;PFBNS&gt;</span>
+
+<span class="comment">%generate the geometry</span>
+[ EBSP_Fe_One.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_Fe_One.PC );
+
+EBSP_OneFigure=Plot_SinglePattern(EBSP_Fe_One,Crystal_UCell,Crystal_LUT,1);
+</pre>
+<h2 id="15">Find the pattern centre for one pattern</h2>
+<pre class="codeinput">
+<span class="comment">%For this to work you need to have the optimization and global optimization</span>
+<span class="comment">%toolboxes installed</span>
+
+EBSP_Fe_PC.PatternIn=EBSP_Fe_One.PatternIn;
+
+<span class="comment">%copy over the PC found earlier</span>
+Settings_PCin.start=EBSP_Fe_One.PC;
+
+<span class="comment">%find the pattern centre</span>
+[EBSP_Fe_PCOut] = EBSP_PCSearch(EBSP_Fe_PC,Settings_Cor,Settings_Rad,Settings_PCin,Phase_Num,Crystal_LUT,Crystal_UCell);
+
+<span class="comment">%generate the geometry</span>
+[ EBSP_Fe_PCOut.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_Fe_PCOut.PC );
+<span class="comment">%index the pattern</span>
+[ EBSP_Fe_PCOut.nhat_gnom] = EBSP_NormConv( EBSP_Fe_PCOut.Peak_Centre,size(EBSP_Fe_PCOut.PatternIn),EBSP_Fe_PCOut.PC);
+[EBSP_Fe_PCOut.rotdata{1},EBSP_Fe_PCOut.banddata{1}]=EBSP_Index(EBSP_Fe_PCOut.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},rot_det); <span class="comment">%#ok&lt;PFBNS&gt;</span>
+
+<span class="comment">%plot the result</span>
+EBSP_OneFigure=Plot_SinglePattern(EBSP_Fe_PCOut,Crystal_UCell,Crystal_LUT,1);
+</pre>
+<h2 id="16">Do this for a whole map</h2>
+<pre class="codeinput">
+<span class="comment">%convert the input data into a map</span>
+disp(<span class="string">'Converting EBSD data to a map'</span>);
+[Data_InputMap] = EBSD_Map(MapData,MicroscopeData);
+
+<span class="comment">%radon transform (from EBSP data on disk - this uses original AstroEBSD codes)</span>
+<span class="comment">%it will use the parallel compute toolbox - you can adjust this if you do not have access</span>
+
+disp(<span class="string">'Perfoming Radon transform on the whole map'</span>);
+[Peak_Centres,Peak_Quality,Peak_NBands,EBSD_Info ] = Map_Radon( Data_InputMap,EBSPData,Settings_Cor,Settings_Rad );
+
+disp(<span class="string">'Searching for the pattern centre'</span>)
+Settings_PCin.start=[0.493 0.452 0.569]; <span class="comment">%Fe</span>
+Settings_PCin.array=[5 5]; <span class="comment">%[#X,#Y] points extracted from map - will fit a PC to these points &amp; then fit a plane</span>
+Settings_PCin.range=[0.15 0.15 0.15]; <span class="comment">%+- these values</span>
+
+<span class="comment">%find a pattern centre model</span>
+[PCOut] = Map_PCSearch(Data_InputMap,Peak_Centres,Peak_NBands,EBSD_Info,Crystal_LUT,Crystal_UCell,Settings_PCin);
+
+disp(<span class="string">'Indexing the map'</span>)
+<span class="comment">%index</span>
+[Indexed_Rotdata,Indexed_Banddata] = <span class="keyword">...</span>
+            Map_Index( Data_InputMap,Peak_Centres,Peak_NBands,Phase_Num,PCOut.Fit_2nd,Crystal_UCell,Crystal_LUT,Settings_LUT,EBSD_Info,MicroscopeData);
+</pre>
+<h2 id="17">Write data to a h5 file</h2>
+<pre class="codeinput">
+<span class="comment">%create the file container</span>
+OutputUser=InputUser;
+
+OutputUser.HDF5_file=[OutputUser.HDF5_file(1:end-3) <span class="string">'_Astro.h5'</span>];
+<span class="comment">%we assume that this is an h5 file, hdf5 will cause issues with the (end-3)</span>
+OutputUser.DataName=InputUser.HDF5_file(1:end-3);
+OutputUser.HDF5FullFile=fullfile(OutputUser.HDF5_folder,OutputUser.HDF5_file);
+
+dtype=<span class="string">'/EBSD/Data/'</span>; <span class="comment">%EBSD data location</span>
+htype=<span class="string">'/EBSD/Header/'</span>; <span class="comment">%Header data location (e.g. microscope settings)</span>
+
+disp([<span class="string">'Writing h5 file to '</span> OutputUser.HDF5_file])
+<span class="comment">%Pattern centre</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'DD'</span>,PCOut.Fit_2nd.PCz_map(:)); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'PCX'</span>,PCOut.Fit_2nd.PCx_map(:)); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'PCY'</span>,PCOut.Fit_2nd.PCy_map(:)); <span class="comment">%write the data</span>
+
+<span class="comment">%construct arrays from the indexed data</span>
+Astro_Phi1=zeros(MicroscopeData.NPoints,1);
+Astro_PHI=zeros(MicroscopeData.NPoints,1);
+Astro_Phi2=zeros(MicroscopeData.NPoints,1);
+Astro_error=zeros(MicroscopeData.NPoints,1);
+Astro_maxok=zeros(MicroscopeData.NPoints,1);
+
+Astro_BC=Peak_Quality(:,1);
+Astro_IQ=Peak_Quality(:,2);
+
+<span class="keyword">for</span> p=1:MicroscopeData.NPoints
+    Astro_Phi1(p)=Indexed_Rotdata{p}.eang(1)*180/pi;
+    Astro_Phi2(p)=Indexed_Rotdata{p}.eang(3)*180/pi;
+    Astro_PHI(p)=Indexed_Rotdata{p}.eang(2)*180/pi;
+    Astro_error(p)=Indexed_Rotdata{p}.error;
+    Astro_maxok(p)=Indexed_Rotdata{p}.maxok;
+<span class="keyword">end</span>
+
+<span class="comment">%orientation data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'PHI'</span>,Astro_PHI); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'phi2'</span>,Astro_Phi2); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'phi1'</span>,Astro_Phi1); <span class="comment">%write the data</span>
+
+<span class="comment">%beam data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'X BEAM'</span>,double(MapData.XBeam)-1); <span class="comment">%subtract 1 from the data because of the 0 indexing</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'Y BEAM'</span>,double(MapData.YBeam)-1); <span class="comment">%subtract 1 from the data because of the 0 indexing</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'X SAMPLE'</span>,MapData.XSample); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'Y SAMPLE'</span>,MapData.YSample); <span class="comment">%write the data</span>
+
+<span class="comment">%indexing data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'MAD'</span>,Astro_error); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'MADPhase'</span>,Astro_Phi1*0+1); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'NIndexedBands'</span>,Astro_maxok); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,<span class="string">'RadonQuality'</span>,Astro_IQ); <span class="comment">%write the data</span>
+
+<span class="comment">%header</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'CameraTilt'</span>,MicroscopeData.CameraTilt); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'SampleTilt'</span>,MicroscopeData.SampleTilt); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'TotalTilt'</span>,MicroscopeData.TotalTilt); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'KV'</span>,MicroscopeData.KV); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'NCOLS'</span>,MicroscopeData.NCOLS); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'NROWS'</span>,MicroscopeData.NROWS); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'XSTEP'</span>,MicroscopeData.XSTEP); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'YSTEP'</span>,MicroscopeData.YSTEP); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'NPoints'</span>,MicroscopeData.NPoints); <span class="comment">%write the data</span>
+
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'Magnification'</span>,MicroscopeData.Magnification); <span class="comment">%write the data</span>
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,<span class="string">'WD'</span>,MicroscopeData.WD); <span class="comment">%write the data</span>
+</pre>
+<h2 id="18">Create stuff in MTEX</h2>
+<pre class="codeinput">cs = loadCIF(<span class="string">'Fe-Iron-alpha.cif'</span>);
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'west'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+
+<span class="comment">% build the coordinate maps</span>
+prop.x = double(MapData.XSample); <span class="comment">%have to transpose - not sure why...</span>
+prop.y = double(MapData.YSample);
+ori = <span class="keyword">...</span>
+  rotation(<span class="string">'Euler'</span>,Astro_Phi1*degree,Astro_PHI*degree,Astro_Phi2*degree);
+
+ebsd = EBSD(ori.', ones(size(ori)),{<span class="string">'notIndexed'</span>,cs},<span class="string">'Options'</span>,prop);
+
+figure;
+colorKey = ipfHSVKey(cs);
+colorKey.inversePoleFigureDirection = xvector;
+color = colorKey.orientation2color(ebsd(<span class="string">'indexed'</span>).orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations))
+
+<span class="comment">% Plot an orientation color key, this will cause an error and break the</span>
+<span class="comment">% codes, so only plot it if needed</span>
+<span class="comment">% figure;</span>
+<span class="comment">% plot(colorKey)</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+home 
+close all
+
+% This script was created to kick off discussions at the 2019 EBSD meeting
+% and it contains basic functionality that may be useful within the
+% AstroEBSD toolbox
+%
+% You can fetch the demo h5 data set from https://doi.org/10.5281/zenodo.2609220
+%
+% Works with MTEX 5.2
+
+%% Toolbox locations for AstroEBSD and MTEX
+
+location_astro='C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location
+location_mtex='C:\Communal_MatlabPlugins\mtex-5.2.beta2'; %Change this to where you keep your MTEX folder
+
+%% run Astro and EBSD to start
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+run(fullfile(location_mtex,'startup_mtex.m'));
+
+%% Analyse a single pattern
+pattern1=flipud(double(imread('pattern1.tif'))); %Make sure pattern1.tif is saved in your current working directory
+
+% Normalise intensities
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( pattern1,[]);
+Settings_Cor.radius=1;
+Settings_Cor.radius_frac=0.95;
+
+%build the phases
+InputUser.Phase_Folder = fullfile(location_astro,'phases\phasefiles');
+InputUser.Phase_Input  = {'Si'}; %Si, Ferrite
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+   
+%Set up the radon transform peak finder
+Settings_Rad.theta_range=[-10 180 1]; %theta min, theta max, theta step - in degrees
+
+%peak hunt
+Settings_Rad.max_peaks=12; %max number of peaks to return
+Settings_Rad.num_peak=20; %number of peaks to search for - peaks will be rejected
+Settings_Rad.theta_search_pix=6; %search size in theta steps
+Settings_Rad.rho_search_per=0.2; %radon search in fractions
+Settings_Rad.min_peak_width=0.002; %min rseperation of the peak width, in pixels
+
+%% Load in the GUI
+%play with the GUI
+%Close the GUI to have the code continue automatically
+Settings_PCin.start=[0.5,0.3,0.6];
+Astro_EBSPset(EBSP_One,Settings_Cor,Settings_Rad,Settings_PCin,InputUser);
+
+%% Do the indexing offline
+
+%This is the example
+EBSP_One.PC=[0.5,0.3,0.6]; %known
+
+%Radon transform
+[ EBSP_One.Peak_Centre,EBSP_One.Single.Peak_Set_All,EBSP_One.Peak_Set_All,...
+            EBSP_One.R_EBSP,EBSP_One.R_Edge,EBSP_One.R_rho,EBSP_One.R_theta ] ...
+            = EBSP_RadHunt( EBSP_One.PatternIn,Settings_Rad);
+
+% Convert the bands to normal space
+[ EBSP_One.nhat_gnom] = EBSP_NormConv( EBSP_One.Peak_Centre,size(EBSP_One.PatternIn),EBSP_One.PC);
+   
+% Index
+[EBSP_One.rotdata,EBSP_One.banddata]=EBSP_Index(EBSP_One.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3)); %#ok<PFBNS>
+
+%% Now read a H5 file
+InputUser.HDF5_folder='E:\Ben\'; %Change this to the file location in whch you have saved the example data
+InputUser.HDF5_file='Demo_Ben_16bin.h5';
+InputUser.Phase_Input  = {'Ferrite'};
+Settings_PCin.start=[0.5010 0.4510 0.5870]; %Fe
+
+%Read the h5 data
+[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+%Read an EBSP
+[ EBSP_FeR ] = bReadEBSP(EBSPData,1);
+EBSP_Fe.PatternIn=EBSP_FeR;
+
+%background correction settings
+
+%gaussian flatten (removes the low frequency bg)
+Settings_Cor_Fe.gfilt=1; %use a low pass filter (do you mean high pass?)
+Settings_Cor_Fe.gfilt_s=4; %low pass filter sigma
+
+%radius mask (crops to a circle)
+Settings_Cor_Fe.radius=1; %use a radius mask
+Settings_Cor_Fe.radius_frac=0.98; %fraction of the pattern width to use as the mask
+
+%split BG fix (removes vertical seam)
+Settings_Cor_Fe.SplitBG=1;
+
+%inspect the pattern & give settings back to the user
+[Settings_Corout,Settings_Radout,Settings_PCout]=Astro_EBSPset(EBSP_Fe,Settings_Cor_Fe,Settings_Rad,Settings_PCin,InputUser);
+
+%% Read the EBSD patterns into the RAM - this takes 0.5GB of RAM, but makes every thing else easier
+
+%read in serial patterns
+
+% EBSP_all=zeros([size(EBSP_FeR) MicroscopeData.NPoints]); 
+% for p=1:MicroscopeData.NPoints 
+%     [ EBSP_all(:,:,p) ] = bReadEBSP(EBSPData,p); %This can take a minute or two so be patient if it doesn't seem to work straighht away
+% end
+
+%read the whole array (beware of RAM issues)
+EBSP_all=bReadEBSP(EBSPData);
+
+%% Now we can start playing
+EBSP_sum=zeros(MicroscopeData.NPoints,1);
+for p=1:MicroscopeData.NPoints
+    EBSP_sum(p)=sum(EBSP_all(:,:,p),'all');
+% EBSP_sum(p)=sum(sum(EBSP_all(:,:,p))); % There are two versions of this here because of a bug fix, R2018b onwards can use the first verion, earlier versions need the second
+end
+
+%sort this into a 2D Map
+[Map_EBSP_sum] = bMapSort(MapData,MicroscopeData,EBSP_sum);
+
+%Map the EBSD scanning coords
+Map_XSample=bMapSort(MapData,MicroscopeData,MapData.XSample);
+Map_YSample=bMapSort(MapData,MicroscopeData,MapData.YSample);
+
+%plot the secondary electron map
+figure;
+sp1=subplot(1,1,1); %creates an axis
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_sum); %plots the data
+axis image; axis tight; colormap('gray'); axis ij; sp1.XDir='reverse'; %sets the axis to how they are expected
+
+
+%% plot a dummy argus image
+%create zeros
+EBSP_sumR=zeros(MicroscopeData.NPoints,1);
+EBSP_sumG=zeros(MicroscopeData.NPoints,1);
+EBSP_sumB=zeros(MicroscopeData.NPoints,1);
+
+%sum three horizontal strips from the EBSP
+for p=1:MicroscopeData.NPoints
+    EBSP_sumR(p)=sum(EBSP_all(1:25,:,p),'all'); 
+    EBSP_sumG(p)=sum(EBSP_all(25:50,:,p),'all');
+    EBSP_sumB(p)=sum(EBSP_all(51:75,:,p),'all'); 
+
+%     EBSP_sumR(p)=sum(sum(EBSP_all(1:25,:,p))); %There are two versions of this because of the same versioning issue earlier
+%     EBSP_sumG(p)=sum(sum(EBSP_all(25:50,:,p)));
+%     EBSP_sumB(p)=sum(sum(EBSP_all(51:75,:,p))); 
+end
+
+%convert into maps
+[Map_EBSP_sumR] = bMapSort(MapData,MicroscopeData,EBSP_sumR);
+[Map_EBSP_sumG] = bMapSort(MapData,MicroscopeData,EBSP_sumG);
+[Map_EBSP_sumB] = bMapSort(MapData,MicroscopeData,EBSP_sumB);
+
+%normalise the channels
+%zero mean
+Map_EBSP_sumR=Map_EBSP_sumR-mean(Map_EBSP_sumR(:));
+Map_EBSP_sumG=Map_EBSP_sumG-mean(Map_EBSP_sumG(:));
+Map_EBSP_sumB=Map_EBSP_sumB-mean(Map_EBSP_sumB(:));
+
+%fix the STDev
+Map_EBSP_sumR=Map_EBSP_sumR./std(Map_EBSP_sumR(:));
+Map_EBSP_sumG=Map_EBSP_sumG./std(Map_EBSP_sumG(:));
+Map_EBSP_sumB=Map_EBSP_sumB./std(Map_EBSP_sumB(:));
+
+%normalise the histogram channels
+Map_EBSP_sumR_eq=histeq(Map_EBSP_sumR);
+Map_EBSP_sumG_eq=histeq(Map_EBSP_sumG);
+Map_EBSP_sumB_eq=histeq(Map_EBSP_sumB);
+
+%put into a RGB array
+Map_EBSP_sum_RGB=Map_EBSP_sumR_eq;
+Map_EBSP_sum_RGB(:,:,2)=Map_EBSP_sumG_eq;
+Map_EBSP_sum_RGB(:,:,3)=Map_EBSP_sumB_eq;
+
+%plot the final figure
+figure;
+sp1=subplot(1,1,1); %creates an axis
+image(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_sum_RGB); axis image;
+axis image; axis tight;  axis ij; sp1.XDir='reverse'; %sets the axis to how they are expected
+
+
+%% Now process the patterns
+EBSP_BG=zeros([size(EBSP_FeR) MicroscopeData.NPoints]);
+
+for p=1:MicroscopeData.NPoints
+    [EBSP_BG(:,:,p),~ ] = EBSP_BGCor( EBSP_all(:,:,p),Settings_Cor); %Background correct the patterns
+    
+        %provide some feedback
+    if 1000*round(p/1000) == p
+        disp(['Pattern ' int2str(p) ' of ' int2str(MicroscopeData.NPoints) ' patterns corrected']);
+    end
+end
+
+%% Extract data from 1 pixel
+figure;
+imagesc(EBSP_BG(:,:,3131)); axis image; axis xy; title('Click somewhere to plot the intensity of this pixel');
+colormap('gray')
+%take a mouse input
+[x,y]=ginput(1);
+%round to a whole pixel location
+x=round(x); y=round(y);
+%plot this location
+hold on; scatter(x,y,'m');
+
+%extract this pixel from the EBSP data
+EBSP_pixel=EBSP_BG(y,x,:);
+%shift the dimensions from (1,1,NUMPTS) to (NUMPTS,1);
+EBSP_pixel=shiftdim(EBSP_pixel,2);
+
+%turn into a map
+Map_EBSP_pixel=bMapSort(MapData,MicroscopeData,EBSP_pixel);
+
+%plot the map
+figure;
+sp1=subplot(1,1,1); %creates an axis
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_pixel); %plots the data
+axis image; axis tight; colormap('gray'); axis ij; sp1.XDir='reverse'; %sets the axis to how they are expected
+
+%% From a map, plot the EBSP
+
+figure; %crete new figure
+sp1=subplot(1,1,1); %creates an axis
+imagesc(Map_XSample(1,:),Map_YSample(:,1)',Map_EBSP_pixel); %plots the data
+axis image; axis tight; colormap('gray'); axis ij; sp1.XDir='reverse'; %sets the axis to how they are expected
+[EBSP_x,EBSP_y]=ginput(1); %one mouse input
+hold on; scatter(EBSP_x,EBSP_y,'m'); %plot this point
+
+%calculate the pythagorian distance
+Map_Distance_XY=(Map_XSample-EBSP_x).^2+(Map_YSample-EBSP_y).^2; 
+
+%calculate the minimum from a 2D array
+[~,ii]=min(Map_Distance_XY(:));
+[IY,IX]=ind2sub(size(Map_Distance_XY),ii);
+
+%plot back on the image, to show which pixel is being selected
+XI=Map_XSample(IY,IX);
+YI=Map_YSample(IY,IX);
+scatter(XI,YI,5,'b','filled')
+
+%convert the pattern mapping into a 2D array to index
+Map_PNum=bMapSort(MapData,MicroscopeData,MapData.PMap);
+
+%index this map for that pattern
+pattern_number=Map_PNum(IY,IX);
+
+%plot this pattern
+figure; %crete new figure
+sp1=subplot(1,1,1); %creates an axis
+imagesc(EBSP_BG(:,:,pattern_number)); axis image; axis xy; axis tight; colormap('gray');
+
+%% Use the astro settings as before to find the PC & index
+EBSP_Fe_One.PatternIn=EBSP_BG(:,:,pattern_number);
+EBSP_Fe_One.PC=[0.5010 0.4510 0.5870]; %Fe
+
+InputUser.Phase_Folder = fullfile(location_astro,'phases\phasefiles');
+InputUser.Phase_Input  = {'Ferrite'};
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder( InputUser.Phase_Input,InputUser.Phase_Folder );
+
+%Radon transform
+[ EBSP_Fe_One.Peak_Centre,EBSP_Fe_One.Single.Peak_Set_All,EBSP_Fe_One.Peak_Set_All,...
+            EBSP_Fe_One.R_EBSP,EBSP_Fe_One.R_Edge,EBSP_Fe_One.R_rho,EBSP_Fe_One.R_theta ] ...
+            = EBSP_RadHunt( EBSP_Fe_One.PatternIn,Settings_Rad);
+
+% Convert the bands to normal space
+[ EBSP_Fe_One.nhat_gnom] = EBSP_NormConv( EBSP_Fe_One.Peak_Centre,size(EBSP_Fe_One.PatternIn),EBSP_Fe_One.PC);
+   
+R_x=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)];
+rot_det=R_x(MicroscopeData.TotalTilt);
+
+% Index this pattern
+[EBSP_Fe_One.rotdata{1},EBSP_Fe_One.banddata{1}]=EBSP_Index(EBSP_Fe_One.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},rot_det); %#ok<PFBNS>
+
+%generate the geometry
+[ EBSP_Fe_One.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_Fe_One.PC );
+
+EBSP_OneFigure=Plot_SinglePattern(EBSP_Fe_One,Crystal_UCell,Crystal_LUT,1);
+
+%% Find the pattern centre for one pattern
+%For this to work you need to have the optimization and global optimization
+%toolboxes installed
+
+EBSP_Fe_PC.PatternIn=EBSP_Fe_One.PatternIn;
+
+%copy over the PC found earlier
+Settings_PCin.start=EBSP_Fe_One.PC;
+
+%find the pattern centre
+[EBSP_Fe_PCOut] = EBSP_PCSearch(EBSP_Fe_PC,Settings_Cor,Settings_Rad,Settings_PCin,Phase_Num,Crystal_LUT,Crystal_UCell);
+
+%generate the geometry
+[ EBSP_Fe_PCOut.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_Fe_PCOut.PC );
+%index the pattern 
+[ EBSP_Fe_PCOut.nhat_gnom] = EBSP_NormConv( EBSP_Fe_PCOut.Peak_Centre,size(EBSP_Fe_PCOut.PatternIn),EBSP_Fe_PCOut.PC);
+[EBSP_Fe_PCOut.rotdata{1},EBSP_Fe_PCOut.banddata{1}]=EBSP_Index(EBSP_Fe_PCOut.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},rot_det); %#ok<PFBNS>
+
+%plot the result
+EBSP_OneFigure=Plot_SinglePattern(EBSP_Fe_PCOut,Crystal_UCell,Crystal_LUT,1);
+ 
+%% Do this for a whole map
+%convert the input data into a map
+disp('Converting EBSD data to a map');
+[Data_InputMap] = EBSD_Map(MapData,MicroscopeData);
+
+%radon transform (from EBSP data on disk - this uses original AstroEBSD codes)
+%it will use the parallel compute toolbox - you can adjust this if you do not have access
+
+disp('Perfoming Radon transform on the whole map');
+[Peak_Centres,Peak_Quality,Peak_NBands,EBSD_Info ] = Map_Radon( Data_InputMap,EBSPData,Settings_Cor,Settings_Rad );
+
+disp('Searching for the pattern centre')
+Settings_PCin.start=[0.493 0.452 0.569]; %Fe
+Settings_PCin.array=[5 5]; %[#X,#Y] points extracted from map - will fit a PC to these points & then fit a plane
+Settings_PCin.range=[0.15 0.15 0.15]; %+- these values
+
+%find a pattern centre model
+[PCOut] = Map_PCSearch(Data_InputMap,Peak_Centres,Peak_NBands,EBSD_Info,Crystal_LUT,Crystal_UCell,Settings_PCin);
+
+disp('Indexing the map')
+%index
+[Indexed_Rotdata,Indexed_Banddata] = ...
+            Map_Index( Data_InputMap,Peak_Centres,Peak_NBands,Phase_Num,PCOut.Fit_2nd,Crystal_UCell,Crystal_LUT,Settings_LUT,EBSD_Info,MicroscopeData);
+
+%% Write data to a h5 file
+
+%create the file container
+OutputUser=InputUser;
+
+OutputUser.HDF5_file=[OutputUser.HDF5_file(1:end-3) '_Astro.h5'];
+%we assume that this is an h5 file, hdf5 will cause issues with the (end-3)
+OutputUser.DataName=InputUser.HDF5_file(1:end-3);
+OutputUser.HDF5FullFile=fullfile(OutputUser.HDF5_folder,OutputUser.HDF5_file);
+
+dtype='/EBSD/Data/'; %EBSD data location
+htype='/EBSD/Header/'; %Header data location (e.g. microscope settings)
+
+disp(['Writing h5 file to ' OutputUser.HDF5_file])
+%Pattern centre
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'DD',PCOut.Fit_2nd.PCz_map(:)); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'PCX',PCOut.Fit_2nd.PCx_map(:)); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'PCY',PCOut.Fit_2nd.PCy_map(:)); %write the data
+
+%construct arrays from the indexed data
+Astro_Phi1=zeros(MicroscopeData.NPoints,1);
+Astro_PHI=zeros(MicroscopeData.NPoints,1);
+Astro_Phi2=zeros(MicroscopeData.NPoints,1);
+Astro_error=zeros(MicroscopeData.NPoints,1);
+Astro_maxok=zeros(MicroscopeData.NPoints,1);
+
+Astro_BC=Peak_Quality(:,1);
+Astro_IQ=Peak_Quality(:,2);
+
+for p=1:MicroscopeData.NPoints
+    Astro_Phi1(p)=Indexed_Rotdata{p}.eang(1)*180/pi;
+    Astro_Phi2(p)=Indexed_Rotdata{p}.eang(3)*180/pi;
+    Astro_PHI(p)=Indexed_Rotdata{p}.eang(2)*180/pi;
+    Astro_error(p)=Indexed_Rotdata{p}.error;
+    Astro_maxok(p)=Indexed_Rotdata{p}.maxok;
+end
+
+%orientation data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'PHI',Astro_PHI); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'phi2',Astro_Phi2); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'phi1',Astro_Phi1); %write the data
+
+%beam data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'X BEAM',double(MapData.XBeam)-1); %subtract 1 from the data because of the 0 indexing
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'Y BEAM',double(MapData.YBeam)-1); %subtract 1 from the data because of the 0 indexing
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'X SAMPLE',MapData.XSample); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'Y SAMPLE',MapData.YSample); %write the data
+
+%indexing data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'MAD',Astro_error); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'MADPhase',Astro_Phi1*0+1); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'NIndexedBands',Astro_maxok); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,dtype,'RadonQuality',Astro_IQ); %write the data
+
+%header
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'CameraTilt',MicroscopeData.CameraTilt); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'SampleTilt',MicroscopeData.SampleTilt); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'TotalTilt',MicroscopeData.TotalTilt); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'KV',MicroscopeData.KV); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'NCOLS',MicroscopeData.NCOLS); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'NROWS',MicroscopeData.NROWS); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'XSTEP',MicroscopeData.XSTEP); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'YSTEP',MicroscopeData.YSTEP); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'NPoints',MicroscopeData.NPoints); %write the data
+
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'Magnification',MicroscopeData.Magnification); %write the data
+h5_WritePair(OutputUser.HDF5FullFile,OutputUser.DataName,htype,'WD',MicroscopeData.WD); %write the data
+
+%% Create stuff in MTEX
+cs = loadCIF('Fe-Iron-alpha.cif');
+setMTEXpref('xAxisDirection','west');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+% build the coordinate maps
+prop.x = double(MapData.XSample); %have to transpose - not sure why...
+prop.y = double(MapData.YSample);
+ori = ...
+  rotation('Euler',Astro_Phi1*degree,Astro_PHI*degree,Astro_Phi2*degree);
+
+ebsd = EBSD(ori.', ones(size(ori)),{'notIndexed',cs},'Options',prop);
+
+figure;
+colorKey = ipfHSVKey(cs);
+colorKey.inversePoleFigureDirection = xvector;
+color = colorKey.orientation2color(ebsd('indexed').orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations))
+
+% Plot an orientation color key, this will cause an error and break the
+% codes, so only plot it if needed
+% figure;
+% plot(colorKey)
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

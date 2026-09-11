@@ -1,0 +1,437 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>MatchECP</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="MatchECP.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">set up the file locations</a>
+</li>
+<li>
+<a href="#3">Tescan Data - comment out this block if you want to run TFS data</a>
+</li>
+<li>
+<a href="#4">Start MTEX and AstroEBSD</a>
+</li>
+<li>
+<a href="#5">set some MTEX preferences</a>
+</li>
+<li>
+<a href="#6">Load data and run the GUI</a>
+</li>
+<li>
+<a href="#7">RTM Loading - phase + dynamic pattern, and generate the RTM filter settings</a>
+</li>
+<li>
+<a href="#8">Library generation</a>
+</li>
+<li>
+<a href="#9">Match the pattern</a>
+</li>
+<li>
+<a href="#11">Show the result</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear; home; close <span class="string">all</span>;
+</pre>
+<h2 id="2">set up the file locations</h2>
+<p>Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD\'; Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; %working with 5.10.2</p>
+<pre class="codeinput">Input_Data.astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\'</span>;
+Input_Data.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'</span>; <span class="comment">%working with 5.10.2</span>
+</pre>
+<h2 id="3">Tescan Data - comment out this block if you want to run TFS data</h2>
+<pre class="codeinput">Input_Data.image_folder=[Input_Data.astro_location <span class="string">'\modules\AstroECP'</span>];
+Input_Data.image_folder=<span class="string">'C:\Users\benja\Documents\EBSD\SAECPs\ECP_in'</span>;
+Input_Data.image_name=<span class="string">'50.tif'</span>;     <span class="comment">%available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/</span>
+Input_Data.image_frame=0;     <span class="comment">%frame number for Tescan data, this variable should not exist for other file types</span>
+Input_Data.ECP_type=<span class="string">'Other'</span>; <span class="comment">%supported types: 'TESCAN', 'TFS', 'other'</span>
+
+<span class="comment">%values for the example data</span>
+<span class="comment">% Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]</span>
+Input_Data.PC_in=[0.5 0.5 3.825]; <span class="comment">% starting PC - AstroEBSD convention [PCx, PCy, DD]</span>
+
+<span class="comment">% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern</span>
+
+<span class="comment">%set the greyscale colorlim for the ECP</span>
+Input_Data.ECP_Pat_clim=[2 5]; <span class="comment">% default settings of histogram</span>
+
+Input_Data.Phase_Input{1}=<span class="string">'Si_20kV'</span>; <span class="comment">%pick the phase - this should be in \AstroEBSD\phases\phasefiles</span>
+
+<span class="comment">%location of the phase information</span>
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+</pre>
+<h2 id="4">Start MTEX and AstroEBSD</h2>
+<pre class="codeinput">
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.mtex_location,<span class="string">"startup_mtex.m"</span>));
+<span class="keyword">end</span>
+
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="5">set some MTEX preferences</h2>
+<pre class="codeinput">setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofPlane'</span>);
+</pre>
+<h2 id="6">Load data and run the GUI</h2>
+<pre class="codeinput">
+<span class="comment">% play with these</span>
+RTM.screensize = 128; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq=4; <span class="comment">%Set the SO(3) sampling freq in degrees - probably should be 1/2 the ECP subtended angle, if this is very small - the cost (RAM and CPU) is high</span>
+RTM.iterations = 3;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 128; <span class="comment">%LPT size used in pixels</span>
+RTM.singleprecision= 1; <span class="comment">%use single precision (1) or double (0)</span>
+
+<span class="comment">%background correction settings</span>
+Settings_CorX.gfilt=1; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.resize=1; <span class="comment">%resize correction</span>
+Settings_CorX.size=[RTM.screensize RTM.screensize]; <span class="comment">%image height</span>
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<h2 id="7">RTM Loading - phase + dynamic pattern, and generate the RTM filter settings</h2>
+<pre class="codeinput">
+<span class="comment">%load the crystallographic informatio</span>
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder); <span class="comment">%#ok&lt;CCAT1&gt;</span>
+<span class="comment">%build the look up table for the dynamical patterns</span>
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex,<span class="string">'resize'</span>,512);
+
+<span class="comment">%set up the initial filter settings for the RTM approach</span>
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+SettingsXCF.single=RTM.singleprecision; <span class="comment">%make the library and patterns single precision</span>
+</pre>
+<pre class="codeoutput error">Error: File: C:\Users\berners\AstroEBSD_v2\modules\rtm\bin\Phase_Builder_RTM.m
+Line: 151 Column: 1
+This statement is not inside any function.
+ (It follows the END that terminates the definition of the function
+ "Phase_Builder_RTM".)
+
+Error in MatchECP (line 70)
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder); %#ok&lt;CCAT1&gt;
+</pre>
+<h2 id="8">Library generation</h2>
+<pre class="codeinput">
+<span class="comment">%populate fundamental zone of SO(3)</span>
+tic
+[ text_out ] = pNameClock;
+fprintf(<span class="string">'%s: Pattern library started.\n'</span>,text_out);
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+<span class="comment">% generate the library</span>
+[EBSD_geom ] = EBSP_Gnom( RTM, Input_Data.PC_in); <span class="comment">%</span>
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+[ text_out ] = pNameClock;
+fprintf(<span class="string">'%s: Pattern library generated.\n'</span>,text_out);
+toc
+</pre>
+<h2 id="9">Match the pattern</h2>
+<pre class="codeinput">
+<span class="comment">%prepare the pattern</span>
+
+file_list=linspace(0,360,73); <span class="comment">%0 to 360, with 73 patterns in between as per the stack</span>
+num_files=size(file_list,2);
+<span class="keyword">for</span> n=1:num_files
+</pre>
+<pre class="codeinput">    Input_Data_n=Input_Data;
+    Input_Data_n.image_name=[int2str(file_list(n)) <span class="string">'.tif'</span>];
+
+<span class="comment">% Experimental ECP pattern load</span>
+[ECP_Pat] = AstroECP_Load(Input_Data_n);
+
+[ pattern1 ] = EBSP_BGCor( ECP_Pat.ECP_Pat_BG, Settings_CorX);
+<span class="comment">% [ pattern1 ] = EBSP_BGCor( thisProcdPattern, []);</span>
+[Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+
+usePar=1; <span class="comment">%use the parallel loop for the library testing</span>
+[G_SO3,Library_PH,~,~]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,usePar);
+<span class="comment">%refine based upon the SO3 found solution</span>
+[G_Refined_SO3,regout_RSO3] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+ toc
+</pre>
+<h2 id="11">Show the result</h2>
+<pre class="codeinput">RTM_out=RTM;
+RTM_out.screensize=ECP_Pat.size(1);
+[screen_int_out] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+[EBSD_geom_out ] = EBSP_Gnom( RTM_out, Input_Data.PC_in); <span class="comment">%</span>
+
+<span class="comment">%generate the simulated patterns to check solutions</span>
+[ Pat_sim_SO3 ] = EBSP_gen( EBSD_geom_out,G_SO3,screen_int_out); <span class="comment">%generate the EBSP for this iteration</span>
+[ Pat_sim_SO3_refined ] = EBSP_gen( EBSD_geom_out,G_Refined_SO3,screen_int_out); <span class="comment">%generate the EBSP for this iteration</span>
+
+<span class="comment">%write these to disk</span>
+file1_name_us=Input_Data.image_folder;
+file1_name_us(strfind(file1_name_us,<span class="string">' '</span>))=<span class="string">'_'</span>;
+resultsdir=fullfile(file1_name_us,<span class="string">'results_rtm'</span>);
+<span class="keyword">if</span> isdir(resultsdir) == 0; mkdir(resultsdir); <span class="keyword">end</span>
+
+path_out_SO3=fullfile(resultsdir,[<span class="string">'SO3_'</span> Input_Data_n.image_name]);
+path_out_R=fullfile(resultsdir,[<span class="string">'R_'</span> Input_Data_n.image_name]);
+path_out_I=fullfile(resultsdir,[<span class="string">'I_'</span> Input_Data_n.image_name]);
+
+imwrite(flipud(normalizeto16bit(Pat_sim_SO3)),path_out_SO3);
+imwrite(flipud(normalizeto16bit(Pat_sim_SO3_refined)),path_out_R);
+imwrite(flipud(normalizeto16bit(ECP_Pat.pattern)),path_out_I);
+</pre>
+<pre class="codeinput">
+<span class="keyword">end</span>
+
+<span class="comment">%{
+</span><span class="comment">% Plot the results
+</span><span class="comment">figure;
+</span><span class="comment">nexttile;
+</span><span class="comment">pPattern(ECP_Pat.pattern,EBSD_geom_out); title('Experimental')
+</span><span class="comment">nexttile;
+</span><span class="comment">pPattern(Pat_sim_SO3,EBSD_geom_out); title('Sim - SO(3)')
+</span><span class="comment">nexttile;
+</span><span class="comment">pPattern(Pat_sim_SO3_refined,EBSD_geom_out); title('Sim - SO(3) - refined')
+</span><span class="comment">%}</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear; home; close all;
+
+%% set up the file locations 
+% Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD\';
+% Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; %working with 5.10.2
+
+Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';
+Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; %working with 5.10.2
+
+%%  Tescan Data - comment out this block if you want to run TFS data
+
+Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
+Input_Data.image_folder='C:\Users\benja\Documents\EBSD\SAECPs\ECP_in';
+Input_Data.image_name='50.tif';     %available in https://github.com/ExpMicroMech/AstroEBSD/blob/main/modules/AstroECP/
+Input_Data.image_frame=0;     %frame number for Tescan data, this variable should not exist for other file types
+Input_Data.ECP_type='Other'; %supported types: 'TESCAN', 'TFS', 'other'
+
+%values for the example data
+% Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
+Input_Data.PC_in=[0.5 0.5 3.825]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
+
+% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern
+
+%set the greyscale colorlim for the ECP
+Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
+
+Input_Data.Phase_Input{1}='Si_20kV'; %pick the phase - this should be in \AstroEBSD\phases\phasefiles
+
+%location of the phase information
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+%% Start MTEX and AstroEBSD
+try EBSD;
+catch
+    run(fullfile(Input_Data.mtex_location,"startup_mtex.m"));
+end
+
+try astro_loadcheck
+catch
+    run(fullfile(Input_Data.astro_location,"start_AstroEBSD.m"));
+end
+
+%% set some MTEX preferences
+setMTEXpref('xAxisDirection','east');
+setMTEXpref('zAxisDirection','outofPlane');
+
+%% Load data and run the GUI
+
+% play with these
+RTM.screensize = 128; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq=4; %Set the SO(3) sampling freq in degrees - probably should be 1/2 the ECP subtended angle, if this is very small - the cost (RAM and CPU) is high
+RTM.iterations = 3;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 128; %LPT size used in pixels
+RTM.singleprecision= 1; %use single precision (1) or double (0)
+
+%background correction settings
+Settings_CorX.gfilt=1; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.resize=1; %resize correction
+Settings_CorX.size=[RTM.screensize RTM.screensize]; %image height
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% RTM Loading - phase + dynamic pattern, and generate the RTM filter settings
+%load the crystallographic informatio
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder); %#ok<CCAT1>
+%build the look up table for the dynamical patterns
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex,'resize',512);
+
+%set up the initial filter settings for the RTM approach
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+SettingsXCF.single=RTM.singleprecision; %make the library and patterns single precision
+
+%% Library generation
+%populate fundamental zone of SO(3)
+tic
+[ text_out ] = pNameClock;
+fprintf('%s: Pattern library started.\n',text_out); 
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+% generate the library
+[EBSD_geom ] = EBSP_Gnom( RTM, Input_Data.PC_in); %
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+[ text_out ] = pNameClock;
+fprintf('%s: Pattern library generated.\n',text_out); 
+toc
+%% Match the pattern
+%prepare the pattern
+
+file_list=linspace(0,360,73); %0 to 360, with 73 patterns in between as per the stack
+num_files=size(file_list,2);
+for n=1:num_files
+
+    Input_Data_n=Input_Data;
+    Input_Data_n.image_name=[int2str(file_list(n)) '.tif'];
+
+% Experimental ECP pattern load
+[ECP_Pat] = AstroECP_Load(Input_Data_n);
+
+[ pattern1 ] = EBSP_BGCor( ECP_Pat.ECP_Pat_BG, Settings_CorX);
+% [ pattern1 ] = EBSP_BGCor( thisProcdPattern, []);
+[Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+
+usePar=1; %use the parallel loop for the library testing
+[G_SO3,Library_PH,~,~]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,usePar);
+%refine based upon the SO3 found solution
+[G_Refined_SO3,regout_RSO3] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+ toc
+%% Show the result
+RTM_out=RTM;
+RTM_out.screensize=ECP_Pat.size(1);
+[screen_int_out] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+[EBSD_geom_out ] = EBSP_Gnom( RTM_out, Input_Data.PC_in); %
+
+%generate the simulated patterns to check solutions
+[ Pat_sim_SO3 ] = EBSP_gen( EBSD_geom_out,G_SO3,screen_int_out); %generate the EBSP for this iteration 
+[ Pat_sim_SO3_refined ] = EBSP_gen( EBSD_geom_out,G_Refined_SO3,screen_int_out); %generate the EBSP for this iteration 
+
+%write these to disk
+file1_name_us=Input_Data.image_folder;
+file1_name_us(strfind(file1_name_us,' '))='_';
+resultsdir=fullfile(file1_name_us,'results_rtm');
+if isdir(resultsdir) == 0; mkdir(resultsdir); end
+
+path_out_SO3=fullfile(resultsdir,['SO3_' Input_Data_n.image_name]);
+path_out_R=fullfile(resultsdir,['R_' Input_Data_n.image_name]);
+path_out_I=fullfile(resultsdir,['I_' Input_Data_n.image_name]);
+
+imwrite(flipud(normalizeto16bit(Pat_sim_SO3)),path_out_SO3);
+imwrite(flipud(normalizeto16bit(Pat_sim_SO3_refined)),path_out_R);
+imwrite(flipud(normalizeto16bit(ECP_Pat.pattern)),path_out_I);
+end
+
+%{
+% Plot the results
+figure;
+nexttile;
+pPattern(ECP_Pat.pattern,EBSD_geom_out); title('Experimental')
+nexttile;
+pPattern(Pat_sim_SO3,EBSD_geom_out); title('Sim - SO(3)')
+nexttile;
+pPattern(Pat_sim_SO3_refined,EBSD_geom_out); title('Sim - SO(3) - refined')
+%}
+##### SOURCE END #####
+-->
+</body>
+</html>

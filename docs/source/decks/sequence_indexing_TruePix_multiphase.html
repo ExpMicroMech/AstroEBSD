@@ -1,0 +1,744 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>sequence_indexing_TruePix_multiphase</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="sequence_indexing_TruePix_multiphase.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">File paths + phase builder</a>
+</li>
+<li>
+<a href="#3">Initial Settings</a>
+</li>
+<li>
+<a href="#4">Load astro and MTEX</a>
+</li>
+<li>
+<a href="#5">Map metadata from Json</a>
+</li>
+<li>
+<a href="#6">placeholders for results storing</a>
+</li>
+<li>
+<a href="#7">RTM Settings</a>
+</li>
+<li>
+<a href="#8">Generate SO3 library</a>
+</li>
+<li>
+<a href="#9">Go through the patterns</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear
+home
+close <span class="string">all</span>
+</pre>
+<h2 id="2">File paths + phase builder</h2>
+<pre class="codeinput">InputUser.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+InputUser.Astro_loc=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+
+<span class="comment">% TFSpath = 'I:\EBSD_Data\2025-07-25T13_22_14_AB1\2025-07-25T13_52_56';</span>
+TFSpath=<span class="string">'C:\Users\benja\Documents\EBSD\Martin'</span>;
+
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases\phasefiles'</span>);
+InputUser.Phase_Input  = {<span class="string">'Ni'</span>}; <span class="comment">%Si, Ferrite, Ti_alpha_20</span>
+</pre>
+<h2 id="3">Initial Settings</h2>
+<pre class="codeinput">
+<span class="comment">% Euler angles (Bunge) and PC</span>
+eangs_start=[176.81 19.31 225.90]*pi/180;<span class="comment">%demo</span>
+<span class="comment">% PC - this needs to be reasonably accurate</span>
+Settings_PCin.start= [0.4942023 0.3919603 0.4872924 ]; <span class="comment">% In Bruker convention - [PCX PCY DD]</span>
+<span class="comment">% Settings_PCin.range = [0.001 0.001 0.001];</span>
+
+<span class="comment">% play with these</span>
+RTM.screensize = 128; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq=5; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.iterations = 10;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 256; <span class="comment">%LPT size used in pixels</span>
+
+<span class="comment">%background correction settings</span>
+Settings_CorX.gfilt=0; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.resize=1; <span class="comment">%resize correction</span>
+Settings_CorX.size=[RTM.screensize RTM.screensize]; <span class="comment">%image height</span>
+
+<span class="comment">%set up the PC refinement algorithm</span>
+Refine.ss=0.08; <span class="comment">%initial probe volume</span>
+Refine.p=2; <span class="comment">%order of polynomial to fit to tetrahedron</span>
+Refine.n_its=100;
+Refine.reindex=1;
+Refine.print=1;
+</pre>
+<h2 id="4">Load astro and MTEX</h2>
+<pre class="codeinput">
+<span class="comment">% InputUser.mtex_location='I:\mtex-5.11.2';</span>
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="comment">% InputUser.Astro_loc='I:\AstroEBSD_v2';</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.Astro_loc,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="5">Map metadata from Json</h2>
+<pre class="codeinput">TFSEBSD = ReadTFSJson(TFSpath, <span class="string">'site.json'</span>);
+
+EBSDPatSize = TFSEBSD.Info.Geometry.PatternWidth;
+EBSDPatArraySize = EBSDPatSize * EBSDPatSize;
+
+
+scan_width = TFSEBSD.Info.Width;
+scan_height = TFSEBSD.Info.Height;
+<span class="comment">% scan_height = 1; % test</span>
+
+scan_step = TFSEBSD.Info.MapStepSize * 1e6; <span class="comment">%um</span>
+
+total_pts = TFSEBSD.Info.TotalNumberOfPoints;
+<span class="comment">% total_pts = scan_width * scan_height;</span>
+
+ResultsTableFields = [<span class="string">"ID"</span>,<span class="string">"EulerZ1"</span>, <span class="string">"EulerX"</span>, <span class="string">"EulerZ2"</span>, <span class="string">"Phase"</span>,<span class="string">"XCF"</span>,<span class="string">"X"</span>, <span class="string">"Y"</span>];
+ResultsTableTypes = {<span class="string">'double'</span>,<span class="string">'double'</span>,<span class="string">'double'</span>,<span class="string">'double'</span>,<span class="string">'string'</span>,<span class="string">'double'</span>,<span class="string">'double'</span>,<span class="string">'double'</span>};
+
+Results = table(<span class="string">'Size'</span>,[total_pts size(ResultsTableFields,2)], <span class="string">'VariableTypes'</span>,ResultsTableTypes,<span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, ResultsTableFields);
+
+PCx_update = @(x)Settings_PCin.start(1) - x * scan_step / (256 * 55);
+PCy_update = @(y)Settings_PCin.start(2) - y * scan_step / (256 * 55) * cos(70*pi/180);
+PCz_update = @(y)Settings_PCin.start(3) + y * scan_step / (256 * 55) * sin(70*pi/180);
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<pre class="codeoutput error">Error using fileread
+Could not open file C:\Users\benja\Documents\EBSD\Martin\site.json. No such
+file or directory.
+
+Error in ReadTFSJson (line 6)
+jsonText = fileread(jsonFile);
+
+Error in sequence_indexing_TruePix_multiphase (line 64)
+TFSEBSD = ReadTFSJson(TFSpath, 'site.json');
+</pre>
+<h2 id="6">placeholders for results storing</h2>
+<p>Res_ID = uint32(linspace(1,total_pts,total_pts)); Res_X = uint32(zeros(1,total_pts)); Res_Y = uint32(zeros(1,total_pts)); Res_Euler_Z1 = zeros(1,total_pts); Res_Euler_X = zeros(1,total_pts); Res_Euler_Z2 = zeros(1,total_pts); Res_XCF = zeros(1,total_pts); Res_Phase = uint8(zeros(1,total_pts));</p>
+<h2 id="7">RTM Settings</h2>
+<pre class="codeinput">[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+</pre>
+<h2 id="8">Generate SO3 library</h2>
+<pre class="codeinput">
+<span class="comment">%populate fundamental zone of SO(3)</span>
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+<span class="comment">% generate the library</span>
+[EBSD_geom ] = EBSP_Gnom( RTM, Settings_PCin.start); <span class="comment">%</span>
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+fprintf(<span class="string">'%s: Pattern library generated.\n'</span>,datestr(now,<span class="string">'HH:MM:SS.FFF'</span>));
+</pre>
+<h2 id="9">Go through the patterns</h2>
+<pre class="codeinput">eangs = eangs_start;
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+PCin = Settings_PCin.start;
+<span class="comment">% Detector_tilt = RTM.Rx(-20*pi/180); % for EBSD</span>
+Detector_tilt = eye(3); <span class="comment">% for TKD - may need to adjust if using detetcor ECP</span>
+
+<span class="comment">% index = 1;</span>
+
+<span class="keyword">for</span> i=0:0<span class="comment">%scan_height-1</span>
+
+<span class="comment">% Read patterns of this row</span>
+<span class="comment">% procPatFileName = "row_00000.bin";</span>
+paddedRowNumber = sprintf( <span class="string">'%05d'</span>, (i) );
+binFileName = strcat(<span class="string">"row_"</span>, paddedRowNumber, <span class="string">".bin"</span>);
+fullBinFileName = fullfile(TFSpath, <span class="string">'patterns/'</span> , binFileName);
+
+fileID = fopen(fullBinFileName, <span class="string">'r'</span>);
+data =  fread(fileID);
+fclose(fileID);
+
+<span class="keyword">if</span> mod(size(data,1), EBSDPatArraySize) ~=0
+    error(<span class="string">"length of pattern file not dividable by pattern size"</span>);
+<span class="keyword">end</span>
+
+allPatsThisRow = reshape(data, [EBSDPatSize EBSDPatSize size(data,1)/EBSDPatArraySize]);
+fprintf(<span class="string">'%s: Starting %d of %d row\n'</span>,datestr(now,<span class="string">'HH:MM:SS.FFF'</span>), i+1, scan_height);
+
+    <span class="keyword">for</span> j=0:0<span class="comment">%scan_width-1</span>
+    <span class="comment">% go through every pattern in this row</span>
+
+    index = i * scan_width + j;
+
+    Res_X_ThisRow(j+1) = j;
+    Res_Y_ThisRow(j+1) = i;
+    Res_ID_ThisRow(j+1) = index + 1;
+
+    thisProcdPattern = flipud(double(allPatsThisRow(:,:,j+1)))';
+
+    <span class="comment">% Generate a simulated pattern</span>
+
+    [EBSD_geom ] = EBSP_Gnom( RTM, PCin); <span class="comment">%</span>
+    <span class="comment">% up to this point, the PC should be updated already.</span>
+
+    <span class="comment">% Refine the orientation - Refine the Bruker solution</span>
+    <span class="comment">%prepare the experimental pattern for refinement</span>
+    [ pattern1 ] = EBSP_BGCor( thisProcdPattern, Settings_CorX);
+    <span class="comment">% [ pattern1 ] = EBSP_BGCor( thisProcdPattern, []);</span>
+    [Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+
+    <span class="comment">% seed for 1st pattern</span>
+    <span class="comment">% if i==num_pat_ini</span>
+        <span class="comment">% Now do SO(3) searching &amp; compare with the library</span>
+
+    <span class="comment">% since the shift of PC is not negligible, need to generate the library</span>
+    <span class="comment">% for every iteration.</span>
+    <span class="comment">% [ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);</span>
+
+    [G_SO3,Library_PH,~,~]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,1);
+    <span class="comment">% Results.XCF(i) = max(regouts(:));</span>
+    <span class="comment">% end</span>
+
+    <span class="comment">% [ Pat_sim_eang ] = EBSP_gen( EBSD_geom,gmatrix*Detector_tilt,screen_int); %generate the EBSP for this iteration</span>
+
+    <span class="comment">%refine</span>
+    <span class="comment">% [G_Refined,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,gmatrix*Detector_tilt,SettingsXCF,screen_int,RTM_info.isHex,RTM);</span>
+
+    <span class="comment">%update simulation</span>
+    <span class="comment">% [ Pat_sim_B_ref ] = EBSP_gen( EBSD_geom,G_Refined,screen_int,screen_int.isHex ); %generate the EBSP for this iteration</span>
+
+    <span class="comment">%refine SO3</span>
+    [G_Refined_SO3,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+
+
+    thisEuler = conv_G_to_EA(G_Refined_SO3); <span class="comment">% MTEX takes radians</span>
+    <span class="comment">%</span>
+    Res_EulerZ1_ThisRow(j+1) = thisEuler(1);
+    Res_EulerX_ThisRow(j+1) = thisEuler(2);
+    Res_EulerZ2_ThisRow(j+1) = thisEuler(3);
+    <span class="comment">% Results.PCx(index) = PCin(1);</span>
+    <span class="comment">% Results.PCy(index) = PCin(2);</span>
+    <span class="comment">% Results.PCz(index) = PCin(3);</span>
+    Res_XCF_ThisRow(j+1) = regout_R(4);
+    <span class="comment">% Results.Phase(index) = InputUser.Phase_Input;</span>
+
+    fprintf(<span class="string">'%s: %d of %d done, XCC=%f.\n'</span>,datestr(now,<span class="string">'HH:MM:SS.FFF'</span>), index+1, total_pts, regout_R(4));
+
+    <span class="comment">% PCin(1) = PCx_update(j);</span>
+    <span class="comment">% PCin(2) = PCy_update(i);</span>
+    <span class="comment">% PCin(3) = PCz_update(i);</span>
+    <span class="comment">% index = index + 1;</span>
+
+    <span class="keyword">end</span>
+
+    <span class="comment">% start from rownum * rowpix (i) * rowsize + 1</span>
+    <span class="comment">% end at (i+1) * rowsize</span>
+
+    thisRowStart = (i) * scan_width + 1;
+    thisRowEnd = (i+1) * scan_width;
+
+    Results.ID(thisRowStart:thisRowEnd) = Res_ID_ThisRow;
+    Results.X(thisRowStart:thisRowEnd) = Res_X_ThisRow;
+    Results.Y(thisRowStart:thisRowEnd) = Res_Y_ThisRow;
+    Results.EulerZ1(thisRowStart:thisRowEnd) = Res_EulerZ1_ThisRow;
+    Results.EulerX(thisRowStart:thisRowEnd) = Res_EulerX_ThisRow;
+    Results.EulerZ2(thisRowStart:thisRowEnd) = Res_EulerZ2_ThisRow;
+    Results.XCF(thisRowStart:thisRowEnd) = Res_XCF_ThisRow;
+
+    fprintf(<span class="string">'%s: %d of %d rows done\n'</span>,datestr(now,<span class="string">'HH:MM:SS.FFF'</span>),i+1, scan_height);
+
+<span class="keyword">end</span>
+
+
+<span class="comment">%{
+</span><span class="comment">%%
+</span><span class="comment">
+</span><span class="comment">% savefilename = fullfile(TFSpath , strcat(InputUser.Phase_Input{1}, '.mat'));
+</span><span class="comment">% save(savefilename, "Results");
+</span><span class="comment">
+</span><span class="comment">%%
+</span><span class="comment">cs = loadCIF(RTM_info.cif_file);
+</span><span class="comment">% Pat 1 is from top left because X sense of the beam is the opposite to X
+</span><span class="comment">% of the detector.
+</span><span class="comment">setMTEXpref('xAxisDirection','east');
+</span><span class="comment">setMTEXpref('zAxisDirection','intoplane');
+</span><span class="comment">
+</span><span class="comment">% build the coordinate maps. To get the accurate micron bar, we multiply by
+</span><span class="comment">% the step size.
+</span><span class="comment">prop.x = double(Res_X) * scan_step;
+</span><span class="comment">prop.y = double(Res_Y) * scan_step;
+</span><span class="comment">prop.XCF=double(Res_XCF);
+</span><span class="comment">% prop.diode = Results.diode;
+</span><span class="comment">
+</span><span class="comment">ori = rotation('Euler', Res_Euler_Z1, Res_Euler_X, Res_Euler_Z2);
+</span><span class="comment">
+</span><span class="comment">try
+</span><span class="comment">ebsd = EBSD(ori, ones(size(ori)),{'notIndexed',cs},'Options',prop);
+</span><span class="comment">catch
+</span><span class="comment">    ebsd = EBSD(ori, ones(size(ori)),{'notIndexed',cs},prop);
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">ebsd_rot = rotate(ebsd,10*degree);
+</span><span class="comment">
+</span><span class="comment">ipfKey = ipfHSVKey(cs);
+</span><span class="comment">figure;
+</span><span class="comment">plot(ipfKey);
+</span><span class="comment">
+</span><span class="comment">colorKey = ipfHSVKey(cs);
+</span><span class="comment">colorKey.inversePoleFigureDirection = xvector;
+</span><span class="comment">color = colorKey.orientation2color(ebsd('indexed').orientations);
+</span><span class="comment">
+</span><span class="comment">cShape = crystalShape.cube(ebsd.CS);
+</span><span class="comment">
+</span><span class="comment">[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',2*degree);
+</span><span class="comment">% big_grains = grains(grains.grainSize &gt; 2);
+</span><span class="comment">
+</span><span class="comment">figure;
+</span><span class="comment">plot(ebsd,colorKey.orientation2color(ebsd.orientations));
+</span><span class="comment">hold on;
+</span><span class="comment">% plot(grains.boundary,'linewidth',2);
+</span><span class="comment">plot(ebsd('indexed'),0.4*cShape,'linewidth',2,'colored','micronbar','off');
+</span><span class="comment">hold off;
+</span><span class="comment">legend off;
+</span><span class="comment">
+</span><span class="comment">figure;
+</span><span class="comment">plot(ebsd,colorKey.orientation2color(ebsd.orientations));
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">%
+</span><span class="comment">% F = meanFilter;
+</span><span class="comment">% F.numNeighbours = 3;
+</span><span class="comment">%
+</span><span class="comment">% % smooth the data
+</span><span class="comment">% ebsdS = smooth(ebsd,F);
+</span><span class="comment">% ebsdS = ebsdS('indexed');
+</span><span class="comment">% ebsdS = ebsd;
+</span><span class="comment">% [grains, ebsdS.grainId] = calcGrains(ebsdS('indexed'),'angle',10*degree);
+</span><span class="comment">% ebsdS(grains(grains.grainSize&lt;2)) = [];
+</span><span class="comment">% [grains, ebsdS.grainId] = calcGrains(ebsdS('indexed'),'angle',10*degree);
+</span><span class="comment">%
+</span><span class="comment">%
+</span><span class="comment">% % plot the smoothed data
+</span><span class="comment">% figure;
+</span><span class="comment">% plot(ebsdS, colorKey.orientation2color(ebsdS.orientations))
+</span><span class="comment">% hold on;
+</span><span class="comment">% plot(grains.boundary,'linewidth',2);
+</span><span class="comment">% plot(big_grains('iron'),0.4*cShape,'linewidth',2,'colored','micronbar','off');
+</span><span class="comment">% hold off;
+</span><span class="comment">% legend off;
+</span><span class="comment">
+</span><span class="comment">%}</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+home
+close all
+
+%% File paths + phase builder
+InputUser.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+InputUser.Astro_loc='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+
+% TFSpath = 'I:\EBSD_Data\2025-07-25T13_22_14_AB1\2025-07-25T13_52_56'; 
+TFSpath='C:\Users\benja\Documents\EBSD\Martin';
+
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,'phases\phasefiles');
+InputUser.Phase_Input  = {'Ni'}; %Si, Ferrite, Ti_alpha_20
+
+
+%% Initial Settings
+
+% Euler angles (Bunge) and PC
+eangs_start=[176.81 19.31 225.90]*pi/180;%demo
+% PC - this needs to be reasonably accurate
+Settings_PCin.start= [0.4942023 0.3919603 0.4872924 ]; % In Bruker convention - [PCX PCY DD]
+% Settings_PCin.range = [0.001 0.001 0.001];
+
+% play with these
+RTM.screensize = 128; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq=5; %Set the SO(3) sampling freq in degrees
+RTM.iterations = 10;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 256; %LPT size used in pixels
+
+%background correction settings
+Settings_CorX.gfilt=0; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.resize=1; %resize correction
+Settings_CorX.size=[RTM.screensize RTM.screensize]; %image height
+
+%set up the PC refinement algorithm
+Refine.ss=0.08; %initial probe volume
+Refine.p=2; %order of polynomial to fit to tetrahedron
+Refine.n_its=100;
+Refine.reindex=1;
+Refine.print=1;
+
+%% Load astro and MTEX
+
+% InputUser.mtex_location='I:\mtex-5.11.2';
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(InputUser.mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+% InputUser.Astro_loc='I:\AstroEBSD_v2';
+try astro_loadcheck;
+catch
+    run(fullfile(InputUser.Astro_loc,"start_AstroEBSD.m"));
+end
+
+%% Map metadata from Json
+
+TFSEBSD = ReadTFSJson(TFSpath, 'site.json');
+
+EBSDPatSize = TFSEBSD.Info.Geometry.PatternWidth;
+EBSDPatArraySize = EBSDPatSize * EBSDPatSize;
+
+
+scan_width = TFSEBSD.Info.Width;
+scan_height = TFSEBSD.Info.Height;
+% scan_height = 1; % test
+
+scan_step = TFSEBSD.Info.MapStepSize * 1e6; %um
+
+total_pts = TFSEBSD.Info.TotalNumberOfPoints;
+% total_pts = scan_width * scan_height;
+
+ResultsTableFields = ["ID","EulerZ1", "EulerX", "EulerZ2", "Phase","XCF","X", "Y"];
+ResultsTableTypes = {'double','double','double','double','string','double','double','double'};
+
+Results = table('Size',[total_pts size(ResultsTableFields,2)], 'VariableTypes',ResultsTableTypes,...
+    'VariableNames', ResultsTableFields);
+
+PCx_update = @(x)Settings_PCin.start(1) - x * scan_step / (256 * 55);
+PCy_update = @(y)Settings_PCin.start(2) - y * scan_step / (256 * 55) * cos(70*pi/180);
+PCz_update = @(y)Settings_PCin.start(3) + y * scan_step / (256 * 55) * sin(70*pi/180);
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% placeholders for results storing
+% Res_ID = uint32(linspace(1,total_pts,total_pts));
+% Res_X = uint32(zeros(1,total_pts));
+% Res_Y = uint32(zeros(1,total_pts));
+% Res_Euler_Z1 = zeros(1,total_pts);
+% Res_Euler_X = zeros(1,total_pts);
+% Res_Euler_Z2 = zeros(1,total_pts);
+% Res_XCF = zeros(1,total_pts);
+% Res_Phase = uint8(zeros(1,total_pts));
+
+%% RTM Settings
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+%% Generate SO3 library
+%populate fundamental zone of SO(3)
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+% generate the library
+[EBSD_geom ] = EBSP_Gnom( RTM, Settings_PCin.start); %
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+fprintf('%s: Pattern library generated.\n',datestr(now,'HH:MM:SS.FFF')); 
+
+%% Go through the patterns
+
+eangs = eangs_start;
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+PCin = Settings_PCin.start;
+% Detector_tilt = RTM.Rx(-20*pi/180); % for EBSD
+Detector_tilt = eye(3); % for TKD - may need to adjust if using detetcor ECP
+
+% index = 1;
+
+for i=0:0%scan_height-1
+
+% Read patterns of this row
+% procPatFileName = "row_00000.bin";
+paddedRowNumber = sprintf( '%05d', (i) );
+binFileName = strcat("row_", paddedRowNumber, ".bin");
+fullBinFileName = fullfile(TFSpath, 'patterns/' , binFileName);
+
+fileID = fopen(fullBinFileName, 'r');
+data =  fread(fileID);
+fclose(fileID);
+
+if mod(size(data,1), EBSDPatArraySize) ~=0
+    error("length of pattern file not dividable by pattern size");
+end
+
+allPatsThisRow = reshape(data, [EBSDPatSize EBSDPatSize size(data,1)/EBSDPatArraySize]);
+fprintf('%s: Starting %d of %d row\n',datestr(now,'HH:MM:SS.FFF'), i+1, scan_height);
+
+    for j=0:0%scan_width-1
+    % go through every pattern in this row
+
+    index = i * scan_width + j;    
+
+    Res_X_ThisRow(j+1) = j;
+    Res_Y_ThisRow(j+1) = i;
+    Res_ID_ThisRow(j+1) = index + 1;
+
+    thisProcdPattern = flipud(double(allPatsThisRow(:,:,j+1)))';
+
+    % Generate a simulated pattern
+    
+    [EBSD_geom ] = EBSP_Gnom( RTM, PCin); %
+    % up to this point, the PC should be updated already.
+    
+    % Refine the orientation - Refine the Bruker solution
+    %prepare the experimental pattern for refinement
+    [ pattern1 ] = EBSP_BGCor( thisProcdPattern, Settings_CorX);
+    % [ pattern1 ] = EBSP_BGCor( thisProcdPattern, []);
+    [Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+    
+    % seed for 1st pattern
+    % if i==num_pat_ini    
+        % Now do SO(3) searching & compare with the library
+
+    % since the shift of PC is not negligible, need to generate the library
+    % for every iteration.
+    % [ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+    [G_SO3,Library_PH,~,~]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,1);
+    % Results.XCF(i) = max(regouts(:));
+    % end
+    
+    % [ Pat_sim_eang ] = EBSP_gen( EBSD_geom,gmatrix*Detector_tilt,screen_int); %generate the EBSP for this iteration 
+    
+    %refine
+    % [G_Refined,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,gmatrix*Detector_tilt,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+    
+    %update simulation
+    % [ Pat_sim_B_ref ] = EBSP_gen( EBSD_geom,G_Refined,screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+    
+    %refine SO3
+    [G_Refined_SO3,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+    
+    
+    thisEuler = conv_G_to_EA(G_Refined_SO3); % MTEX takes radians
+    % 
+    Res_EulerZ1_ThisRow(j+1) = thisEuler(1);
+    Res_EulerX_ThisRow(j+1) = thisEuler(2);
+    Res_EulerZ2_ThisRow(j+1) = thisEuler(3);
+    % Results.PCx(index) = PCin(1);
+    % Results.PCy(index) = PCin(2);
+    % Results.PCz(index) = PCin(3);
+    Res_XCF_ThisRow(j+1) = regout_R(4);
+    % Results.Phase(index) = InputUser.Phase_Input;
+    
+    fprintf('%s: %d of %d done, XCC=%f.\n',datestr(now,'HH:MM:SS.FFF'), index+1, total_pts, regout_R(4));
+    
+    % PCin(1) = PCx_update(j);
+    % PCin(2) = PCy_update(i);
+    % PCin(3) = PCz_update(i);
+    % index = index + 1;
+    
+    end
+
+    % start from rownum * rowpix (i) * rowsize + 1
+    % end at (i+1) * rowsize
+
+    thisRowStart = (i) * scan_width + 1;
+    thisRowEnd = (i+1) * scan_width;
+    
+    Results.ID(thisRowStart:thisRowEnd) = Res_ID_ThisRow;
+    Results.X(thisRowStart:thisRowEnd) = Res_X_ThisRow;
+    Results.Y(thisRowStart:thisRowEnd) = Res_Y_ThisRow;
+    Results.EulerZ1(thisRowStart:thisRowEnd) = Res_EulerZ1_ThisRow;
+    Results.EulerX(thisRowStart:thisRowEnd) = Res_EulerX_ThisRow;
+    Results.EulerZ2(thisRowStart:thisRowEnd) = Res_EulerZ2_ThisRow;
+    Results.XCF(thisRowStart:thisRowEnd) = Res_XCF_ThisRow;
+
+    fprintf('%s: %d of %d rows done\n',datestr(now,'HH:MM:SS.FFF'),i+1, scan_height);
+
+end
+
+
+%{
+%%
+
+% savefilename = fullfile(TFSpath , strcat(InputUser.Phase_Input{1}, '.mat'));
+% save(savefilename, "Results");
+
+%%
+cs = loadCIF(RTM_info.cif_file);
+% Pat 1 is from top left because X sense of the beam is the opposite to X
+% of the detector.
+setMTEXpref('xAxisDirection','east'); 
+setMTEXpref('zAxisDirection','intoplane');
+
+% build the coordinate maps. To get the accurate micron bar, we multiply by
+% the step size.
+prop.x = double(Res_X) * scan_step;
+prop.y = double(Res_Y) * scan_step;
+prop.XCF=double(Res_XCF);
+% prop.diode = Results.diode;
+
+ori = rotation('Euler', Res_Euler_Z1, Res_Euler_X, Res_Euler_Z2);
+
+try
+ebsd = EBSD(ori, ones(size(ori)),{'notIndexed',cs},'Options',prop);
+catch
+    ebsd = EBSD(ori, ones(size(ori)),{'notIndexed',cs},prop);
+end
+
+ebsd_rot = rotate(ebsd,10*degree);
+
+ipfKey = ipfHSVKey(cs);
+figure;
+plot(ipfKey);
+
+colorKey = ipfHSVKey(cs);
+colorKey.inversePoleFigureDirection = xvector;
+color = colorKey.orientation2color(ebsd('indexed').orientations);
+
+cShape = crystalShape.cube(ebsd.CS);
+
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',2*degree);
+% big_grains = grains(grains.grainSize > 2);
+
+figure;
+plot(ebsd,colorKey.orientation2color(ebsd.orientations));
+hold on;
+% plot(grains.boundary,'linewidth',2);
+plot(ebsd('indexed'),0.4*cShape,'linewidth',2,'colored','micronbar','off');
+hold off;
+legend off;
+
+figure;
+plot(ebsd,colorKey.orientation2color(ebsd.orientations));
+
+
+%
+% F = meanFilter;
+% F.numNeighbours = 3;
+% 
+% % smooth the data
+% ebsdS = smooth(ebsd,F);
+% ebsdS = ebsdS('indexed');
+% ebsdS = ebsd;
+% [grains, ebsdS.grainId] = calcGrains(ebsdS('indexed'),'angle',10*degree);
+% ebsdS(grains(grains.grainSize<2)) = [];
+% [grains, ebsdS.grainId] = calcGrains(ebsdS('indexed'),'angle',10*degree);
+% 
+% 
+% % plot the smoothed data
+% figure;
+% plot(ebsdS, colorKey.orientation2color(ebsdS.orientations))
+% hold on;
+% plot(grains.boundary,'linewidth',2);
+% plot(big_grains('iron'),0.4*cShape,'linewidth',2,'colored','micronbar','off');
+% hold off;
+% legend off;
+
+%}
+##### SOURCE END #####
+-->
+</body>
+</html>

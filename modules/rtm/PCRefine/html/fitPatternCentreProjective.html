@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>fitPatternCentreProjective</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-09-08">
+<meta name="DC.source" content="fitPatternCentreProjective.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Fitting a projective transformation between PCX,PCY,PCZ and xGrid, yGrid vectors</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="keyword">function</span> P = fitPatternCentreProjective(PCX,PCY,PCZ,x,y)
+</pre>
+<h2 id="2">Fitting a projective transformation between PCX,PCY,PCZ and xGrid, yGrid vectors</h2>
+<p>P = fitPatternCentreProjective(PCX, PCY, PCZ, x, y) computes a projective transformation matrix that relates the input projection cetnre coordinates (PCX, PCY, PCZ) to the specified grid vectors (x, y). This function constructs a minimization matrix and solves for the transformation parameters using linear algebra techniques. NOTE: The minimization matrix is only solvable, if at least 5 combinations of PCX,PCZ,PCZ, x and y are known. For more the linear equation is over determined an the best fit is determined by the matlab command.</p>
+<p>Inputs: - PCX: Pattern Centre X. - PCY: Pattern Centre Y. - PCZ: Pattern Centre Z. - x: Beam Position on Sample x. - y: Beam Position on Sample y.</p>
+<p>Outputs: - P: The projective transformation matrix that aligns the projection center with the sample coordinates.</p>
+<p>Usage: PCs = P(1:3,:)*[x;y;ones(size(x))]</p>
+<pre>   scale = P(10)*x + P(11)*y +1;
+   PCs = PCs./scale;
+   PCX = PCs(:,1:3);
+   PCY = PCs(:,1:3);
+   PCZ = PCs(:,1:3);
+%% BUILD a Large LEQ from this.
+Also have a look at.
+Refined Calibration Model for Improving the
+Orientation Precision of Electron Backscatter
+Diffraction Maps Aimo Winkelmann et al. doi:10.3390/ma13122816
++ Estimating Projective Transformation Matrix</pre>
+<pre class="codeinput">
+<span class="comment">%%(Collineation, Homography)</span>
+<span class="comment">%Zhengyou Zhang Microsoft Research Techical Report MSR-TR-2010-63</span>
+<span class="comment">% Handbook of Image</span>
+<span class="comment">% Processing and Computer</span>
+<span class="comment">% Vision https://doi.org/10.1007/978-3-030-42374-2</span>
+
+    <span class="comment">% lets start with only a small subset to make the matrix easier "graspable"</span>
+    <span class="comment">% numPatsSel = 55;</span>
+    numPatsSel = numel(PCX);
+    PCX_temp = PCX(1:numPatsSel);
+    PCY_temp = PCY(1:numPatsSel);
+    PCZ_temp = PCZ(1:numPatsSel);
+    PC_temp = [PCX_temp;PCY_temp;PCZ_temp]; <span class="comment">% [pc_x,y,z]x n_points (rowsxcols)</span>
+    PC_temp = PC_temp; <span class="comment">%[pcx1 pcy1 pcz1 pcx2 pcy2 pcz2 ... pcxn pcyn pczn</span>
+    x_temp = x(1:numPatsSel);
+    y_temp = y(1:numPatsSel);
+    z_temp = ones(size(x_temp));
+    gridVecs = [x_temp; y_temp; z_temp] <span class="comment">%</span>
+    <span class="comment">% gridVecs = gridVecs(:);     %[x1 y1 z1 x2 y2 z2 x3 y3 z3]....</span>
+
+    <span class="comment">% matrix needs to look sth like this. How do we automate this ?</span>
+    <span class="comment">% [x_temp(1) y_temp(1) z_temp(1) 0 0 0 0 0 0    -x_temp(1)*PCX(1) - y_temp(1)*PCX(1);...</span>
+     <span class="comment">% 0 0 0 x_temp(1) y_temp(1) z_temp(1)  0 0 0  -x_temp(1)*PCY(1) - y_temp(1)*PCY(1);...</span>
+     <span class="comment">% 0 0 0 0 0 0 x_temp(1) y_temp(1) z_temp(1)   -x_temp(1)*PCZ(1) - y_temp(1)*PCZ(1)]</span>
+
+     <span class="comment">% 14    14     1     0     0     0     0     0     0</span>
+    <span class="comment">% 0     0     0    14    14     1     0     0     0</span>
+    <span class="comment">% 0     0     0     0     0     0    14    14     1</span>
+</pre>
+<pre class="codeoutput error">Not enough input arguments.
+
+Error in fitPatternCentreProjective (line 45)
+    numPatsSel = numel(PCX);
+</pre>
+<pre class="codeinput">    minMatrixComplete = zeros(size(PCX_temp,2)*3,11)
+    <span class="keyword">for</span> n = 1: numPatsSel<span class="comment">%: numPoints</span>
+        <span class="comment">% n=1</span>
+        minimizationMatrix = blkdiag(gridVecs(:,n)',gridVecs(:,n)',gridVecs(:,n)');
+        minimizationMatrixRightPart = -gridVecs(1:2,n)'.*PC_temp(:,n)
+        <span class="comment">% put them together like ( minimizationMatrix</span>
+        <span class="comment">% minimizationMatrixRightPart); -&gt; 3x11 matrix</span>
+        <span class="comment">% minimizationMatrix =</span>
+        <span class="comment">% minimizationMatrix()</span>
+        minMatrixComplete(3*n-2:3*n,:) = [minimizationMatrix minimizationMatrixRightPart]
+    <span class="keyword">end</span>
+</pre>
+<pre class="codeinput">    <span class="comment">%</span>
+    pTL = linsolve(minMatrixComplete,PC_temp(:))
+    scale = pTL(10)*x + pTL(11)*y +1
+    <span class="comment">%</span>
+    <span class="comment">%</span>
+    P = [pTL(1:3)'; pTL(4:6)';pTL(7:9)'; pTL(10), pTL(11), 1]
+</pre>
+<pre class="codeinput">
+<span class="keyword">end</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+function P = fitPatternCentreProjective(PCX,PCY,PCZ,x,y)
+%% Fitting a projective transformation between PCX,PCY,PCZ and xGrid, yGrid vectors
+% P = fitPatternCentreProjective(PCX, PCY, PCZ, x, y) computes a projective transformation 
+% matrix that relates the input projection cetnre coordinates (PCX, PCY, PCZ) to the specified 
+% grid vectors (x, y). This function constructs a minimization matrix and solves for the 
+% transformation parameters using linear algebra techniques.
+% NOTE: The minimization matrix is only solvable, if at least 5
+% combinations of PCX,PCZ,PCZ, x and y are known. For more the linear
+% equation is over determined an the best fit is determined by the matlab
+% command.
+%
+% Inputs:
+%   - PCX: Pattern Centre X.
+%   - PCY: Pattern Centre Y.
+%   - PCZ: Pattern Centre Z.
+%   - x: Beam Position on Sample x.
+%   - y: Beam Position on Sample y.
+%
+% Outputs:
+%   - P: The projective transformation matrix that aligns the projection
+%   center with the sample coordinates.
+%
+% Usage:
+%   	PCs = P(1:3,:)*[x;y;ones(size(x))]
+% 
+%     scale = P(10)*x + P(11)*y +1;
+%     PCs = PCs./scale;
+%     PCX = PCs(:,1:3);
+%     PCY = PCs(:,1:3);   
+%     PCZ = PCs(:,1:3);
+% %% BUILD a Large LEQ from this.
+% Also have a look at.
+% Refined Calibration Model for Improving the
+% Orientation Precision of Electron Backscatter
+% Diffraction Maps Aimo Winkelmann et al. doi:10.3390/ma13122816
+% + Estimating Projective Transformation Matrix
+%%(Collineation, Homography)
+%Zhengyou Zhang Microsoft Research Techical Report MSR-TR-2010-63
+% Handbook of Image
+% Processing and Computer
+% Vision https://doi.org/10.1007/978-3-030-42374-2
+
+    % lets start with only a small subset to make the matrix easier "graspable"
+    % numPatsSel = 55;
+    numPatsSel = numel(PCX);
+    PCX_temp = PCX(1:numPatsSel);
+    PCY_temp = PCY(1:numPatsSel);
+    PCZ_temp = PCZ(1:numPatsSel);
+    PC_temp = [PCX_temp;PCY_temp;PCZ_temp]; % [pc_x,y,z]x n_points (rowsxcols)
+    PC_temp = PC_temp; %[pcx1 pcy1 pcz1 pcx2 pcy2 pcz2 ... pcxn pcyn pczn
+    x_temp = x(1:numPatsSel);
+    y_temp = y(1:numPatsSel);
+    z_temp = ones(size(x_temp));
+    gridVecs = [x_temp; y_temp; z_temp] % 
+    % gridVecs = gridVecs(:);     %[x1 y1 z1 x2 y2 z2 x3 y3 z3]....
+    
+    % matrix needs to look sth like this. How do we automate this ?
+    % [x_temp(1) y_temp(1) z_temp(1) 0 0 0 0 0 0    -x_temp(1)*PCX(1) - y_temp(1)*PCX(1);...
+     % 0 0 0 x_temp(1) y_temp(1) z_temp(1)  0 0 0  -x_temp(1)*PCY(1) - y_temp(1)*PCY(1);...
+     % 0 0 0 0 0 0 x_temp(1) y_temp(1) z_temp(1)   -x_temp(1)*PCZ(1) - y_temp(1)*PCZ(1)]
+    
+     % 14    14     1     0     0     0     0     0     0
+    % 0     0     0    14    14     1     0     0     0
+    % 0     0     0     0     0     0    14    14     1
+     %%
+    minMatrixComplete = zeros(size(PCX_temp,2)*3,11)
+    for n = 1: numPatsSel%: numPoints
+        % n=1
+        minimizationMatrix = blkdiag(gridVecs(:,n)',gridVecs(:,n)',gridVecs(:,n)');
+        minimizationMatrixRightPart = -gridVecs(1:2,n)'.*PC_temp(:,n)
+        % put them together like ( minimizationMatrix
+        % minimizationMatrixRightPart); -> 3x11 matrix
+        % minimizationMatrix = 
+        % minimizationMatrix()
+        minMatrixComplete(3*n-2:3*n,:) = [minimizationMatrix minimizationMatrixRightPart]
+    end
+    %%
+    
+    %
+    pTL = linsolve(minMatrixComplete,PC_temp(:))
+    scale = pTL(10)*x + pTL(11)*y +1
+    %
+    %
+    P = [pTL(1:3)'; pTL(4:6)';pTL(7:9)'; pTL(10), pTL(11), 1]
+
+
+
+end
+##### SOURCE END #####
+-->
+</body>
+</html>

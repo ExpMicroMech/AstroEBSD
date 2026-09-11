@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>AstroECP_v2_TFS</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="AstroECP_v2_TFS.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">AstroECP v1</a>
+</li>
+<li>
+<a href="#2">set up the file locations</a>
+</li>
+<li>
+<a href="#3">ECP location and information</a>
+</li>
+<li>
+<a href="#4">Tescan Data - comment out this block if you want to run TFS data</a>
+</li>
+<li>
+<a href="#5">TFS data - comment this block out if you want to run the Tescan data</a>
+</li>
+<li>
+<a href="#6">Other ECP information</a>
+</li>
+<li>
+<a href="#7">Crystal information</a>
+</li>
+<li>
+<a href="#8">Start MTEX and AstroEBSD</a>
+</li>
+<li>
+<a href="#9">set some MTEX preferences</a>
+</li>
+<li>
+<a href="#10">Load data and run the GUI</a>
+</li>
+</ul>
+</div>
+<h2 id="1">AstroECP v1</h2>
+<p>
+<a href="https://arxiv.org/abs/2507.00354">https://arxiv.org/abs/2507.00354</a>
+</p>
+<pre class="codeinput">
+<span class="comment">% -------</span>
+<span class="comment">% a digital twin of our SEM within a graphical user interface to help navigate the electron channeling patterns</span>
+<span class="comment">% and quickly access specific ECCI conditions for subsequent analysis, based on the approaches and functions used in</span>
+<span class="comment">% AstroEBSD (Britton, Tong et al., 2018) and MTEX v5.10.2 (Bachmann et al., 2010; Hielscher et al., 2019).</span>
+<span class="comment">% AstroECP reads the dynamically calculated Kikuchi reference patterns generated from pattern simulation software</span>
+<span class="comment">% that include: MapSweeper EBSD dynamical patterns (higher quality Bloch Wave Kikuchi Diffraction (BWKD) patterns,</span>
+<span class="comment">% the open-source software EMsoft (Singh, Marc de Graef et al., 2017) and also Bruker DynamicS. The GUI then</span>
+<span class="comment">% reprojects the channeling pattern based upon the crystal orientation and ECP conditions. Manipulation of the</span>
+<span class="comment">% simulation can be performed through virtual movement of the stage and microscope to inform movement of the sample</span>
+<span class="comment">% within the SEM. This helps to effectively orient the crystal for the development of crystallographic contrast with</span>
+<span class="comment">% a specific [uvw] direction along the optic axis of the SEM, and provide imaging conditions that are suitable for</span>
+<span class="comment">% the collection of ECCI micrographs.</span>
+<span class="comment">% --------</span>
+
+clear; home; close <span class="string">all</span>;
+</pre>
+<h2 id="2">set up the file locations</h2>
+<pre class="codeinput">Input_Data.astro_location=<span class="string">'D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\'</span>;
+Input_Data.mtex_location=<span class="string">'D:\OneDrive - UBC\MatLab\mtex-5.11.2\'</span>;
+
+<span class="comment">% Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';</span>
+<span class="comment">% Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\';</span>
+</pre>
+<h2 id="3">ECP location and information</h2>
+<h2 id="4">Tescan Data - comment out this block if you want to run TFS data</h2>
+<pre class="codeinput">
+<span class="comment">% Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];</span>
+<span class="comment">% Input_Data.image_name='Si_SAECP_example.tif';     %https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP</span>
+<span class="comment">% Input_Data.image_frame=1;     %frame number for Tescan data, this variable should not exist for other file types</span>
+<span class="comment">% Input_Data.ECP_type='TESCAN'; %supported types: 'TESCAN', 'TFS', 'other'</span>
+<span class="comment">%</span>
+<span class="comment">% %values for the example data</span>
+<span class="comment">% Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]</span>
+<span class="comment">% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern 'Si_SAECP_example.tif'</span>
+<span class="comment">%</span>
+<span class="comment">% %set the greyscale colorlim for the ECP</span>
+<span class="comment">% Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram</span>
+</pre>
+<h2 id="5">TFS data - comment this block out if you want to run the Tescan data</h2>
+<pre class="codeinput">Input_Data.image_folder=[Input_Data.astro_location <span class="string">'\modules\AstroECP'</span>];
+Input_Data.image_name=<span class="string">'20keV_3.2nA_Ref.tif'</span>;     <span class="comment">%available in https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP</span>
+Input_Data.ECP_type=<span class="string">'TFS'</span>; <span class="comment">%supported types: 'TESCAN', 'TFS', 'other'</span>
+
+<span class="comment">%values for the example data</span>
+Input_Data.PC_in=[0.5 0.5 8.39949];
+Input_Data.eangs=[-92.4754,1.0886,133.8429]; <span class="comment">% for the example pattern '20keV_3.2nA_Ref.tif'</span>
+
+<span class="comment">%set the greyscale colorlim for the ECP</span>
+Input_Data.ECP_Pat_clim=[1 4]; <span class="comment">% default settings of histogram</span>
+</pre>
+<h2 id="6">Other ECP information</h2>
+<pre class="codeinput">Input_Data.Stage_in=[0 0 0]; <span class="comment">% stage rotation settings, in degrees [Rx, Ry, Rz]</span>
+</pre>
+<h2 id="7">Crystal information</h2>
+<pre class="codeinput">Input_Data.Phase_Input{1}=<span class="string">'Si_20kV'</span>; <span class="comment">%pick the phase - this should be in \AstroEBSD\phases\phasefiles</span>
+
+Input_Data.crystal_shape=<span class="string">'cube'</span>; <span class="comment">%the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic'</span>
+Input_Data.miller1=[0 0 1]; <span class="comment">%miller indicies for PF plot of the crystal</span>
+Input_Data.miller2=[1 1 0]; <span class="comment">%miller indicies for PF plot of the crystal</span>
+
+<span class="comment">%location of the phase information</span>
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+Input_Data.Index=1; <span class="comment">%show the Atlas and Index buttons</span>
+</pre>
+<h2 id="8">Start MTEX and AstroEBSD</h2>
+<pre class="codeinput">
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.mtex_location,<span class="string">"startup_mtex.m"</span>));
+<span class="keyword">end</span>
+
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="9">set some MTEX preferences</h2>
+<pre class="codeinput">setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofPlane'</span>);
+</pre>
+<h2 id="10">Load data and run the GUI</h2>
+<pre class="codeinput">
+<span class="comment">% Experimental ECP pattern load</span>
+[ECP_Pat] = AstroECP_Load(Input_Data);
+
+<span class="comment">% Now Run the AstroECP GUI</span>
+[Output_Data]=fAstroECP(Input_Data,ECP_Pat);
+</pre>
+<pre class="codeoutput">Warning: Failed to load the experimental ECP, creating a blank frame 
+</pre>
+<pre class="codeoutput error">Error using fAstroECP/phasefolder_read
+The folder D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\phases does not
+exist
+
+Error in fAstroECP (line 136)
+phases_list=phasefolder_read(Input_Data);
+
+Error in AstroECP_v2_TFS (line 95)
+[Output_Data]=fAstroECP(Input_Data,ECP_Pat);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% AstroECP v1
+% https://arxiv.org/abs/2507.00354
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% a digital twin of our SEM within a graphical user interface to help navigate the electron channeling patterns 
+% and quickly access specific ECCI conditions for subsequent analysis, based on the approaches and functions used in 
+% AstroEBSD (Britton, Tong et al., 2018) and MTEX v5.10.2 (Bachmann et al., 2010; Hielscher et al., 2019). 
+% AstroECP reads the dynamically calculated Kikuchi reference patterns generated from pattern simulation software 
+% that include: MapSweeper EBSD dynamical patterns (higher quality Bloch Wave Kikuchi Diffraction (BWKD) patterns, 
+% the open-source software EMsoft (Singh, Marc de Graef et al., 2017) and also Bruker DynamicS. The GUI then 
+% reprojects the channeling pattern based upon the crystal orientation and ECP conditions. Manipulation of the 
+% simulation can be performed through virtual movement of the stage and microscope to inform movement of the sample 
+% within the SEM. This helps to effectively orient the crystal for the development of crystallographic contrast with 
+% a specific [uvw] direction along the optic axis of the SEM, and provide imaging conditions that are suitable for 
+% the collection of ECCI micrographs.
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH 
+
+clear; home; close all;
+
+%% set up the file locations 
+Input_Data.astro_location='D:\OneDrive - UBC\Documents\GitHub\AstroEBSD_v2\';
+Input_Data.mtex_location='D:\OneDrive - UBC\MatLab\mtex-5.11.2\'; 
+
+% Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';
+% Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1\'; 
+
+%% ECP location and information
+
+%%  Tescan Data - comment out this block if you want to run TFS data
+
+% Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
+% Input_Data.image_name='Si_SAECP_example.tif';     %https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP
+% Input_Data.image_frame=1;     %frame number for Tescan data, this variable should not exist for other file types
+% Input_Data.ECP_type='TESCAN'; %supported types: 'TESCAN', 'TFS', 'other'
+% 
+% %values for the example data
+% Input_Data.PC_in=[0.5 0.5 3.9031]; % starting PC - AstroEBSD convention [PCx, PCy, DD]
+% Input_Data.eangs=[87.4431,0.674269,-96.3694]; % for the example pattern 'Si_SAECP_example.tif'
+% 
+% %set the greyscale colorlim for the ECP
+% Input_Data.ECP_Pat_clim=[2 5]; % default settings of histogram
+
+%% TFS data - comment this block out if you want to run the Tescan data
+
+Input_Data.image_folder=[Input_Data.astro_location '\modules\AstroECP'];
+Input_Data.image_name='20keV_3.2nA_Ref.tif';     %available in https://github.com/benjaminbritton/AstroEBSD_v2/tree/live/modules/AstroECP
+Input_Data.ECP_type='TFS'; %supported types: 'TESCAN', 'TFS', 'other'
+
+%values for the example data
+Input_Data.PC_in=[0.5 0.5 8.39949];
+Input_Data.eangs=[-92.4754,1.0886,133.8429]; % for the example pattern '20keV_3.2nA_Ref.tif'
+
+%set the greyscale colorlim for the ECP
+Input_Data.ECP_Pat_clim=[1 4]; % default settings of histogram
+
+%% Other ECP information 
+
+Input_Data.Stage_in=[0 0 0]; % stage rotation settings, in degrees [Rx, Ry, Rz]
+
+
+%% Crystal information
+
+Input_Data.Phase_Input{1}='Si_20kV'; %pick the phase - this should be in \AstroEBSD\phases\phasefiles
+
+Input_Data.crystal_shape='cube'; %the crystal shape to use from MTEX - 'hex' and 'cube' coded or 'orthorhombic'
+Input_Data.miller1=[0 0 1]; %miller indicies for PF plot of the crystal
+Input_Data.miller2=[1 1 0]; %miller indicies for PF plot of the crystal
+
+%location of the phase information
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+Input_Data.Index=1; %show the Atlas and Index buttons
+%% Start MTEX and AstroEBSD
+try EBSD;
+catch
+    run(fullfile(Input_Data.mtex_location,"startup_mtex.m"));
+end
+
+try astro_loadcheck
+catch
+    run(fullfile(Input_Data.astro_location,"start_AstroEBSD.m"));
+end
+
+%% set some MTEX preferences
+setMTEXpref('xAxisDirection','east');
+setMTEXpref('zAxisDirection','outofPlane');
+
+%% Load data and run the GUI
+
+% Experimental ECP pattern load
+[ECP_Pat] = AstroECP_Load(Input_Data);
+
+% Now Run the AstroECP GUI
+[Output_Data]=fAstroECP(Input_Data,ECP_Pat);
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

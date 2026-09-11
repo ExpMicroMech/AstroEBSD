@@ -14,6 +14,7 @@ function [ EBSDPat ] = bReadEBSP(EBSPData,pattern_number)
 %% Versioning
 %v1 - TBB 14/04/2017
 %v2 - TBB 30/03/2020 - added whole array reading
+%v3 - LB  11/09/2025 - added edax up2 binary reading and reading from PCA tiles
 
 if isfield(EBSPData,'HDF5_loc')
     
@@ -54,6 +55,28 @@ elseif isfield(EBSPData,'ang_name')
     EBSDPat=double(flipud(imread(fullfile(EBSPData.pattern_locs,pattern_name))));
     
     
+
+elseif isfield(EBSPData,'edax_binary_loc')   
+    if numel(pattern_number) == 1
+        % try
+            %%
+            EBSDPat=double(flipud(load_edax_binary_single(char(EBSPData.edax_binary_loc),pattern_number).data));
+        %%
+        % catch
+            % warning("ebsd file could not be read returning pattern containing ones.")
+            % EBSDPat=ones(EBSPData.PW,EBSPData.PH)';
+        % end
+    else
+        EBSDPat=double(load_edax_binary_multi(char(EBSPData.edax_binary_loc),pattern_number).data);
+    end
+elseif isfield(EBSPData,'tile')
+    components=EBSPData.tile.map_reshaped_original';
+    components=components(:);
+    pattern_index=components(pattern_number);
+    disp(sprintf("component: %i",pattern_index));
+    disp(sprintf("pattern: %i",pattern_number))
+    EBSDPat=EBSPData.tile.pat(:,:,pattern_index);
+%     pass
 end
 end
 

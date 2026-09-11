@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>analysis_RKD</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="analysis_RKD.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Input Variables</a>
+</li>
+<li>
+<a href="#3">Load MTEX</a>
+</li>
+<li>
+<a href="#4">load the RKD data</a>
+</li>
+<li>
+<a href="#5">Specify Crystal and Specimen Symmetries</a>
+</li>
+<li>
+<a href="#6">Import the Data</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% close all;</span>
+clear;
+home;
+</pre>
+<h2 id="2">Input Variables</h2>
+<pre class="codeinput">
+<span class="comment">%Toolboxes</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+xebsd_location=<span class="string">'C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks'</span>;
+</pre>
+<h2 id="3">Load MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then this will be used to start MTEX up</span>
+
+
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">load the RKD data</h2>
+<pre class="codeinput">rkd_folder=<span class="string">'C:\Users\benja\OneDrive - UBC\EBSD\2024-01-10T12_51_35_Small_Ni'</span>;
+rkd_file=<span class="string">'Ni-data'</span>;
+
+rkd_up1=fullfile(rkd_folder,[rkd_file <span class="string">'.up1'</span>]);
+rkd_ang=fullfile(rkd_folder,[rkd_file <span class="string">'.ang'</span>]);
+</pre>
+<h2 id="5">Specify Crystal and Specimen Symmetries</h2>
+<pre class="codeinput">
+<span class="comment">% crystal symmetry</span>
+CS = {<span class="keyword">...</span>
+  <span class="string">'notIndexed'</span>,<span class="keyword">...</span>
+  crystalSymmetry(<span class="string">'432'</span>, [3.5 3.5 3.5], <span class="string">'mineral'</span>, <span class="string">'Nickel'</span>, <span class="string">'color'</span>, [0.53 0.81 0.98])};
+
+<span class="comment">% plotting convention</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'north'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+</pre>
+<h2 id="6">Import the Data</h2>
+<pre class="codeinput">
+<span class="comment">% create an EBSD variable containing the data</span>
+ebsd = EBSD.load(rkd_ang,CS,<span class="string">'interface'</span>,<span class="string">'ang'</span>);
+</pre>
+<pre class="codeoutput error">Error using assert
+No file found!
+
+Error in getFileNames (line 14)
+  assert(~isempty(files),'No file found!');
+
+Error in EBSD.load (line 57)
+fname = getFileNames(fname);
+
+Error in analysis_RKD (line 52)
+ebsd = EBSD.load(rkd_ang,CS,'interface','ang');
+</pre>
+<pre class="codeinput">[pats_raw] = readEdaxUp(rkd_up1);
+
+
+<span class="comment">% pat1=rot90(reshape(pats(:,1),sqrt(size(pats,1)),sqrt(size(pats,1))));</span>
+<span class="comment">% figure; imagesc(pat1); axis image; axis xy; colormap('gray');</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% close all;
+clear;
+home;
+
+
+%% Input Variables
+
+%Toolboxes
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+xebsd_location='C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks';
+
+%% Load MTEX
+
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then this will be used to start MTEX up
+
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+%% load the RKD data
+rkd_folder='C:\Users\benja\OneDrive - UBC\EBSD\2024-01-10T12_51_35_Small_Ni';
+rkd_file='Ni-data';
+
+rkd_up1=fullfile(rkd_folder,[rkd_file '.up1']);
+rkd_ang=fullfile(rkd_folder,[rkd_file '.ang']);
+
+%% Specify Crystal and Specimen Symmetries
+
+% crystal symmetry
+CS = {... 
+  'notIndexed',...
+  crystalSymmetry('432', [3.5 3.5 3.5], 'mineral', 'Nickel', 'color', [0.53 0.81 0.98])};
+
+% plotting convention
+setMTEXpref('xAxisDirection','north');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+%% Import the Data
+
+% create an EBSD variable containing the data
+ebsd = EBSD.load(rkd_ang,CS,'interface','ang');
+
+
+%%
+[pats_raw] = readEdaxUp(rkd_up1);
+
+
+% pat1=rot90(reshape(pats(:,1),sqrt(size(pats,1)),sqrt(size(pats,1))));
+% figure; imagesc(pat1); axis image; axis xy; colormap('gray');
+
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

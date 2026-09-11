@@ -29,4 +29,13 @@ for n=1:SettingsXCF.numroi
 end
 
 
+if isfield(SettingsXCF,'single')
+else
+    SettingsXCF.single=0;
+end
+
+if SettingsXCF.single == 1
+    FFTData=single(FFTData);
+end
+
 end

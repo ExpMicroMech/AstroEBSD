@@ -1,0 +1,774 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>This function will load a h5oina file into MTEX and plot various plots that you might find useful</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="example_h5oina_load.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>This function will load a h5oina file into MTEX and plot various plots that you might find useful</h1>
+<!--introduction-->
+<p>it also has tools to load patterns</p>
+<p>written by Ben Britton 2023 Use as is</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">File and folder infos</a>
+</li>
+<li>
+<a href="#2">Other settings</a>
+</li>
+<li>
+<a href="#3">Load up AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#4">Load the H5 data</a>
+</li>
+<li>
+<a href="#5">Set the plotting preferences - this has to be validated for your instrument</a>
+</li>
+<li>
+<a href="#6">Now do some plots</a>
+</li>
+<li>
+<a href="#7">Extract the phase to plot</a>
+</li>
+<li>
+<a href="#8">Plot the map of phases/indexed data</a>
+</li>
+<li>
+<a href="#9">IPF-x, y and z</a>
+</li>
+<li>
+<a href="#10">Plot the PF - scatter</a>
+</li>
+<li>
+<a href="#11">Plot the IPF - scatter</a>
+</li>
+<li>
+<a href="#12">Construct the ODF</a>
+</li>
+<li>
+<a href="#13">Plot the uncorrelated misorientation distribution</a>
+</li>
+<li>
+<a href="#14">Calculate grains and grain boundaries</a>
+</li>
+<li>
+<a href="#15">Plot the grain size distributions</a>
+</li>
+<li>
+<a href="#16">Filter the grain size data</a>
+</li>
+<li>
+<a href="#17">Demonstrate that we can extract a point from this map</a>
+</li>
+<li>
+<a href="#18">Also show that we can pop the grain out</a>
+</li>
+</ul>
+</div>
+<h2 id="1">File and folder infos</h2>
+<pre class="codeinput">
+<span class="comment">% Folder that contains the h5oina file you want to load</span>
+h5oina_folder=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\Example_Data'</span>;
+
+<span class="comment">%file that you want to load - omit the .h5oina</span>
+h5oina_file=<span class="string">'Mg_Pecs1 Specimen 1 Site 1 Map Data 1'</span>;
+
+<span class="comment">%location of MTEX 5.10.2</span>
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then it will start MTEX up</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2'</span>;
+
+<span class="comment">%location of astroEBSD</span>
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\Github\AstroEBSD_v2'</span>;
+<span class="comment">% astro_location='C:\Users\benja\OneDrive\Documents\Github\AstroEBSD';</span>
+</pre>
+<h2 id="2">Other settings</h2>
+<pre class="codeinput">mb_length = 500; <span class="comment">%micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen</span>
+</pre>
+<h2 id="3">Load up AstroEBSD and MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start astro if needed</span>
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Load the H5 data</h2>
+<pre class="codeinput">[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+
+<span class="comment">%if you want to plot the pattern matched data, you can change this here</span>
+ebsd=ebsd_original;
+<span class="comment">% ebsd=ebsd_patternmatched;</span>
+</pre>
+<pre class="codeoutput error">Undefined function 'load_h5oina_pm' for input arguments of type 'char'.
+
+Error in example_h5oina_load (line 42)
+[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+</pre>
+<h2 id="5">Set the plotting preferences - this has to be validated for your instrument</h2>
+<pre class="codeinput">
+<span class="comment">%this is set up for the pFIB and Oxford Insturments systems at UBC</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);           <span class="comment">%aztec</span>
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofPlane'</span>);     <span class="comment">%aztec</span>
+setMTEXpref(<span class="string">'FontSize'</span>,12)
+mb_length = 500; <span class="comment">%micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen</span>
+</pre>
+<h2 id="6">Now do some plots</h2>
+<pre class="codeinput">
+<span class="comment">%band contrast</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="7">Extract the phase to plot</h2>
+<pre class="codeinput">
+<span class="comment">%select the mineral name</span>
+mineral_name=ebsd.CS.mineral;
+<span class="comment">% mineral_name='Magnesium';</span>
+</pre>
+<h2 id="8">Plot the map of phases/indexed data</h2>
+<pre class="codeinput">figure;
+plot(ebsd');
+
+<span class="comment">%overlay with Band Contrast</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+hold <span class="string">on</span>;
+plot(ebsd,<span class="string">'FaceAlpha'</span>,<span class="string">'0.3'</span>);
+hold <span class="string">on</span>;
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="9">IPF-x, y and z</h2>
+<p>compute the colors</p>
+<pre class="codeinput">ipfKey = ipfHSVKey(ebsd(mineral_name));
+
+<span class="comment">%plot the key</span>
+figure;
+plot(ipfKey)
+
+<span class="comment">% now generate the IPF colour maps</span>
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+<span class="comment">%now plot the three IPF coloured maps</span>
+figure;
+plot(ebsd(mineral_name),colors_X,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Y,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Z,<span class="string">'micronbar'</span>,<span class="string">'on'</span>);
+
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="10">Plot the PF - scatter</h2>
+<pre class="codeinput">
+<span class="comment">%plot planes as spots, and use a subset</span>
+figure
+plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)])
+<span class="comment">%you can plot all - but this takes a while..</span>
+<span class="comment">%plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)],'Points','all')</span>
+</pre>
+<h2 id="11">Plot the IPF - scatter</h2>
+<pre class="codeinput">figure
+plotIPDF(ebsd(mineral_name).orientations,[xvector yvector zvector])
+</pre>
+<h2 id="12">Construct the ODF</h2>
+<pre class="codeinput">
+<span class="comment">%suggested reading:</span>
+<span class="comment">%https://mtex-toolbox.github.io/ODFTutorial.html</span>
+<span class="comment">%https://mtex-toolbox.github.io/PoleFigure2ODF.html</span>
+
+<span class="comment">% compute the ODF</span>
+odf = calcDensity(ebsd(mineral_name).orientations);
+<span class="comment">% You could also change/fix the half width - compare this different ODF</span>
+<span class="comment">% odf = calcDensity(ebsd(mineral_name).orientations,'halfwidth',2*degree);</span>
+
+figure;
+<span class="comment">% plot the pole figure representation of the ODF</span>
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS)]);
+mtexColorbar(<span class="string">'location'</span>,<span class="string">'southoutside'</span>)
+
+<span class="comment">%you can also plot this ODF in the IPF</span>
+figure;
+<span class="comment">% plot the pole figure representation of the ODF</span>
+plotIPDF(odf,[xvector yvector zvector])
+mtexColorbar(<span class="string">'location'</span>,<span class="string">'southoutside'</span>)
+</pre>
+<h2 id="13">Plot the uncorrelated misorientation distribution</h2>
+<pre class="codeinput">
+<span class="comment">%see https://mtex-toolbox.github.io/MisorientationDistributionFunction.html</span>
+
+mdf = calcMDF(odf);
+
+<span class="comment">%plot the axis</span>
+figure;
+plotAxisDistribution(mdf)
+
+<span class="comment">%plot the angle</span>
+figure;
+plotAngleDistribution(mdf)
+hold <span class="string">all</span>
+plotAngleDistribution(ebsd(mineral_name).CS,ebsd(mineral_name).CS)
+hold <span class="string">off</span>
+legend(<span class="string">'data MDF'</span>,<span class="string">'uniform ODF'</span>)
+</pre>
+<h2 id="14">Calculate grains and grain boundaries</h2>
+<pre class="codeinput">
+<span class="comment">%see https://mtex-toolbox.github.io/GrainReconstruction.html</span>
+
+grains = calcGrains(ebsd,<span class="string">'angle'</span>,10*degree);
+<span class="comment">%care with this threshold value - you can look at the angle distribution for some guidance</span>
+
+<span class="comment">%Now plot the grian boundary map on the band contrast map</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'linewidth'</span>,0.5,<span class="string">'lineColor'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+
+<span class="comment">%contrast this with the grain boundaries for indexed only points</span>
+<span class="comment">% (look at the scratches)</span>
+grains_indexed = calcGrains(ebsd(<span class="string">'indexed'</span>));
+<span class="comment">% If the edge grains are being annoying - don't use the convex hull</span>
+<span class="comment">% grains_indexed = calcGrains(ebsd('indexed'),'boundary','tight');</span>
+
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+hold <span class="string">on</span>
+plot(grains_indexed.boundary,<span class="string">'linewidth'</span>,0.5,<span class="string">'lineColor'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+
+<span class="comment">%subset to only have the interior grains</span>
+grains_indexed_int=grains_indexed(~grains_indexed.isBoundary);
+<span class="comment">% hold on</span>
+<span class="comment">% plot(grains_indexed_int.boundary,'linewidth',0.5,'lineColor','g')</span>
+<span class="comment">% hold off</span>
+</pre>
+<h2 id="15">Plot the grain size distributions</h2>
+<pre class="codeinput">
+<span class="comment">%extract some different distributions</span>
+grain_radius=grains_indexed_int.equivalentRadius;
+grain_area=grains_indexed_int.area;
+grain_perimeter=grains_indexed_int.equivalentPerimeter;
+<span class="comment">% for a full list of shapes - https://mtex-toolbox.github.io/ShapeParameters.html</span>
+
+histogram_bins=100;
+
+figure;
+subplot(3,1,1);
+histogram(grain_radius,histogram_bins,<span class="string">'Normalization'</span>,<span class="string">'probability'</span>);
+<span class="comment">%meddle with the displays</span>
+ytix = get(gca, <span class="string">'YTick'</span>);
+set(gca, <span class="string">'YTick'</span>,ytix, <span class="string">'YTickLabel'</span>,ytix*100);
+ylabel(<span class="string">'Frequency %'</span>); xlabel(<span class="string">'Radius (\mum)'</span>)
+xlims=xlim; xlim([0 xlims(2)]);
+
+subplot(3,1,2);
+histogram(grain_area,histogram_bins,<span class="string">'Normalization'</span>,<span class="string">'probability'</span>);
+<span class="comment">%meddle with the displays</span>
+ytix = get(gca, <span class="string">'YTick'</span>);
+set(gca, <span class="string">'YTick'</span>,ytix, <span class="string">'YTickLabel'</span>,ytix*100);
+ylabel(<span class="string">'Frequency %'</span>); xlabel(<span class="string">'Area (\mum^2)'</span>)
+xlims=xlim; xlim([0 xlims(2)]);
+
+subplot(3,1,3);
+histogram(grain_perimeter,histogram_bins,<span class="string">'Normalization'</span>,<span class="string">'probability'</span>);
+<span class="comment">%meddle with the displays</span>
+ytix = get(gca, <span class="string">'YTick'</span>);
+set(gca, <span class="string">'YTick'</span>,ytix, <span class="string">'YTickLabel'</span>,ytix*100);
+ylabel(<span class="string">'Frequency %'</span>); xlabel(<span class="string">'Perimeter (\mum)'</span>)
+xlims=xlim; xlim([0 xlims(2)]);
+
+<span class="comment">%are any of these Normally distributed ? If so, have a think about what you</span>
+<span class="comment">%call a 'grain size'</span>
+</pre>
+<h2 id="16">Filter the grain size data</h2>
+<pre class="codeinput">
+<span class="comment">%mostly to demo that this can be done</span>
+
+min_grain_radius=10;
+grains_reduced=grains_indexed_int(grains_indexed_int.equivalentRadius&gt;min_grain_radius);
+
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+hold <span class="string">on</span>;
+plot(ebsd,<span class="string">'FaceAlpha'</span>,<span class="string">'0.3'</span>);
+hold <span class="string">on</span>;
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+
+hold <span class="string">on</span>
+plot(grains_reduced.boundary,<span class="string">'linewidth'</span>,0.5,<span class="string">'lineColor'</span>,<span class="string">'g'</span>)
+hold <span class="string">off</span>
+</pre>
+<h2 id="17">Demonstrate that we can extract a point from this map</h2>
+<pre class="codeinput">
+<span class="comment">%plot the phase data + grain boundaries + bc</span>
+figure;
+plot(ebsd');
+
+<span class="comment">%overlay with Band Contrast</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+hold <span class="string">on</span>;
+plot(ebsd,<span class="string">'FaceAlpha'</span>,<span class="string">'0.3'</span>);
+hold <span class="string">on</span>;
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+
+hold <span class="string">on</span>
+plot(grains_indexed_int.boundary,<span class="string">'linewidth'</span>,0.5,<span class="string">'lineColor'</span>,<span class="string">'g'</span>)
+hold <span class="string">off</span>
+
+<span class="comment">%take a mouse input</span>
+[x_g,y_g]=ginput(1);
+
+<span class="comment">%find the nearest point in the data to this point</span>
+p_map=(ebsd.prop.x-x_g).^2+(ebsd.prop.y-y_g).^2;
+[mv,pattern_number]=min(p_map);
+ebsd_point=ebsd(pattern_number);
+
+hold <span class="string">on</span>;
+<span class="comment">% % scatter(x_g,y_g,'r');</span>
+<span class="comment">%mark this point</span>
+scatter(ebsd_point.x,ebsd_point.y,<span class="string">'w'</span>);
+
+<span class="comment">%plot the grain for this</span>
+hold <span class="string">on</span>
+plot(grains(ebsd_point.x,ebsd_point.y).boundary,<span class="string">'linewidth'</span>,4,<span class="string">'linecolor'</span>,<span class="string">'y'</span>)
+hold <span class="string">off</span>
+
+<span class="comment">%{
+</span><span class="comment">%extract the pattern - if they are saved - otherwise this will error
+</span><span class="comment">%
+</span><span class="comment">% NOTE
+</span><span class="comment">%
+</span><span class="comment">% you have to install the filter, as per the answer here
+</span><span class="comment">% https://www.mathworks.com/matlabcentral/answers/393621-how-can-i-import-a-lzf-compressed-hdf5-dataset-in-matlab
+</span><span class="comment">
+</span><span class="comment">[Pat_Exp]=loadEBSP_T(h5_original,dataset_header,pattern_number);
+</span><span class="comment">figure;
+</span><span class="comment">imagesc(Pat_Exp);
+</span><span class="comment">colormap('gray');
+</span><span class="comment">axis equal; axis tight; axis xy;
+</span><span class="comment">%}
+</span>
+<span class="comment">%plot the crystal shape for this point</span>
+hold <span class="string">on</span>
+scaling = 100; <span class="comment">% scale the crystal shape to have a nice size</span>
+<span class="comment">%here we use a hexagon, but you could use a cube for cubic</span>
+<span class="comment">%crystalShape.cube</span>
+cS = crystalShape.hex(ebsd(mineral_name).CS);
+plot(ebsd(pattern_number).prop.x,ebsd(pattern_number).prop.y,50, ebsd(pattern_number).orientations * cS * scaling)
+hold <span class="string">off</span>
+</pre>
+<h2 id="18">Also show that we can pop the grain out</h2>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% This function will load a h5oina file into MTEX and plot various plots that you might find useful
+% it also has tools to load patterns
+%
+% written by Ben Britton 2023
+% Use as is
+
+%% File and folder infos
+
+% Folder that contains the h5oina file you want to load
+h5oina_folder='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\Example_Data';
+
+%file that you want to load - omit the .h5oina
+h5oina_file='Mg_Pecs1 Specimen 1 Site 1 Map Data 1';
+
+%location of MTEX 5.10.2
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then it will start MTEX up
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2';
+
+%location of astroEBSD
+astro_location='C:\Users\benja\OneDrive\Documents\Github\AstroEBSD_v2';
+% astro_location='C:\Users\benja\OneDrive\Documents\Github\AstroEBSD';
+
+%% Other settings
+mb_length = 500; %micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen
+
+%% Load up AstroEBSD and MTEX
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start astro if needed
+try astro_loadcheck
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+%% Load the H5 data
+[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+
+%if you want to plot the pattern matched data, you can change this here
+ebsd=ebsd_original;
+% ebsd=ebsd_patternmatched;
+%% Set the plotting preferences - this has to be validated for your instrument
+
+%this is set up for the pFIB and Oxford Insturments systems at UBC
+setMTEXpref('xAxisDirection','east');           %aztec
+setMTEXpref('zAxisDirection','outofPlane');     %aztec
+setMTEXpref('FontSize',12)
+mb_length = 500; %micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen
+
+
+%% Now do some plots
+
+%band contrast
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% Extract the phase to plot
+
+%select the mineral name
+mineral_name=ebsd.CS.mineral;
+% mineral_name='Magnesium';
+
+%% Plot the map of phases/indexed data
+figure;
+plot(ebsd');
+
+%overlay with Band Contrast
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+hold on;
+plot(ebsd,'FaceAlpha','0.3');
+hold on;
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% IPF-x, y and z
+% compute the colors
+ipfKey = ipfHSVKey(ebsd(mineral_name));
+
+%plot the key
+figure;
+plot(ipfKey)
+
+% now generate the IPF colour maps
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+%now plot the three IPF coloured maps
+figure;
+plot(ebsd(mineral_name),colors_X,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Y,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Z,'micronbar','on');
+
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% Plot the PF - scatter
+
+%plot planes as spots, and use a subset
+figure
+plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)])
+%you can plot all - but this takes a while..
+%plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)],'Points','all')
+
+%% Plot the IPF - scatter
+
+figure
+plotIPDF(ebsd(mineral_name).orientations,[xvector yvector zvector])
+
+%% Construct the ODF
+
+%suggested reading:
+%https://mtex-toolbox.github.io/ODFTutorial.html
+%https://mtex-toolbox.github.io/PoleFigure2ODF.html
+
+% compute the ODF
+odf = calcDensity(ebsd(mineral_name).orientations);
+% You could also change/fix the half width - compare this different ODF
+% odf = calcDensity(ebsd(mineral_name).orientations,'halfwidth',2*degree);
+
+figure;
+% plot the pole figure representation of the ODF
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS)]);
+mtexColorbar('location','southoutside')
+
+%you can also plot this ODF in the IPF
+figure;
+% plot the pole figure representation of the ODF
+plotIPDF(odf,[xvector yvector zvector])
+mtexColorbar('location','southoutside')
+
+%% Plot the uncorrelated misorientation distribution
+%see https://mtex-toolbox.github.io/MisorientationDistributionFunction.html
+
+mdf = calcMDF(odf);
+
+%plot the axis
+figure;
+plotAxisDistribution(mdf)
+
+%plot the angle
+figure;
+plotAngleDistribution(mdf)
+hold all
+plotAngleDistribution(ebsd(mineral_name).CS,ebsd(mineral_name).CS)
+hold off
+legend('data MDF','uniform ODF')
+
+%% Calculate grains and grain boundaries
+%see https://mtex-toolbox.github.io/GrainReconstruction.html
+
+grains = calcGrains(ebsd,'angle',10*degree); 
+%care with this threshold value - you can look at the angle distribution for some guidance
+
+%Now plot the grian boundary map on the band contrast map
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+hold on
+plot(grains.boundary,'linewidth',0.5,'lineColor','r')
+hold off
+
+%contrast this with the grain boundaries for indexed only points 
+% (look at the scratches)
+grains_indexed = calcGrains(ebsd('indexed'));
+% If the edge grains are being annoying - don't use the convex hull
+% grains_indexed = calcGrains(ebsd('indexed'),'boundary','tight');
+
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+hold on
+plot(grains_indexed.boundary,'linewidth',0.5,'lineColor','r')
+hold off
+
+%subset to only have the interior grains
+grains_indexed_int=grains_indexed(~grains_indexed.isBoundary);
+% hold on
+% plot(grains_indexed_int.boundary,'linewidth',0.5,'lineColor','g')
+% hold off
+
+%% Plot the grain size distributions
+
+%extract some different distributions
+grain_radius=grains_indexed_int.equivalentRadius;
+grain_area=grains_indexed_int.area;
+grain_perimeter=grains_indexed_int.equivalentPerimeter;
+% for a full list of shapes - https://mtex-toolbox.github.io/ShapeParameters.html
+
+histogram_bins=100;
+
+figure;
+subplot(3,1,1);
+histogram(grain_radius,histogram_bins,'Normalization','probability');
+%meddle with the displays
+ytix = get(gca, 'YTick');
+set(gca, 'YTick',ytix, 'YTickLabel',ytix*100);
+ylabel('Frequency %'); xlabel('Radius (\mum)')
+xlims=xlim; xlim([0 xlims(2)]);
+
+subplot(3,1,2);
+histogram(grain_area,histogram_bins,'Normalization','probability');
+%meddle with the displays
+ytix = get(gca, 'YTick');
+set(gca, 'YTick',ytix, 'YTickLabel',ytix*100);
+ylabel('Frequency %'); xlabel('Area (\mum^2)')
+xlims=xlim; xlim([0 xlims(2)]);
+
+subplot(3,1,3);
+histogram(grain_perimeter,histogram_bins,'Normalization','probability');
+%meddle with the displays
+ytix = get(gca, 'YTick');
+set(gca, 'YTick',ytix, 'YTickLabel',ytix*100);
+ylabel('Frequency %'); xlabel('Perimeter (\mum)')
+xlims=xlim; xlim([0 xlims(2)]);
+
+%are any of these Normally distributed ? If so, have a think about what you
+%call a 'grain size'
+
+%% Filter the grain size data
+%mostly to demo that this can be done
+
+min_grain_radius=10;
+grains_reduced=grains_indexed_int(grains_indexed_int.equivalentRadius>min_grain_radius);
+
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+hold on;
+plot(ebsd,'FaceAlpha','0.3');
+hold on;
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+hold on
+plot(grains_reduced.boundary,'linewidth',0.5,'lineColor','g')
+hold off
+%% Demonstrate that we can extract a point from this map
+
+%plot the phase data + grain boundaries + bc
+figure;
+plot(ebsd');
+
+%overlay with Band Contrast
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+hold on;
+plot(ebsd,'FaceAlpha','0.3');
+hold on;
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+hold on
+plot(grains_indexed_int.boundary,'linewidth',0.5,'lineColor','g')
+hold off
+
+%take a mouse input
+[x_g,y_g]=ginput(1);
+
+%find the nearest point in the data to this point
+p_map=(ebsd.prop.x-x_g).^2+(ebsd.prop.y-y_g).^2;
+[mv,pattern_number]=min(p_map);
+ebsd_point=ebsd(pattern_number);
+
+hold on;
+% % scatter(x_g,y_g,'r');
+%mark this point
+scatter(ebsd_point.x,ebsd_point.y,'w');
+
+%plot the grain for this
+hold on
+plot(grains(ebsd_point.x,ebsd_point.y).boundary,'linewidth',4,'linecolor','y')
+hold off
+
+%{
+%extract the pattern - if they are saved - otherwise this will error
+%
+% NOTE
+%
+% you have to install the filter, as per the answer here
+% https://www.mathworks.com/matlabcentral/answers/393621-how-can-i-import-a-lzf-compressed-hdf5-dataset-in-matlab
+
+[Pat_Exp]=loadEBSP_T(h5_original,dataset_header,pattern_number);
+figure;
+imagesc(Pat_Exp);
+colormap('gray');
+axis equal; axis tight; axis xy;
+%}
+
+%plot the crystal shape for this point
+hold on
+scaling = 100; % scale the crystal shape to have a nice size
+%here we use a hexagon, but you could use a cube for cubic
+%crystalShape.cube
+cS = crystalShape.hex(ebsd(mineral_name).CS);
+plot(ebsd(pattern_number).prop.x,ebsd(pattern_number).prop.y,50, ebsd(pattern_number).orientations * cS * scaling)
+hold off
+
+%% Also show that we can pop the grain out
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

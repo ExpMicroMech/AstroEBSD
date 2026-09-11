@@ -29,6 +29,9 @@ function [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM
 
 %v7 - added in the voltage line
 
+%v8 -L. Berners querying multiple fields from the phase file to make comparison of
+%master pattern simulations more easy
+
 %
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 % EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
@@ -68,7 +71,8 @@ array_num=1:size(PhaseRaw,1);
 
 %Extract the cif file
 ix=array_num(contains(PhaseRaw,'$cif','IgnoreCase',true));
-RTM_info.cif_file=fullfile(Cif_loc,PhaseRaw{ix+1});
+RTM_info = struct();
+RTM_info(num_P).cif_file=fullfile(Cif_loc,PhaseRaw{ix+1});
 
 %Extract the bin file name
  try
@@ -89,7 +93,7 @@ RTM_info.cif_file=fullfile(Cif_loc,PhaseRaw{ix+1});
                 if ~isempty(s)
                     bin_file_name=bin_file_name(1:s-1);
                 end
-                RTM_info.bin_file = fullfile(Bin_loc, [bin_file_name, '.h5']);
+                RTM_info(num_P).bin_file = fullfile(Bin_loc, [bin_file_name, '.h5']);
             elseif strcmpi(simtype,'bwkd')
                 [s]=strfind(bin_file_name,'.bwkd');
                 if ~isempty(s)
@@ -109,9 +113,10 @@ RTM_info.cif_file=fullfile(Cif_loc,PhaseRaw{ix+1});
                 if ~isempty(s)
                     bin_file_name=bin_file_name(1:s-1);
                 end
-                RTM_info.bin_file = fullfile(Bin_loc, [bin_file_name, '.bin']);
+                RTM_info(num_P).bin_file = fullfile(Bin_loc, [bin_file_name, '.bin']);
             end
             ix=array_num(contains(PhaseRaw,'$isHex','IgnoreCase',true));
+            RTM_info(num_P).isHex=PhaseRaw{ix+1};
  catch
      disp('We could not identify your Dynamic simulation :(')
 end
@@ -138,6 +143,28 @@ if ischar(RTM_info.isHex)
 end
 
 end
+end
+
+
+try
+    ix=array_num(contains(PhaseRaw,'$ekev','IgnoreCase',true));
+    RTM_info.Voltage=PhaseRaw{ix+1};
+    if ischar(RTM_info.Voltage)
+        RTM_info.Voltage=str2double(RTM_info.Voltage)*1e3; % assumeit is in kv of course
+    end
+catch
+end
+
+
+
+try
+    ix=array_num(contains(PhaseRaw,'$Voltage','IgnoreCase',true));
+    RTM_info.Voltage=PhaseRaw{ix+1};
+    if ischar(RTM_info.Voltage)
+        RTM_info.Voltage=str2double(RTM_info.Voltage)*1e3; % assumeit is in kv of course
+    end
+catch
+
 end
 
 % function [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( Phases,Phase_Folder )

@@ -1,0 +1,871 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Preamble</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="TKD_HDR_pattern_astro.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>Preamble</h1>
+<!--introduction-->
+<p>TKD_HDR_Pattern.m - a script in AstroEBSD Package to generate a fused high dynamic range on-axis transmission kikuchi diffraction pattern (TKP)</p>
+<p>Originally scripted by Tianbi Zhang in November 2022 with major rework in April 2023 (structure and variables) and June 2023 (functions) Annotated in April-June 2023 For how this script works, please refer to our paper</p>
+<p>Pre-requisite: MATLAB Image Processing &amp; Statistics and Machine Learning Toolbox, Signal Processing Toolbox</p>
+<p>Additional requisites (does not affect this code, but helps you check file structure of the h5) (a) h5 file viewer to check h5 file structure (b) A few new functions, especially yaxis rotation, is optimized in MATLAB R2023a. Not using this version though should not affect its functionality.</p>
+<p>Inputs: on-axis transmission Kikuchi patterns captured by a TimePIX3 direct detector in .h5 format. The patterns can be saved as individual frames within a single .h5 file, or as a single integrated frame. There are two different functions to import the data to the workspace.</p>
+<p>Outputs: fused high dynamic range pattern (raw and flatfielded), corresponding 2D FFT spectra (modulus) and assorted plots.</p>
+<p>The standard version of the script generates similar plots as Figure 3-5 of the original paper (you will need a simulated pattern for Fig.5.)</p>
+<p>You can customize this script to produce other plots - please work on a copy of this code for your own pattern, and acknowledge the original work if possible. Fig. 6-8 are generated by a separate reprojection code which can be found in the AstroEBSD repository as well.</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Load astro</a>
+</li>
+<li>
+<a href="#3">Settings</a>
+</li>
+<li>
+<a href="#4">Initial PC info</a>
+</li>
+<li>
+<a href="#5">Import Data</a>
+</li>
+<li>
+<a href="#6">Plot raw signal versus scattering angle</a>
+</li>
+<li>
+<a href="#7">Flat field</a>
+</li>
+<li>
+<a href="#8">Visualization and FFT</a>
+</li>
+<li>
+<a href="#9">Assorted Plots</a>
+</li>
+<li>
+<a href="#10">Export images: 16-bit TIFF</a>
+</li>
+<li>
+<a href="#11">Side scripts for other plots</a>
+</li>
+<li>
+<a href="#12">SideScript A: patterns vs exposure time (not normalized)</a>
+</li>
+<li>
+<a href="#13">Figure: patterns at different exposure times, short to long, and gaussian</a>
+</li>
+<li>
+<a href="#14">intensity histogram (not in the paper)</a>
+</li>
+<li>
+<a href="#15">angle contours + corrected intensity plot</a>
+</li>
+<li>
+<a href="#16">filling zone contours (for easier visualization)</a>
+</li>
+<li>
+<a href="#17">Side Script 6: line profile across a band - need to plot corrected images</a>
+</li>
+<li>
+<a href="#18">Helper functions</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">home;
+close <span class="string">all</span>;
+clear;
+</pre>
+<h2 id="2">Load astro</h2>
+<p>location_astro='C:\Users\billy\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location</p>
+<pre class="codeinput">location_astro=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+run(fullfile(location_astro,<span class="string">'start_AstroEBSD.m'</span>));
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD.m not
+found.
+
+Error in TKD_HDR_pattern_astro (line 45)
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+</pre>
+<h2 id="3">Settings</h2>
+<pre class="codeinput">export_option = false; <span class="comment">% select true if you want image outputs</span>
+multframe_option = false; <span class="comment">% true if the data are stored in individual frames within a h5 file</span>
+multframe_num = 50; <span class="comment">% the number of frames in a multi-frame h5 file,</span>
+<span class="comment">% or the number of frames integrated if your raw data is collected as sum of frames.</span>
+
+<span class="comment">% InputUser.Astro_loc='C:\Users\billy\Documents\MATLAB\AstroEBSD_v2-live';</span>
+<span class="comment">% run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m')); % run AstroEBSD</span>
+</pre>
+<h2 id="4">Initial PC info</h2>
+<pre class="codeinput">DD = 10.535; <span class="comment">%% CL in mm - you need to measure this in the SEM.</span>
+PCx = 136; <span class="comment">%%PCx, PCy in pixel units - you can read from the image</span>
+PCy = 146; <span class="comment">% 149</span>
+
+<span class="comment">%Saturation of the camera, in counts</span>
+sat_index = 1022;
+
+<span class="comment">% I added an npix definition</span>
+npix = 254; <span class="comment">% final dimension of the pattern (a square) in pixel units - we remove the edge two pixels, as they are larger than the rest</span>
+
+Settings_Cor.gfilt=1; <span class="comment">%gaussian (high frequency filter) - 1 = on, 0 = off</span>
+<span class="comment">%you can switch off the gaussian high pass filter if you need/want</span>
+Settings_Cor.gfilt_s=15; <span class="comment">%low pass filter sigma, in pixels, e.g. remove things that vary bigger than 15 pixels</span>
+Settings_Cor.size = [npix, npix];
+</pre>
+<h2 id="5">Import Data</h2>
+<pre class="codeinput">
+<span class="comment">% Change file path based on your settings</span>
+path1= <span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\Al_HDR\Demo'</span>;
+<span class="comment">% path1= 'C:\Users\billy\OneDrive - UBC\PhD\TKD\Al_HDR\Demo';</span>
+
+<span class="comment">% Please fill in the file names in decreasing order of exposure time. The</span>
+<span class="comment">% file corresponding to the baseline exposure time t0 (the longest in the set) should be the</span>
+<span class="comment">% first one.</span>
+h5filenames = {<span class="string">'spot1_50f_01s.h5'</span>,<span class="string">'spot1_50f_001s.h5'</span>, <span class="string">'spot1_50f_0005s.h5'</span>,<span class="string">'spot1_50f_0001s_Event.h5'</span>};
+sampleID =  [<span class="string">"0.1s Exposure"</span>, <span class="string">"0.01s Exposure"</span>, <span class="string">"0.005s Exposure"</span>, <span class="string">"0.001s Exposure"</span>];
+
+[rawdata,numfiles] = h5_pixet(h5filenames,path1,multframe_option,multframe_num);
+
+<span class="comment">% Signal Saturation Correction &amp; Normalization</span>
+[fillingdomains, satdomains] = TKD_cor_saturated(rawdata,numfiles,sat_index);
+<span class="comment">% added sat_index input in function dfefinition</span>
+<span class="comment">% added satdomains in function output</span>
+
+[normalizeddata] = TKD_normalize(fillingdomains,rawdata,numfiles);
+
+<span class="comment">% note: for the "demo" data, due to a mistake in collection, the event and</span>
+<span class="comment">% iToT subframes are separated into 2 files. Thi resuslts in the extra</span>
+<span class="comment">% if-else on lines 17-23 of h5_pixet. For other data, you can just use line</span>
+<span class="comment">% 19 and discard the rest of the sub if-loop.</span>
+</pre>
+<h2 id="6">Plot raw signal versus scattering angle</h2>
+<pre class="codeinput">PC_TKD=[PCx/npix,1-PCy/npix,1000*DD/(55*npix)]; <span class="comment">% TZ - I think this should be right - can you have a think whether this should be 256 of 254?</span>
+
+<span class="comment">% Detector.screensize = npix;</span>
+[ TKD_Geometry ] = EBSP_Gnom( Settings_Cor, PC_TKD );
+
+angle_matrix=atand(sqrt(TKD_Geometry.ypts_screen.^2+TKD_Geometry.xpts_screen.^2));
+<span class="comment">% angle_matrix(find(angle_matrix == min(angle_matrix(:)))) = 0;</span>
+
+<span class="comment">% added 2 additional outputs so the fitted curve will pe properly plotted.</span>
+[normfactor, ref_curve] = TKD_referencecurvefit(rawdata,normalizeddata,angle_matrix,numfiles);
+
+<span class="comment">% Stitch the pattern</span>
+[fusedpattern] = TKD_patternfuse(rawdata,normalizeddata,fillingdomains);
+</pre>
+<h2 id="7">Flat field</h2>
+<p>normfactor = feval(fitresult2, angle_matrix);</p>
+<pre class="codeinput">normfactor = reshape(normfactor, [npix npix]);
+fused_flat = fusedpattern ./ normfactor;
+
+<span class="comment">% If your fused pattern still shows uneven background, consider adding a</span>
+<span class="comment">% Gaussian filter, for example:</span>
+fused_gaussian = imgaussfilt(fused_flat, 15);
+fused_flat_gaus = fused_flat ./ fused_gaussian;
+<span class="comment">% Flat field using the fitted radial scattering profile</span>
+[fused_flat,fusedpattern,normfactor, ref_curve] = TKD_flatfield(rawdata,normalizeddata,angle_matrix,fillingdomains,numfiles);
+
+<span class="comment">% [fused_flat,Settings_Cor ] = EBSP_BGCor( fused_flat,Settings_Cor);</span>
+[~,Settings_Cor ] = EBSP_BGCor( fused_flat,Settings_Cor);
+<span class="comment">% This step is completely optional</span>
+</pre>
+<h2 id="8">Visualization and FFT</h2>
+<pre class="codeinput">fused_fft = fft2(fusedpattern);
+fused_flat_fft = fft2(fused_flat);
+fused_gaus_fft = fft2(fused_flat_gaus);
+
+figure;
+subplot(2,2,1);
+imagesc(fusedpattern); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);axis <span class="string">off</span>;
+title(<span class="string">"Raw fused"</span>);
+subplot(2,2,2);
+imagesc(fused_flat); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);axis <span class="string">off</span>;
+title(<span class="string">"Flattened fused"</span>);
+subplot(2,2,3);
+imagesc(log10(abs(fftshift(fused_fft)))); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);axis <span class="string">off</span>;
+subplot(2,2,4);
+imagesc(log10(abs(fftshift(fused_flat_fft)))); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);axis <span class="string">off</span>;
+</pre>
+<h2 id="9">Assorted Plots</h2>
+<pre class="codeinput">figure;
+subplot(1,3,1); <span class="comment">%Figure 1: raw data as a function of scattering angle</span>
+hold <span class="string">on</span>;
+<span class="keyword">for</span> i=1:numfiles
+scatter(angle_matrix(:), rawdata(:,i), 1, <span class="string">'o'</span>, <span class="string">'filled'</span>);
+<span class="keyword">end</span>
+grid <span class="string">on</span>;
+xlabel(<span class="string">"Scattering Angle (degrees)"</span>);
+ylabel([<span class="string">"Event"</span>; <span class="string">"Count"</span>],<span class="string">'Rotation'</span>,0);
+legend(sampleID);
+subplot(1,3,2); <span class="comment">%Figure 2: normalized data and the conformity to the reference curve</span>
+hold <span class="string">on</span>;
+<span class="keyword">for</span> i=1:numfiles
+scatter(angle_matrix(:), normalizeddata(:,i), 1, <span class="string">'o'</span>, <span class="string">'filled'</span>);
+<span class="keyword">end</span>
+grid <span class="string">on</span>;
+xlabel(<span class="string">"Scatter Angle (degrees)"</span>);
+ylabel([<span class="string">"Weighted"</span>; <span class="string">"Event"</span>; <span class="string">"Count"</span>],<span class="string">'Rotation'</span>,0);
+<span class="comment">% legend(sampleID);</span>
+subplot(1,3,3); <span class="comment">%Figure 3: Plot fit with the reference curve</span>
+plot(angle_matrix(:), ref_curve,<span class="string">'.'</span>,<span class="string">'Color'</span>,[0 0 1],<span class="string">'MarkerSize'</span>,10);
+hold <span class="string">on</span>;
+plot(angle_matrix(:), normfactor(:),<span class="string">'-'</span>, <span class="string">'LineWidth'</span>,2, <span class="string">'Color'</span>,[1 0 0]);
+legend(<span class="string">'Reference Curve'</span>, <span class="string">'Smoothed Reference Curve'</span>, <span class="string">'Location'</span>, <span class="string">'NorthEast'</span>);
+<span class="comment">% Label axes</span>
+xlabel( <span class="string">'Scatter Angle (degree)'</span>, <span class="string">'Interpreter'</span>, <span class="string">'none'</span> );
+ylabel( [<span class="string">"Weighted"</span>; <span class="string">'Event'</span>; <span class="string">'Count'</span>], <span class="string">'Rotation'</span>,0);
+grid <span class="string">on</span>;
+</pre>
+<h2 id="10">Export images: 16-bit TIFF</h2>
+<pre class="codeinput">fusedpattern_16 = normalizeto16bit(fusedpattern);
+fused_flat_16 = normalizeto16bit(fused_flat);
+fused_gaus_16 = normalizeto16bit(fused_flat_gaus);
+
+<span class="comment">% note: below are log10 fft spectrum</span>
+fused_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_fft))));
+fused_flat_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_flat_fft))));
+fused_gaus_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_gaus_fft))));
+
+
+<span class="keyword">if</span> export_option == true
+    imwrite(uint16(flipud(fusedpattern_16)), fullfile(path1,<span class="string">'fused_raw.tif'</span>));
+    imwrite(uint16(flipud(fused_flat_16)), fullfile(path1,<span class="string">'fused_flat.tif'</span>));
+    imwrite(uint16(flipud(fused_gaus_16)), fullfile(path1,<span class="string">'fused_flat_gaus.tif'</span>));
+
+    imwrite(uint16(flipud(fused_fft_16)), fullfile(path1,<span class="string">'fused_raw_fft.tif'</span>));
+    imwrite(uint16(flipud(fused_flat_fft_16)), fullfile(path1,<span class="string">'fused_flat_fft.tif'</span>));
+    imwrite(uint16(flipud(fused_gaus_fft_16)), fullfile(path1,<span class="string">'fused_flat_gaus_fft.tif'</span>));
+<span class="keyword">end</span>
+</pre>
+<h2 id="11">Side scripts for other plots</h2>
+<h2 id="12">SideScript A: patterns vs exposure time (not normalized)</h2>
+<pre class="codeinput">numpats = numfiles+1;
+sampleID{end+1} = <span class="string">'Raw fused'</span>;
+<span class="comment">%this will be exposure time longest to shortest, then fused</span>
+</pre>
+<h2 id="13">Figure: patterns at different exposure times, short to long, and gaussian</h2>
+<pre class="codeinput">figure;
+hold <span class="string">on</span>;
+<span class="keyword">for</span> k=1:numfiles
+pattern = reshape(rawdata(:,k),[254 254]);
+subplot(1,numpats,k);
+imagesc(pattern); axis <span class="string">xy</span>; axis <span class="string">image</span>; axis <span class="string">off</span>; colormap(<span class="string">'gray'</span>); colorbar;
+title(sampleID{k});
+<span class="keyword">end</span>
+subplot(1,numpats, numpats);
+imagesc(fusedpattern); axis <span class="string">xy</span>; axis <span class="string">image</span>; axis <span class="string">off</span>; colormap(<span class="string">'gray'</span>); colorbar;
+title(sampleID{end});
+
+figure;
+hold <span class="string">on</span>;
+<span class="keyword">for</span> k=1:numfiles
+pattern = reshape(rawdata(:,k),[254 254]);
+pattern_gaus = pattern ./ normfactor;
+pattern_gaus(satdomains{k})=0;
+
+subplot(1,numpats,k);
+imagesc(pattern_gaus); axis <span class="string">xy</span>; axis <span class="string">image</span>; axis <span class="string">off</span>; colormap(<span class="string">'gray'</span>);
+<span class="keyword">end</span>
+subplot(1,numpats,numpats);
+imagesc(fused_flat); axis <span class="string">xy</span>; axis <span class="string">image</span>; axis <span class="string">off</span>; colormap(<span class="string">'gray'</span>);
+</pre>
+<h2 id="14">intensity histogram (not in the paper)</h2>
+<pre class="codeinput">figure;
+histogram(fusedpattern_16, 200,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>,<span class="string">'Normalization'</span>,<span class="string">'count'</span>);
+hold <span class="string">on</span>;
+histogram(fused_gaus_16, 200,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>,<span class="string">'Normalization'</span>,<span class="string">'count'</span>);
+xlabel(<span class="string">"Normalized grayscale"</span>);
+ylabel(<span class="string">"Pixel count"</span>);
+legend(<span class="string">"Raw fused"</span>,<span class="string">"Background corrected"</span>);
+grid <span class="string">on</span>;
+</pre>
+<h2 id="15">angle contours + corrected intensity plot</h2>
+<pre class="codeinput">f3 = figure;
+h2 = axes;
+p2 = pPattern(fused_flat,TKD_Geometry);
+h3 = axes;
+[p3,h4] = contour(TKD_Geometry.xpts_screen,TKD_Geometry.ypts_screen,angle_matrix,[10 20 30 40 50],<span class="string">'ShowText'</span>,<span class="string">'on'</span>, <span class="string">'linewidth'</span>, 2);
+set(h3,<span class="string">'color'</span>,<span class="string">'none'</span>,<span class="string">'visible'</span>,<span class="string">'off'</span>,<span class="string">'fontsize'</span>,22);
+axis <span class="string">equal</span>;
+clabel(p3,h4,<span class="string">'color'</span>,<span class="string">'yellow'</span>, <span class="string">'fontsize'</span>,20);
+set(h3,<span class="string">'ydir'</span>, <span class="string">'normal'</span>);
+linkaxes([h2 h3]);
+
+
+figure;
+plot(angle_matrix(:),fused_flat(:),<span class="string">'.'</span>,<span class="string">'MarkerSize'</span>,10,<span class="string">'Color'</span>,<span class="string">"#77AC30"</span>);
+xlabel(<span class="string">"Scattering Angle (degrees)"</span>);
+ylabel([<span class="string">"Corrected"</span>; <span class="string">"Intensity"</span>; <span class="string">"(a.u.)"</span>], <span class="string">'Rotation'</span>,0);
+grid <span class="string">on</span>;
+</pre>
+<h2 id="16">filling zone contours (for easier visualization)</h2>
+<pre class="codeinput">fillingcontour = zeros(254^2,1);
+
+<span class="keyword">for</span> i=1:numfiles
+    fillingcontour(fillingdomains{i}) = i;
+<span class="keyword">end</span>
+
+fillingcontour = reshape(fillingcontour, 254,254);
+
+figure;
+contour(fillingcontour);
+axis <span class="string">xy</span>; axis <span class="string">image</span>;
+</pre>
+<h2 id="17">Side Script 6: line profile across a band - need to plot corrected images</h2>
+<p>and relative intensity; almost perfectly perpendicular profiling This section will not work if you don't have a simulated pattern as the reference. The simulated pattern for the demo pattern is included in the raw dataset.</p>
+<pre class="codeinput">newsampleID = sampleID;
+newsampleID(end) = <span class="string">"Fused pattern"</span>;
+extendedsampleID = newsampleID;
+extendedsampleID(end+1) = <span class="string">"Simulated Pattern"</span>;
+
+<span class="comment">% read the simulated pattern</span>
+opts = delimitedTextImportOptions(<span class="string">"NumVariables"</span>, 254, <span class="string">"Encoding"</span>, <span class="string">"UTF-8"</span>);
+<span class="comment">% Specify range and delimiter</span>
+opts.DataLines = [1, Inf];
+opts.Delimiter = <span class="string">"\t"</span>;
+opts.VariableNames = [<span class="string">"VarName1"</span>, <span class="string">"VarName2"</span>, <span class="string">"VarName3"</span>, <span class="string">"VarName4"</span>, <span class="string">"VarName5"</span>, <span class="string">"VarName6"</span>, <span class="string">"VarName7"</span>, <span class="string">"VarName8"</span>, <span class="string">"VarName9"</span>, <span class="string">"VarName10"</span>, <span class="string">"VarName11"</span>, <span class="string">"VarName12"</span>, <span class="string">"VarName13"</span>, <span class="string">"VarName14"</span>, <span class="string">"VarName15"</span>, <span class="string">"VarName16"</span>, <span class="string">"VarName17"</span>, <span class="string">"VarName18"</span>, <span class="string">"VarName19"</span>, <span class="string">"VarName20"</span>, <span class="string">"VarName21"</span>, <span class="string">"VarName22"</span>, <span class="string">"VarName23"</span>, <span class="string">"VarName24"</span>, <span class="string">"VarName25"</span>, <span class="string">"VarName26"</span>, <span class="string">"VarName27"</span>, <span class="string">"VarName28"</span>, <span class="string">"VarName29"</span>, <span class="string">"VarName30"</span>, <span class="string">"VarName31"</span>, <span class="string">"VarName32"</span>, <span class="string">"VarName33"</span>, <span class="string">"VarName34"</span>, <span class="string">"VarName35"</span>, <span class="string">"VarName36"</span>, <span class="string">"VarName37"</span>, <span class="string">"VarName38"</span>, <span class="string">"VarName39"</span>, <span class="string">"VarName40"</span>, <span class="string">"VarName41"</span>, <span class="string">"VarName42"</span>, <span class="string">"VarName43"</span>, <span class="string">"VarName44"</span>, <span class="string">"VarName45"</span>, <span class="string">"VarName46"</span>, <span class="string">"VarName47"</span>, <span class="string">"VarName48"</span>, <span class="string">"VarName49"</span>, <span class="string">"VarName50"</span>, <span class="string">"VarName51"</span>, <span class="string">"VarName52"</span>, <span class="string">"VarName53"</span>, <span class="string">"VarName54"</span>, <span class="string">"VarName55"</span>, <span class="string">"VarName56"</span>, <span class="string">"VarName57"</span>, <span class="string">"VarName58"</span>, <span class="string">"VarName59"</span>, <span class="string">"VarName60"</span>, <span class="string">"VarName61"</span>, <span class="string">"VarName62"</span>, <span class="string">"VarName63"</span>, <span class="string">"VarName64"</span>, <span class="string">"VarName65"</span>, <span class="string">"VarName66"</span>, <span class="string">"VarName67"</span>, <span class="string">"VarName68"</span>, <span class="string">"VarName69"</span>, <span class="string">"VarName70"</span>, <span class="string">"VarName71"</span>, <span class="string">"VarName72"</span>, <span class="string">"VarName73"</span>, <span class="string">"VarName74"</span>, <span class="string">"VarName75"</span>, <span class="string">"VarName76"</span>, <span class="string">"VarName77"</span>, <span class="string">"VarName78"</span>, <span class="string">"VarName79"</span>, <span class="string">"VarName80"</span>, <span class="string">"VarName81"</span>, <span class="string">"VarName82"</span>, <span class="string">"VarName83"</span>, <span class="string">"VarName84"</span>, <span class="string">"VarName85"</span>, <span class="string">"VarName86"</span>, <span class="string">"VarName87"</span>, <span class="string">"VarName88"</span>, <span class="string">"VarName89"</span>, <span class="string">"VarName90"</span>, <span class="string">"VarName91"</span>, <span class="string">"VarName92"</span>, <span class="string">"VarName93"</span>, <span class="string">"VarName94"</span>, <span class="string">"VarName95"</span>, <span class="string">"VarName96"</span>, <span class="string">"VarName97"</span>, <span class="string">"VarName98"</span>, <span class="string">"VarName99"</span>, <span class="string">"VarName100"</span>, <span class="string">"VarName101"</span>, <span class="string">"VarName102"</span>, <span class="string">"VarName103"</span>, <span class="string">"VarName104"</span>, <span class="string">"VarName105"</span>, <span class="string">"VarName106"</span>, <span class="string">"VarName107"</span>, <span class="string">"VarName108"</span>, <span class="string">"VarName109"</span>, <span class="string">"VarName110"</span>, <span class="string">"VarName111"</span>, <span class="string">"VarName112"</span>, <span class="string">"VarName113"</span>, <span class="string">"VarName114"</span>, <span class="string">"VarName115"</span>, <span class="string">"VarName116"</span>, <span class="string">"VarName117"</span>, <span class="string">"VarName118"</span>, <span class="string">"VarName119"</span>, <span class="string">"VarName120"</span>, <span class="string">"VarName121"</span>, <span class="string">"VarName122"</span>, <span class="string">"VarName123"</span>, <span class="string">"VarName124"</span>, <span class="string">"VarName125"</span>, <span class="string">"VarName126"</span>, <span class="string">"VarName127"</span>, <span class="string">"VarName128"</span>, <span class="string">"VarName129"</span>, <span class="string">"VarName130"</span>, <span class="string">"VarName131"</span>, <span class="string">"VarName132"</span>, <span class="string">"VarName133"</span>, <span class="string">"VarName134"</span>, <span class="string">"VarName135"</span>, <span class="string">"VarName136"</span>, <span class="string">"VarName137"</span>, <span class="string">"VarName138"</span>, <span class="string">"VarName139"</span>, <span class="string">"VarName140"</span>, <span class="string">"VarName141"</span>, <span class="string">"VarName142"</span>, <span class="string">"VarName143"</span>, <span class="string">"VarName144"</span>, <span class="string">"VarName145"</span>, <span class="string">"VarName146"</span>, <span class="string">"VarName147"</span>, <span class="string">"VarName148"</span>, <span class="string">"VarName149"</span>, <span class="string">"VarName150"</span>, <span class="string">"VarName151"</span>, <span class="string">"VarName152"</span>, <span class="string">"VarName153"</span>, <span class="string">"VarName154"</span>, <span class="string">"VarName155"</span>, <span class="string">"VarName156"</span>, <span class="string">"VarName157"</span>, <span class="string">"VarName158"</span>, <span class="string">"VarName159"</span>, <span class="string">"VarName160"</span>, <span class="string">"VarName161"</span>, <span class="string">"VarName162"</span>, <span class="string">"VarName163"</span>, <span class="string">"VarName164"</span>, <span class="string">"VarName165"</span>, <span class="string">"VarName166"</span>, <span class="string">"VarName167"</span>, <span class="string">"VarName168"</span>, <span class="string">"VarName169"</span>, <span class="string">"VarName170"</span>, <span class="string">"VarName171"</span>, <span class="string">"VarName172"</span>, <span class="string">"VarName173"</span>, <span class="string">"VarName174"</span>, <span class="string">"VarName175"</span>, <span class="string">"VarName176"</span>, <span class="string">"VarName177"</span>, <span class="string">"VarName178"</span>, <span class="string">"VarName179"</span>, <span class="string">"VarName180"</span>, <span class="string">"VarName181"</span>, <span class="string">"VarName182"</span>, <span class="string">"VarName183"</span>, <span class="string">"VarName184"</span>, <span class="string">"VarName185"</span>, <span class="string">"VarName186"</span>, <span class="string">"VarName187"</span>, <span class="string">"VarName188"</span>, <span class="string">"VarName189"</span>, <span class="string">"VarName190"</span>, <span class="string">"VarName191"</span>, <span class="string">"VarName192"</span>, <span class="string">"VarName193"</span>, <span class="string">"VarName194"</span>, <span class="string">"VarName195"</span>, <span class="string">"VarName196"</span>, <span class="string">"VarName197"</span>, <span class="string">"VarName198"</span>, <span class="string">"VarName199"</span>, <span class="string">"VarName200"</span>, <span class="string">"VarName201"</span>, <span class="string">"VarName202"</span>, <span class="string">"VarName203"</span>, <span class="string">"VarName204"</span>, <span class="string">"VarName205"</span>, <span class="string">"VarName206"</span>, <span class="string">"VarName207"</span>, <span class="string">"VarName208"</span>, <span class="string">"VarName209"</span>, <span class="string">"VarName210"</span>, <span class="string">"VarName211"</span>, <span class="string">"VarName212"</span>, <span class="string">"VarName213"</span>, <span class="string">"VarName214"</span>, <span class="string">"VarName215"</span>, <span class="string">"VarName216"</span>, <span class="string">"VarName217"</span>, <span class="string">"VarName218"</span>, <span class="string">"VarName219"</span>, <span class="string">"VarName220"</span>, <span class="string">"VarName221"</span>, <span class="string">"VarName222"</span>, <span class="string">"VarName223"</span>, <span class="string">"VarName224"</span>, <span class="string">"VarName225"</span>, <span class="string">"VarName226"</span>, <span class="string">"VarName227"</span>, <span class="string">"VarName228"</span>, <span class="string">"VarName229"</span>, <span class="string">"VarName230"</span>, <span class="string">"VarName231"</span>, <span class="string">"VarName232"</span>, <span class="string">"VarName233"</span>, <span class="string">"VarName234"</span>, <span class="string">"VarName235"</span>, <span class="string">"VarName236"</span>, <span class="string">"VarName237"</span>, <span class="string">"VarName238"</span>, <span class="string">"VarName239"</span>, <span class="string">"VarName240"</span>, <span class="string">"VarName241"</span>, <span class="string">"VarName242"</span>, <span class="string">"VarName243"</span>, <span class="string">"VarName244"</span>, <span class="string">"VarName245"</span>, <span class="string">"VarName246"</span>, <span class="string">"VarName247"</span>, <span class="string">"VarName248"</span>, <span class="string">"VarName249"</span>, <span class="string">"VarName250"</span>, <span class="string">"VarName251"</span>, <span class="string">"VarName252"</span>, <span class="string">"VarName253"</span>, <span class="string">"VarName254"</span>];
+opts.VariableTypes = [<span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>, <span class="string">"double"</span>];
+
+<span class="comment">% Specify file level properties</span>
+opts.ExtraColumnsRule = <span class="string">"ignore"</span>;
+opts.EmptyLineRule = <span class="string">"read"</span>;
+<span class="comment">% Import the data</span>
+simpattern_table = fullfile(path1, <span class="string">'sim_pattern.csv'</span>);
+
+simpattern = readtable(simpattern_table, opts);
+simpattern = table2array(simpattern);
+
+simpattern = simpattern + 0.5; <span class="comment">% offset to move the band intensities up</span>
+clear <span class="string">opts</span>;
+
+figure;
+imagesc(simpattern); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>;
+
+[line_1_x, line_1_y] = fitedge(28, 57, 34, 31); <span class="comment">% these are read from the pattern manually</span>
+[line_2_x, line_2_y] = fitedge(200,222,167,178);
+
+figure;
+subplot(2,2,[1 3]);
+hold <span class="string">on</span>;
+imagesc(fused_flat); axis <span class="string">xy</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>;
+hold <span class="string">on</span>;
+plot(line_1_x, line_1_y,<span class="string">'Color'</span>,<span class="string">'cyan'</span>,<span class="string">'LineWidth'</span>,2);
+plot(line_2_x, line_2_y,<span class="string">'Color'</span>,<span class="string">'magenta'</span>,<span class="string">'LineWidth'</span>,2);
+hold <span class="string">off</span>;
+
+
+<span class="keyword">for</span> k=1:numfiles
+thispattern = reshape(normalizeddata(:,k),[254 254]);
+bgcorpattern = thispattern ./ normfactor;
+subplot(2,2,2);
+hold <span class="string">on</span>;
+lineprof1 = improfile(bgcorpattern, line_1_x, line_1_y, <span class="string">'nearest'</span>);
+plot(lineprof1,<span class="string">'LineWidth'</span>,2);
+subplot(2,2,4);
+hold <span class="string">on</span>;
+lineprof2 = improfile(bgcorpattern, line_2_x, line_2_y, <span class="string">'nearest'</span>);
+plot(lineprof2,<span class="string">'LineWidth'</span>,2);
+<span class="keyword">end</span>
+subplot(2,2,2);
+lineprof = improfile(fused_flat, line_1_x,line_1_y, <span class="string">'nearest'</span>);
+plot(lineprof,<span class="string">'LineWidth'</span>,2);
+lineprof = improfile(simpattern, line_1_x,line_1_y, <span class="string">'nearest'</span>);
+plot(lineprof,<span class="string">'LineWidth'</span>,2);
+legend(extendedsampleID);
+grid <span class="string">on</span>;
+xlabel(<span class="string">"Pixel Position"</span>);
+ylabel(<span class="string">"Corrected Intensity (a.u.)"</span>);
+title(<span class="string">"Line 1 (Cyan)"</span>);
+subplot(2,2,4);
+lineprof = improfile(fused_flat, line_2_x, line_2_y, <span class="string">'nearest'</span>);
+plot(lineprof,<span class="string">'LineWidth'</span>,2);
+lineprof = improfile(simpattern, line_2_x-2,line_2_y, <span class="string">'nearest'</span>);
+plot(lineprof,<span class="string">'LineWidth'</span>,2);
+legend(extendedsampleID);
+grid <span class="string">on</span>;
+xlabel(<span class="string">"Pixel Position"</span>);
+ylabel(<span class="string">"Corrected Intensity (a.u.)"</span>);
+title(<span class="string">"Line 2 (Magenta)"</span>);
+</pre>
+<h2 id="18">Helper functions</h2>
+<pre class="codeinput">
+<span class="comment">% write a dead pixel correction program</span>
+
+<span class="keyword">function</span> normalized_matrix = normalizeto1(matrix_in)
+normalized_matrix = matrix_in - min(matrix_in(:)); <span class="comment">% make the lowest 0</span>
+normalized_matrix = normalized_matrix ./ max(normalized_matrix(:)); <span class="comment">% Normalize</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> normalized_matrix = normalizeto16bit(matrix_in)
+<span class="comment">% normalized_matrix = matrix_in;</span>
+normalized_matrix = matrix_in - min(matrix_in(:)); <span class="comment">% make the lowest 0</span>
+normalized_matrix = normalized_matrix ./ max(normalized_matrix(:)); <span class="comment">% Normalize</span>
+normalized_matrix = uint16(normalized_matrix * (2^16 - 1)); <span class="comment">% Convert to 16 bit</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [fitlinex, fitliney] = fitedge(x1,x2,y1,y2)
+fitslope = (y2 - y1) / (x2 - x1);
+
+fitlinex = linspace(x1,x2,(abs(x2 - x1) + 1));
+fitliney = y1 + fitslope .* (fitlinex - x1);
+<span class="keyword">end</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Preamble
+% TKD_HDR_Pattern.m - a script in AstroEBSD Package to generate a fused
+% high dynamic range on-axis transmission kikuchi diffraction pattern (TKP)
+%
+% Originally scripted by Tianbi Zhang in November 2022 with major rework in 
+% April 2023 (structure and variables) and June 2023 (functions)
+% Annotated in April-June 2023
+% For how this script works, please refer to our paper
+% 
+% Pre-requisite: MATLAB Image Processing & Statistics and Machine Learning
+% Toolbox, Signal Processing Toolbox
+%
+% Additional requisites (does not affect this code, but helps you check
+% file structure of the h5)
+% (a) h5 file viewer to check h5 file structure
+% (b) A few new functions, especially yaxis rotation, is optimized in
+% MATLAB R2023a. Not using this version though should not affect its
+% functionality.
+%
+% Inputs: on-axis transmission Kikuchi patterns captured by a TimePIX3
+% direct detector in .h5 format. The patterns can be saved as individual
+% frames within a single .h5 file, or as a single integrated frame. There
+% are two different functions to import the data to the workspace.
+%
+% Outputs: fused high dynamic range pattern (raw and flatfielded), 
+% corresponding 2D FFT spectra (modulus) and assorted plots.
+%
+% The standard version of the script generates similar plots as Figure 3-5
+% of the original paper (you will need a simulated pattern for Fig.5.)
+%
+% You can customize this script to produce other plots - please work on a
+% copy of this code for your own pattern, and acknowledge the original 
+% work if possible.
+% Fig. 6-8 are generated by a separate reprojection code which can be found
+% in the AstroEBSD repository as well.
+
+%%
+home;
+close all;
+clear;
+
+%% Load astro
+% location_astro='C:\Users\billy\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location
+location_astro='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+
+%% Settings
+export_option = false; % select true if you want image outputs
+multframe_option = false; % true if the data are stored in individual frames within a h5 file
+multframe_num = 50; % the number of frames in a multi-frame h5 file, 
+% or the number of frames integrated if your raw data is collected as sum of frames.
+
+% InputUser.Astro_loc='C:\Users\billy\Documents\MATLAB\AstroEBSD_v2-live'; 
+% run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m')); % run AstroEBSD
+
+%% Initial PC info
+DD = 10.535; %% CL in mm - you need to measure this in the SEM.
+PCx = 136; %%PCx, PCy in pixel units - you can read from the image
+PCy = 146; % 149
+
+%Saturation of the camera, in counts
+sat_index = 1022;
+
+% I added an npix definition
+npix = 254; % final dimension of the pattern (a square) in pixel units - we remove the edge two pixels, as they are larger than the rest
+
+Settings_Cor.gfilt=1; %gaussian (high frequency filter) - 1 = on, 0 = off
+%you can switch off the gaussian high pass filter if you need/want
+Settings_Cor.gfilt_s=15; %low pass filter sigma, in pixels, e.g. remove things that vary bigger than 15 pixels
+Settings_Cor.size = [npix, npix];
+%% Import Data
+
+% Change file path based on your settings
+path1= 'C:\Users\benja\OneDrive\Documents\MATLAB\Al_HDR\Demo';
+% path1= 'C:\Users\billy\OneDrive - UBC\PhD\TKD\Al_HDR\Demo';
+
+% Please fill in the file names in decreasing order of exposure time. The
+% file corresponding to the baseline exposure time t0 (the longest in the set) should be the 
+% first one.
+h5filenames = {'spot1_50f_01s.h5','spot1_50f_001s.h5', 'spot1_50f_0005s.h5','spot1_50f_0001s_Event.h5'}; 
+sampleID =  ["0.1s Exposure", "0.01s Exposure", "0.005s Exposure", "0.001s Exposure"];
+
+[rawdata,numfiles] = h5_pixet(h5filenames,path1,multframe_option,multframe_num);
+
+% Signal Saturation Correction & Normalization
+[fillingdomains, satdomains] = TKD_cor_saturated(rawdata,numfiles,sat_index); 
+% added sat_index input in function dfefinition
+% added satdomains in function output
+
+[normalizeddata] = TKD_normalize(fillingdomains,rawdata,numfiles);
+
+% note: for the "demo" data, due to a mistake in collection, the event and 
+% iToT subframes are separated into 2 files. Thi resuslts in the extra 
+% if-else on lines 17-23 of h5_pixet. For other data, you can just use line
+% 19 and discard the rest of the sub if-loop.
+
+%% Plot raw signal versus scattering angle
+PC_TKD=[PCx/npix,1-PCy/npix,1000*DD/(55*npix)]; % TZ - I think this should be right - can you have a think whether this should be 256 of 254?
+
+% Detector.screensize = npix;
+[ TKD_Geometry ] = EBSP_Gnom( Settings_Cor, PC_TKD );
+
+angle_matrix=atand(sqrt(TKD_Geometry.ypts_screen.^2+TKD_Geometry.xpts_screen.^2));
+% angle_matrix(find(angle_matrix == min(angle_matrix(:)))) = 0;
+
+% added 2 additional outputs so the fitted curve will pe properly plotted.
+[normfactor, ref_curve] = TKD_referencecurvefit(rawdata,normalizeddata,angle_matrix,numfiles);
+
+% Stitch the pattern
+[fusedpattern] = TKD_patternfuse(rawdata,normalizeddata,fillingdomains);
+
+%% Flat field
+% normfactor = feval(fitresult2, angle_matrix);
+normfactor = reshape(normfactor, [npix npix]);
+fused_flat = fusedpattern ./ normfactor;
+
+% If your fused pattern still shows uneven background, consider adding a
+% Gaussian filter, for example:
+fused_gaussian = imgaussfilt(fused_flat, 15);
+fused_flat_gaus = fused_flat ./ fused_gaussian;
+% Flat field using the fitted radial scattering profile
+[fused_flat,fusedpattern,normfactor, ref_curve] = TKD_flatfield(rawdata,normalizeddata,angle_matrix,fillingdomains,numfiles);
+
+% [fused_flat,Settings_Cor ] = EBSP_BGCor( fused_flat,Settings_Cor);
+[~,Settings_Cor ] = EBSP_BGCor( fused_flat,Settings_Cor);
+% This step is completely optional
+
+%% Visualization and FFT
+
+fused_fft = fft2(fusedpattern);
+fused_flat_fft = fft2(fused_flat);
+fused_gaus_fft = fft2(fused_flat_gaus);
+
+figure;
+subplot(2,2,1);
+imagesc(fusedpattern); axis xy; axis image; colormap('gray');axis off;
+title("Raw fused");
+subplot(2,2,2);
+imagesc(fused_flat); axis xy; axis image; colormap('gray');axis off;
+title("Flattened fused");
+subplot(2,2,3);
+imagesc(log10(abs(fftshift(fused_fft)))); axis xy; axis image; colormap('gray');axis off;
+subplot(2,2,4);
+imagesc(log10(abs(fftshift(fused_flat_fft)))); axis xy; axis image; colormap('gray');axis off;
+
+%% Assorted Plots
+
+figure;
+subplot(1,3,1); %Figure 1: raw data as a function of scattering angle
+hold on;
+for i=1:numfiles
+scatter(angle_matrix(:), rawdata(:,i), 1, 'o', 'filled');
+end
+grid on;
+xlabel("Scattering Angle (degrees)");
+ylabel(["Event"; "Count"],'Rotation',0);
+legend(sampleID);
+subplot(1,3,2); %Figure 2: normalized data and the conformity to the reference curve
+hold on;
+for i=1:numfiles
+scatter(angle_matrix(:), normalizeddata(:,i), 1, 'o', 'filled');
+end
+grid on;
+xlabel("Scatter Angle (degrees)");
+ylabel(["Weighted"; "Event"; "Count"],'Rotation',0);
+% legend(sampleID);
+subplot(1,3,3); %Figure 3: Plot fit with the reference curve
+plot(angle_matrix(:), ref_curve,'.','Color',[0 0 1],'MarkerSize',10);
+hold on;
+plot(angle_matrix(:), normfactor(:),'-', 'LineWidth',2, 'Color',[1 0 0]);
+legend('Reference Curve', 'Smoothed Reference Curve', 'Location', 'NorthEast');
+% Label axes
+xlabel( 'Scatter Angle (degree)', 'Interpreter', 'none' );
+ylabel( ["Weighted"; 'Event'; 'Count'], 'Rotation',0);
+grid on;
+
+%% Export images: 16-bit TIFF
+
+fusedpattern_16 = normalizeto16bit(fusedpattern);
+fused_flat_16 = normalizeto16bit(fused_flat);
+fused_gaus_16 = normalizeto16bit(fused_flat_gaus);
+
+% note: below are log10 fft spectrum
+fused_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_fft))));
+fused_flat_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_flat_fft))));
+fused_gaus_fft_16 = normalizeto16bit(log10(abs(fftshift(fused_gaus_fft))));
+
+
+if export_option == true
+    imwrite(uint16(flipud(fusedpattern_16)), fullfile(path1,'fused_raw.tif'));
+    imwrite(uint16(flipud(fused_flat_16)), fullfile(path1,'fused_flat.tif'));
+    imwrite(uint16(flipud(fused_gaus_16)), fullfile(path1,'fused_flat_gaus.tif'));
+    
+    imwrite(uint16(flipud(fused_fft_16)), fullfile(path1,'fused_raw_fft.tif'));
+    imwrite(uint16(flipud(fused_flat_fft_16)), fullfile(path1,'fused_flat_fft.tif'));
+    imwrite(uint16(flipud(fused_gaus_fft_16)), fullfile(path1,'fused_flat_gaus_fft.tif'));
+end
+
+%% Side scripts for other plots
+%%% SideScript A: patterns vs exposure time (not normalized)
+numpats = numfiles+1;
+sampleID{end+1} = 'Raw fused';
+%this will be exposure time longest to shortest, then fused
+
+%% Figure: patterns at different exposure times, short to long, and gaussian
+figure;
+hold on;
+for k=1:numfiles
+pattern = reshape(rawdata(:,k),[254 254]);
+subplot(1,numpats,k);
+imagesc(pattern); axis xy; axis image; axis off; colormap('gray'); colorbar;
+title(sampleID{k});
+end
+subplot(1,numpats, numpats);
+imagesc(fusedpattern); axis xy; axis image; axis off; colormap('gray'); colorbar;
+title(sampleID{end});
+
+figure;
+hold on;
+for k=1:numfiles
+pattern = reshape(rawdata(:,k),[254 254]);
+pattern_gaus = pattern ./ normfactor;
+pattern_gaus(satdomains{k})=0;
+
+subplot(1,numpats,k);
+imagesc(pattern_gaus); axis xy; axis image; axis off; colormap('gray');
+end
+subplot(1,numpats,numpats);
+imagesc(fused_flat); axis xy; axis image; axis off; colormap('gray');
+
+%% intensity histogram (not in the paper)
+figure;
+histogram(fusedpattern_16, 200,'EdgeColor','none','Normalization','count');
+hold on;
+histogram(fused_gaus_16, 200,'EdgeColor','none','Normalization','count');
+xlabel("Normalized grayscale");
+ylabel("Pixel count");
+legend("Raw fused","Background corrected");
+grid on;
+
+%% angle contours + corrected intensity plot
+f3 = figure;
+h2 = axes; 
+p2 = pPattern(fused_flat,TKD_Geometry);
+h3 = axes;
+[p3,h4] = contour(TKD_Geometry.xpts_screen,TKD_Geometry.ypts_screen,angle_matrix,[10 20 30 40 50],'ShowText','on', 'linewidth', 2);
+set(h3,'color','none','visible','off','fontsize',22);
+axis equal;
+clabel(p3,h4,'color','yellow', 'fontsize',20);
+set(h3,'ydir', 'normal');
+linkaxes([h2 h3]);
+
+
+figure;
+plot(angle_matrix(:),fused_flat(:),'.','MarkerSize',10,'Color',"#77AC30");
+xlabel("Scattering Angle (degrees)");
+ylabel(["Corrected"; "Intensity"; "(a.u.)"], 'Rotation',0);
+grid on;
+
+%% filling zone contours (for easier visualization)
+fillingcontour = zeros(254^2,1);
+
+for i=1:numfiles
+    fillingcontour(fillingdomains{i}) = i;
+end
+
+fillingcontour = reshape(fillingcontour, 254,254);
+
+figure;
+contour(fillingcontour);
+axis xy; axis image;
+
+%% Side Script 6: line profile across a band - need to plot corrected images
+% and relative intensity; almost perfectly perpendicular profiling
+% This section will not work if you don't have a simulated pattern as the reference.
+% The simulated pattern for the demo pattern is included in the raw
+% dataset.
+newsampleID = sampleID;
+newsampleID(end) = "Fused pattern";
+extendedsampleID = newsampleID;
+extendedsampleID(end+1) = "Simulated Pattern";
+
+% read the simulated pattern
+opts = delimitedTextImportOptions("NumVariables", 254, "Encoding", "UTF-8");
+% Specify range and delimiter
+opts.DataLines = [1, Inf];
+opts.Delimiter = "\t";
+opts.VariableNames = ["VarName1", "VarName2", "VarName3", "VarName4", "VarName5", "VarName6", "VarName7", "VarName8", "VarName9", "VarName10", "VarName11", "VarName12", "VarName13", "VarName14", "VarName15", "VarName16", "VarName17", "VarName18", "VarName19", "VarName20", "VarName21", "VarName22", "VarName23", "VarName24", "VarName25", "VarName26", "VarName27", "VarName28", "VarName29", "VarName30", "VarName31", "VarName32", "VarName33", "VarName34", "VarName35", "VarName36", "VarName37", "VarName38", "VarName39", "VarName40", "VarName41", "VarName42", "VarName43", "VarName44", "VarName45", "VarName46", "VarName47", "VarName48", "VarName49", "VarName50", "VarName51", "VarName52", "VarName53", "VarName54", "VarName55", "VarName56", "VarName57", "VarName58", "VarName59", "VarName60", "VarName61", "VarName62", "VarName63", "VarName64", "VarName65", "VarName66", "VarName67", "VarName68", "VarName69", "VarName70", "VarName71", "VarName72", "VarName73", "VarName74", "VarName75", "VarName76", "VarName77", "VarName78", "VarName79", "VarName80", "VarName81", "VarName82", "VarName83", "VarName84", "VarName85", "VarName86", "VarName87", "VarName88", "VarName89", "VarName90", "VarName91", "VarName92", "VarName93", "VarName94", "VarName95", "VarName96", "VarName97", "VarName98", "VarName99", "VarName100", "VarName101", "VarName102", "VarName103", "VarName104", "VarName105", "VarName106", "VarName107", "VarName108", "VarName109", "VarName110", "VarName111", "VarName112", "VarName113", "VarName114", "VarName115", "VarName116", "VarName117", "VarName118", "VarName119", "VarName120", "VarName121", "VarName122", "VarName123", "VarName124", "VarName125", "VarName126", "VarName127", "VarName128", "VarName129", "VarName130", "VarName131", "VarName132", "VarName133", "VarName134", "VarName135", "VarName136", "VarName137", "VarName138", "VarName139", "VarName140", "VarName141", "VarName142", "VarName143", "VarName144", "VarName145", "VarName146", "VarName147", "VarName148", "VarName149", "VarName150", "VarName151", "VarName152", "VarName153", "VarName154", "VarName155", "VarName156", "VarName157", "VarName158", "VarName159", "VarName160", "VarName161", "VarName162", "VarName163", "VarName164", "VarName165", "VarName166", "VarName167", "VarName168", "VarName169", "VarName170", "VarName171", "VarName172", "VarName173", "VarName174", "VarName175", "VarName176", "VarName177", "VarName178", "VarName179", "VarName180", "VarName181", "VarName182", "VarName183", "VarName184", "VarName185", "VarName186", "VarName187", "VarName188", "VarName189", "VarName190", "VarName191", "VarName192", "VarName193", "VarName194", "VarName195", "VarName196", "VarName197", "VarName198", "VarName199", "VarName200", "VarName201", "VarName202", "VarName203", "VarName204", "VarName205", "VarName206", "VarName207", "VarName208", "VarName209", "VarName210", "VarName211", "VarName212", "VarName213", "VarName214", "VarName215", "VarName216", "VarName217", "VarName218", "VarName219", "VarName220", "VarName221", "VarName222", "VarName223", "VarName224", "VarName225", "VarName226", "VarName227", "VarName228", "VarName229", "VarName230", "VarName231", "VarName232", "VarName233", "VarName234", "VarName235", "VarName236", "VarName237", "VarName238", "VarName239", "VarName240", "VarName241", "VarName242", "VarName243", "VarName244", "VarName245", "VarName246", "VarName247", "VarName248", "VarName249", "VarName250", "VarName251", "VarName252", "VarName253", "VarName254"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
+
+% Specify file level properties
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+% Import the data
+simpattern_table = fullfile(path1, 'sim_pattern.csv');
+
+simpattern = readtable(simpattern_table, opts);
+simpattern = table2array(simpattern);
+
+simpattern = simpattern + 0.5; % offset to move the band intensities up
+clear opts;
+
+figure;
+imagesc(simpattern); axis xy; axis image; colormap('gray'); axis off;
+
+[line_1_x, line_1_y] = fitedge(28, 57, 34, 31); % these are read from the pattern manually
+[line_2_x, line_2_y] = fitedge(200,222,167,178);
+
+figure;
+subplot(2,2,[1 3]);
+hold on;
+imagesc(fused_flat); axis xy; axis image; colormap('gray'); axis off;
+hold on;
+plot(line_1_x, line_1_y,'Color','cyan','LineWidth',2); 
+plot(line_2_x, line_2_y,'Color','magenta','LineWidth',2); 
+hold off;
+
+
+for k=1:numfiles
+thispattern = reshape(normalizeddata(:,k),[254 254]);
+bgcorpattern = thispattern ./ normfactor;
+subplot(2,2,2);
+hold on;
+lineprof1 = improfile(bgcorpattern, line_1_x, line_1_y, 'nearest');
+plot(lineprof1,'LineWidth',2);
+subplot(2,2,4);
+hold on;
+lineprof2 = improfile(bgcorpattern, line_2_x, line_2_y, 'nearest');
+plot(lineprof2,'LineWidth',2);
+end
+subplot(2,2,2);
+lineprof = improfile(fused_flat, line_1_x,line_1_y, 'nearest');
+plot(lineprof,'LineWidth',2);
+lineprof = improfile(simpattern, line_1_x,line_1_y, 'nearest');
+plot(lineprof,'LineWidth',2);
+legend(extendedsampleID);
+grid on;
+xlabel("Pixel Position");
+ylabel("Corrected Intensity (a.u.)");
+title("Line 1 (Cyan)");
+subplot(2,2,4);
+lineprof = improfile(fused_flat, line_2_x, line_2_y, 'nearest');
+plot(lineprof,'LineWidth',2);
+lineprof = improfile(simpattern, line_2_x-2,line_2_y, 'nearest');
+plot(lineprof,'LineWidth',2);
+legend(extendedsampleID);
+grid on;
+xlabel("Pixel Position");
+ylabel("Corrected Intensity (a.u.)");
+title("Line 2 (Magenta)");
+
+%% Helper functions
+
+
+% write a dead pixel correction program
+
+function normalized_matrix = normalizeto1(matrix_in)
+normalized_matrix = matrix_in - min(matrix_in(:)); % make the lowest 0
+normalized_matrix = normalized_matrix ./ max(normalized_matrix(:)); % Normalize
+end
+
+function normalized_matrix = normalizeto16bit(matrix_in)
+% normalized_matrix = matrix_in;
+normalized_matrix = matrix_in - min(matrix_in(:)); % make the lowest 0
+normalized_matrix = normalized_matrix ./ max(normalized_matrix(:)); % Normalize
+normalized_matrix = uint16(normalized_matrix * (2^16 - 1)); % Convert to 16 bit
+end
+
+function [fitlinex, fitliney] = fitedge(x1,x2,y1,y2)
+fitslope = (y2 - y1) / (x2 - x1);
+
+fitlinex = linspace(x1,x2,(abs(x2 - x1) + 1));
+fitliney = y1 + fitslope .* (fitlinex - x1);
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>

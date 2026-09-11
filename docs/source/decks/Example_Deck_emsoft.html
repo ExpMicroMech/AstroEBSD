@@ -1,0 +1,414 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>This function will demonstrate, how to load and visualise EMsoft Masterpatterns into AstroEBSD</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="Example_Deck_emsoft.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>This function will demonstrate, how to load and visualise EMsoft Masterpatterns into AstroEBSD</h1>
+<!--introduction-->
+<p>it also has tools to load patterns</p>
+<p>written by Lukas Berners, July 2024 Use as is</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">File and folder infos</a>
+</li>
+<li>
+<a href="#2">Setup our Phases</a>
+</li>
+<li>
+<a href="#3">Load the interpolant</a>
+</li>
+<li>
+<a href="#4">Let's test it and visulaise the pattern projected to a sphere</a>
+</li>
+<li>
+<a href="#5">Now we can try to plot an EBSD pattern in the gnomonic projection</a>
+</li>
+<li>
+<a href="#6">Build the geometry and define the rotation matrices first</a>
+</li>
+<li>
+<a href="#7">Caluclate the gnomonic projection</a>
+</li>
+<li>
+<a href="#8">Plot the patterns</a>
+</li>
+</ul>
+</div>
+<h2 id="1">File and folder infos</h2>
+<pre class="codeinput">clear; close <span class="string">all</span>;
+
+<span class="comment">%location of MTEX 5.10.2</span>
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then it will start MTEX up</span>
+<span class="comment">% mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2';</span>
+<span class="comment">% clear; close all;</span>
+InputUser.MTEX_loc=<span class="string">'C:\Users\lukas\mtex-5.10.2'</span>;
+
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.MTEX_loc,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+InputUser.Phase_Folder=<span class="string">"C:\Promo\matlab_code\Astro_EBSD_main_branch\AstroEBSD_v2\phases"</span>;
+InputUser.Astro_loc=<span class="string">'C:\Promo\matlab_code\Astro_EBSD_main_branch\AstroEBSD_v2'</span>;
+
+
+<span class="comment">% start astro if needed</span>
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.Astro_loc,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="2">Setup our Phases</h2>
+<pre class="language-matlab">The <span class="string">specification</span> <span class="string">of</span> <span class="string">the</span> <span class="string">.pha</span> <span class="string">files</span> <span class="string">is</span> <span class="string">in</span> <span class="string">analogy</span> <span class="string">to</span> <span class="string">the</span> <span class="string">default</span> <span class="string">used</span> <span class="string">in</span>
+AstroEBSD <span class="string">before.</span> <span class="string">If</span> <span class="string">you</span> <span class="string">want</span> <span class="string">to</span> <span class="string">load</span> <span class="string">a</span> <span class="string">EMsoft</span> <span class="string">Masterpattern</span> <span class="string">saved</span> <span class="string">as</span> <span class="string">a</span>
+.h5 file, add <span class="string">the</span> <span class="string">following</span> <span class="string">lines</span> <span class="string">to</span> <span class="string">your</span> <span class="string">.pha</span> <span class="string">file</span>
+</pre>
+<pre class="language-matlab">$sim_type
+Emsoft
+$dynamic
+&gt;yourSimulationFile&gt;.data.h5
+</pre>
+<pre class="language-matlab">If <span class="string">no</span> <span class="string">sim_type</span> <span class="string">is</span> <span class="string">specified</span>, it <span class="string">will</span> <span class="string">be</span> <span class="string">assumed</span> <span class="string">that</span> <span class="string">the</span> <span class="string">simulation</span>
+stems <span class="string">from</span> <span class="string">Bruker</span> <span class="string">Dynamics</span>
+</pre>
+<pre class="codeinput">InputUser.Phase_Input={<span class="string">'Nb6Co7'</span>};  <span class="comment">%% specify the phase name withot file extension</span>
+[ ~,~,~,~,~,RTM_info ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+cs=loadCIF(RTM_info.cif_file);
+<span class="comment">% [ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},InputUser.Phase_Folder);</span>
+</pre>
+<pre class="codeoutput error">Error: File: C:\Users\berners\AstroEBSD_v2\modules\rtm\bin\Phase_Builder_RTM.m
+Line: 151 Column: 1
+This statement is not inside any function.
+ (It follows the END that terminates the definition of the function
+ "Phase_Builder_RTM".)
+
+Error in Example_Deck_emsoft (line 50)
+[ ~,~,~,~,~,RTM_info ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+</pre>
+<h2 id="3">Load the interpolant</h2>
+<pre class="codeinput">[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex,<span class="string">'mean_std'</span>);
+</pre>
+<h2 id="4">Let's test it and visulaise the pattern projected to a sphere</h2>
+<p>Note, that for hexagonal and triognal phases there is currently a range of black dots in positive and negative y direcation at z=0, which is due to some artefacts in the square master patterns themeselves</p>
+<pre class="codeinput">[x,y,z]=sphere(1000);
+
+[pattern_data] =Cube_Sample(x,y,z,screen_int,RTM_info.isHex);
+
+figure
+surf(x,y,z,pattern_data,<span class="string">"EdgeColor"</span>,<span class="string">"none"</span>)
+axis <span class="string">equal</span>;
+colormap <span class="string">gray</span>;
+title(sprintf(<span class="string">'Kikuchi Sphere of %s'</span>, InputUser.Phase_Input{1}))
+</pre>
+<h2 id="5">Now we can try to plot an EBSD pattern in the gnomonic projection</h2>
+<h2 id="6">Build the geometry and define the rotation matrices first</h2>
+<pre class="codeinput">
+<span class="comment">% Euler angles for rotation1</span>
+phi1=0;
+Phi=90;
+phi2=0;
+gmatrix1=rotation.byEuler(phi1*degree,Phi*degree,phi2*degree).matrix
+
+<span class="comment">% Euler angles for rotation2</span>
+phi1=0;
+Phi=0;
+phi2=0;
+gmatrix2=rotation.byEuler(phi1*degree,Phi*degree,phi2*degree).matrix
+
+
+<span class="comment">%Detector size</span>
+PatternInfo.ScreenWidth=round(512*1.2);
+PatternInfo.ScreenHeight=512;
+
+<span class="comment">% Patterncenter, we choose something typical for a 70&deg; EBSD</span>
+PatternCentre= [0.5 0.3 0.65]
+
+
+[ EBSD_geometry ] = EBSP_Gnom(PatternInfo,PatternCentre);
+</pre>
+<h2 id="7">Caluclate the gnomonic projection</h2>
+<pre class="codeinput">[ Pat_sim_eang1] = EBSP_gen( EBSD_geometry,gmatrix1,screen_int,1);<span class="comment">%'lattice_scaling',[1 1.1 0.9]);</span>
+[ Pat_sim_eang2] = EBSP_gen( EBSD_geometry,gmatrix2,screen_int,1);
+</pre>
+<h2 id="8">Plot the patterns</h2>
+<pre class="codeinput">f=figure;
+f.Position=([100 100 800 300])
+
+AxesH=subplot(1,2,1)
+imagesc(Pat_sim_eang1)
+axis <span class="string">equal</span>;
+axis <span class="string">xy</span>;
+colormap <span class="string">'gray'</span>;
+axis <span class="string">off</span>;
+axis(AxesH, <span class="string">'tight'</span>);
+title(<span class="string">'Gnomonic projection'</span>,<span class="string">'for Rotation 1'</span>)
+
+
+AxesH=subplot(1,2,2)
+imagesc(Pat_sim_eang2)
+axis <span class="string">equal</span>;
+axis <span class="string">xy</span>;
+colormap <span class="string">'gray'</span>;
+axis <span class="string">off</span>;
+axis(AxesH, <span class="string">'tight'</span>);
+title(<span class="string">'Gnomonic projection'</span>,<span class="string">'for Rotation 2'</span>)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% This function will demonstrate, how to load and visualise EMsoft Masterpatterns into AstroEBSD
+% it also has tools to load patterns
+%
+% written by Lukas Berners, July 2024
+% Use as is
+
+%% File and folder infos
+clear; close all;
+
+%location of MTEX 5.10.2
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then it will start MTEX up
+% mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2';
+% clear; close all;
+InputUser.MTEX_loc='C:\Users\lukas\mtex-5.10.2';
+
+try EBSD;
+catch
+    run(fullfile(InputUser.MTEX_loc,"startup.m"));
+end
+
+InputUser.Phase_Folder="C:\Promo\matlab_code\Astro_EBSD_main_branch\AstroEBSD_v2\phases";
+InputUser.Astro_loc='C:\Promo\matlab_code\Astro_EBSD_main_branch\AstroEBSD_v2';
+
+
+% start astro if needed
+try astro_loadcheck
+catch
+    run(fullfile(InputUser.Astro_loc,"start_AstroEBSD.m"));
+end
+
+%% Setup our Phases
+%
+%   The specification of the .pha files is in analogy to the default used in
+%   AstroEBSD before. If you want to load a EMsoft Masterpattern saved as a
+%   .h5 file, add the following lines to your .pha file
+%
+%   $sim_type
+%   Emsoft
+%   $dynamic
+%   >yourSimulationFile>.data.h5
+%
+%   If no sim_type is specified, it will be assumed that the simulation
+%   stems from Bruker Dynamics
+%
+%
+%
+%
+InputUser.Phase_Input={'Nb6Co7'};  %% specify the phase name withot file extension 
+[ ~,~,~,~,~,RTM_info ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+cs=loadCIF(RTM_info.cif_file); 
+% [ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},InputUser.Phase_Folder);
+
+
+%% Load the interpolant
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex,'mean_std');
+
+
+
+%% Let's test it and visulaise the pattern projected to a sphere
+% Note, that for hexagonal and triognal phases there is currently a range
+% of black dots in positive and negative y direcation at z=0, which is due
+% to some artefacts in the square master patterns themeselves
+%
+%
+
+[x,y,z]=sphere(1000);
+
+[pattern_data] =Cube_Sample(x,y,z,screen_int,RTM_info.isHex);
+
+figure
+surf(x,y,z,pattern_data,"EdgeColor","none")
+axis equal;
+colormap gray;
+title(sprintf('Kikuchi Sphere of %s', InputUser.Phase_Input{1}))
+
+%% Now we can try to plot an EBSD pattern in the gnomonic projection
+
+%% Build the geometry and define the rotation matrices first
+
+% Euler angles for rotation1
+phi1=0;
+Phi=90;
+phi2=0;
+gmatrix1=rotation.byEuler(phi1*degree,Phi*degree,phi2*degree).matrix
+
+% Euler angles for rotation2
+phi1=0;
+Phi=0;
+phi2=0;
+gmatrix2=rotation.byEuler(phi1*degree,Phi*degree,phi2*degree).matrix
+
+
+%Detector size
+PatternInfo.ScreenWidth=round(512*1.2);
+PatternInfo.ScreenHeight=512;
+
+% Patterncenter, we choose something typical for a 70° EBSD
+PatternCentre= [0.5 0.3 0.65]
+
+
+[ EBSD_geometry ] = EBSP_Gnom(PatternInfo,PatternCentre);
+%% Caluclate the gnomonic projection
+[ Pat_sim_eang1] = EBSP_gen( EBSD_geometry,gmatrix1,screen_int,1);%'lattice_scaling',[1 1.1 0.9]);
+[ Pat_sim_eang2] = EBSP_gen( EBSD_geometry,gmatrix2,screen_int,1);
+%% Plot the patterns
+
+f=figure;
+f.Position=([100 100 800 300])
+
+AxesH=subplot(1,2,1)
+imagesc(Pat_sim_eang1)
+axis equal;
+axis xy;
+colormap 'gray';
+axis off;
+axis(AxesH, 'tight');
+title('Gnomonic projection','for Rotation 1')
+
+
+AxesH=subplot(1,2,2)
+imagesc(Pat_sim_eang2)
+axis equal;
+axis xy;
+colormap 'gray';
+axis off;
+axis(AxesH, 'tight');
+title('Gnomonic projection','for Rotation 2')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

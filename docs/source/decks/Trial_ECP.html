@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Trial_ECP</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="Trial_ECP.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">clear
+close <span class="string">all</span>
+home
+
+imagefolder=<span class="string">'C:\Users\Public\Desktop\SharedData\Haroon\2025\0806_SAECP_Alignments'</span>;
+image1=<span class="string">'20keV_3.2nA_atCircles'</span>;
+image2=<span class="string">'20keV_3.2nA_Ref'</span>;
+
+image_1_full=fullfile(imagefolder,[image1 <span class="string">'.tif'</span>]);
+image_2_full=fullfile(imagefolder,[image2 <span class="string">'.tif'</span>]);
+
+i1=imread(image_1_full);
+i2=imread(image_2_full);
+
+info1 = imfinfo(image_1_full);
+info2 = imfinfo(image_2_full);
+
+y_height=2/3*size(i1,2);
+
+i1_image_only=i1(1:y_height,:);
+
+figure; imagesc(i1_image_only); axis <span class="string">image</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>);
+info1 = imfinfo(image_1_full);
+i1_text=info1.UnknownTags.Value;
+i1_text_pairs=regexp(i1_text, <span class="string">'[\f\n\r]'</span>, <span class="string">'split'</span>);
+nonEmptyCells = ~cellfun(<span class="string">'isempty'</span>, i1_text_pairs);
+i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
+
+<span class="comment">%find the text</span>
+
+<span class="comment">% contains_text = cellfun(@(x)strfind(x,'StageRawR'), i1_text_pairs);</span>
+[text_retrieved] = fReadTFSHeaderPair(<span class="string">'StageRawR'</span>,i1_text_pairs_full);
+</pre>
+<pre class="codeoutput error">Error using imread&gt;get_full_filename
+File
+"C:\Users\Public\Desktop\SharedData\Haroon\2025\0806_SAECP_Alignments\20keV_3.2nA_atCircles.tif"
+does not exist.
+
+Error in imread (line 372)
+        fullname = get_full_filename(filename);
+
+Error in Trial_ECP (line 12)
+i1=imread(image_1_full);
+</pre>
+<pre class="codeinput">figure;
+subplot(1,3,1);
+imagesc(i1)
+title(image1)
+axis <span class="string">equal</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);
+
+subplot(1,3,2);
+imagesc(i2)
+title(image2)
+axis <span class="string">equal</span>; axis <span class="string">image</span>; colormap(<span class="string">'gray'</span>);
+
+<span class="comment">% Display the difference between the two images</span>
+subplot(1,3,3);
+imagesc(abs(i1 - i2));
+title(<span class="string">'Difference Image'</span>);
+axis <span class="string">equal</span>; axis <span class="string">image</span>; colormap(<span class="string">'jet'</span>);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+close all
+home
+
+imagefolder='C:\Users\Public\Desktop\SharedData\Haroon\2025\0806_SAECP_Alignments';
+image1='20keV_3.2nA_atCircles';
+image2='20keV_3.2nA_Ref';
+
+image_1_full=fullfile(imagefolder,[image1 '.tif']);
+image_2_full=fullfile(imagefolder,[image2 '.tif']);
+
+i1=imread(image_1_full);
+i2=imread(image_2_full);
+
+info1 = imfinfo(image_1_full);
+info2 = imfinfo(image_2_full);
+
+y_height=2/3*size(i1,2);
+
+i1_image_only=i1(1:y_height,:);
+
+figure; imagesc(i1_image_only); axis image; axis tight; colormap('gray');
+info1 = imfinfo(image_1_full);
+i1_text=info1.UnknownTags.Value;
+i1_text_pairs=regexp(i1_text, '[\f\n\r]', 'split');
+nonEmptyCells = ~cellfun('isempty', i1_text_pairs);
+i1_text_pairs_full=i1_text_pairs(nonEmptyCells);
+
+%find the text
+
+% contains_text = cellfun(@(x)strfind(x,'StageRawR'), i1_text_pairs);
+[text_retrieved] = fReadTFSHeaderPair('StageRawR',i1_text_pairs_full);
+
+%%
+figure;
+subplot(1,3,1);
+imagesc(i1)
+title(image1)
+axis equal; axis image; colormap('gray');
+
+subplot(1,3,2);
+imagesc(i2)
+title(image2)
+axis equal; axis image; colormap('gray');
+
+% Display the difference between the two images
+subplot(1,3,3);
+imagesc(abs(i1 - i2));
+title('Difference Image');
+axis equal; axis image; colormap('jet');
+##### SOURCE END #####
+-->
+</body>
+</html>

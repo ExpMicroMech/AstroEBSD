@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>RTM_refinement_demo</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-08-11">
+<meta name="DC.source" content="RTM_refinement_demo.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">TPM 2020</a>
+</li>
+<li>
+<a href="#2">Settings</a>
+</li>
+<li>
+<a href="#3">Set up crystal symmetry and bands to index</a>
+</li>
+<li>
+<a href="#4">Generate a template</a>
+</li>
+<li>
+<a href="#5">Generate a start orientation to refine the template against</a>
+</li>
+<li>
+<a href="#6">Single PC refinement (nb. TPM original version, not TBB version - both are in Astro_v2) - this needs updating</a>
+</li>
+</ul>
+</div>
+<h2 id="1">TPM 2020</h2>
+<pre class="codeinput">
+<span class="comment">%refines the pattern centre - demo using simulated pattern</span>
+
+<span class="comment">%set(groot, 'defaultAxesFontName','Helvetica')</span>
+<span class="comment">%set(groot, 'defaultAxesFontSize',12)</span>
+
+InputUser.Phases={<span class="string">'Ni'</span>,<span class="string">'M6C'</span>,<span class="string">'ZrC'</span>,<span class="string">'Ferrite'</span>};
+</pre>
+<h2 id="2">Settings</h2>
+<pre class="codeinput">Settings_Cor.gfilt=1; <span class="comment">%use a high pass filter (1)</span>
+Settings_Cor.gfilt_s=4; <span class="comment">%low pass filter sigma (4)</span>
+Settings_Cor.radius=0; <span class="comment">%use a radius mask (0)</span>
+Settings_Cor.radius_frac=0.85; <span class="comment">%fraction of the pattern width to use as the mask (0.85)</span>
+Settings_Cor.hotpixel=1; <span class="comment">%hot pixel correction (1)</span>
+Settings_Cor.hot_thresh=1000; <span class="comment">%hot pixel threshold (1000)</span>
+Settings_Cor.resize=1; <span class="comment">%resize correction (1)</span>
+Settings_Cor.size=300; <span class="comment">%image height</span>
+Settings_Cor.SplitBG=1; <span class="comment">%split chip fix (1)</span>
+Settings_Cor.RealBG=0; <span class="comment">%use a real BG (0)</span>
+<span class="comment">%Settings_Cor.EBSP_bgnum=30; (30)</span>
+Settings_Cor.Square=1; <span class="comment">%square crop (1)</span>
+Settings_Cor.SquareCrop=1; <span class="comment">%(1)</span>
+Settings_Cor.LineError=1; <span class="comment">%(1)</span>
+Settings_Cor.MeanCentre=1; <span class="comment">%(1)</span>
+
+<span class="comment">%RTI settings</span>
+RTM.Phase_Folder=<span class="string">'C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\phases'</span>;
+RTM.screensize=Settings_Cor.size;
+RTM.Sampling_Freq=8; <span class="comment">%of SO3 space</span>
+RTM.iterations=4;
+RTM.LPTsize=500;
+
+<span class="comment">%add bits to path</span>
+run(<span class="string">'C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD'</span>)
+run(<span class="string">'C:\Communal_MatlabPlugins\mtex-5.2.beta2\startup_mtex'</span>)
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD not found.
+
+Error in RTM_refinement_demo (line 34)
+run('C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD')
+</pre>
+<h2 id="3">Set up crystal symmetry and bands to index</h2>
+<pre class="codeinput">
+<span class="keyword">for</span> i=1:length(InputUser.Phases)
+    [ ~,~,~,~,~, RTI_info ] = Phase_Builder_RTM(InputUser.Phases(i),RTM.Phase_Folder);
+    InputUser.BinFiles{1,i}=RTI_info.bin_file;
+    InputUser.cifnames{1,i}=RTI_info.cif_file;
+    crystals{i}=loadCIF(RTI_info.cif_file);
+<span class="keyword">end</span>
+</pre>
+<h2 id="4">Generate a template</h2>
+<pre class="codeinput">
+<span class="comment">% for reference of reasonable values.. not actually needed.</span>
+InputUser.HDF5_file=<span class="string">'yprime3.h5'</span>;
+InputUser.HDF5_folder=<span class="string">'E:\Tom\GammaPrime_Data\V208C'</span>;
+[ MapData,MicroscopeData,~,EBSPData ]=bReadHDF5( InputUser );
+[Data_InputMap] = EBSD_Map(MapData,MicroscopeData);
+
+phase=1;
+
+true_ori=orientation.rand(1,crystals{phase});
+true_eulers=[true_ori.phi1,true_ori.Phi,true_ori.phi2];
+true_pc=[0.45,0.4,0.65];
+
+[template]=GenerateTemplate(phase,true_eulers,true_pc,RTM.screensize,-0.3944,InputUser,RTM.Phase_Folder);
+</pre>
+<h2 id="5">Generate a start orientation to refine the template against</h2>
+<pre class="codeinput">start_pc=[0.15*rand,0.15*rand,0]+true_pc; <span class="comment">%initial value for PC</span>
+start_pc_error=sqrt(sum((start_pc-true_pc).^2));
+
+<span class="comment">% generate a small misorientation to the template</span>
+<span class="comment">% misori=orientation.rand(1,crystals{phase});</span>
+<span class="comment">% start_ori=true_ori*misori;</span>
+
+start_misori=12;
+<span class="keyword">while</span> start_misori&gt;10 || start_misori&lt;9
+    start_ori=orientation.rand(1,crystals{phase});
+    start_misori=angle(true_ori,start_ori)./degree;
+<span class="keyword">end</span>
+start_eulers=[start_ori.phi1,start_ori.Phi,start_ori.phi2];
+[sample]=GenerateTemplate(phase,start_eulers,start_pc,RTM.screensize,-0.3944,InputUser,RTM.Phase_Folder);
+
+<span class="comment">%start_eulers=[true_ori.phi1,true_ori.Phi,true_ori.phi2]+[0.25*rand,0.25*rand,0.25*rand]; %initial value for Eulers</span>
+</pre>
+<h2 id="6">Single PC refinement (nb. TPM original version, not TBB version - both are in Astro_v2) - this needs updating</h2>
+<pre class="codeinput">Refine.ss=0.08; <span class="comment">%initial probe volume</span>
+Refine.p=2; <span class="comment">%order of polynomial to fit to tetrahedron</span>
+Refine.n_its=150;
+Refine.reindex=1;
+Refine.print=1;
+
+t1=clock;
+pTime(<span class="string">'Starting PC refinement'</span>,t1);
+[Refine]=PC_refine(start_eulers,Refine,start_pc,template,MicroscopeData,RTM,InputUser.Phases{1});
+pTime([<span class="string">'PC refined: '</span>,num2str(100* Refine.Increase),<span class="string">'% increase'</span>],t1);
+
+clear <span class="string">Eulers</span>
+
+final_ori=orientation.byEuler(Refine.Eulers_out);
+final_misori=angle(true_ori,final_ori)./degree;
+final_pc_error=sqrt(sum((Refine.PC_out-true_pc).^2));
+
+disp([<span class="string">'start misorientation: '</span>,num2str(start_misori),<span class="string">' degrees'</span>]);
+disp([<span class="string">'start PC error: '</span>,num2str(start_pc_error)]);
+disp([<span class="string">'end misorientation: '</span>,num2str(final_misori),<span class="string">' degrees'</span>]);
+disp([<span class="string">'end PC error: '</span>,num2str(final_pc_error)]);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% TPM 2020
+%refines the pattern centre - demo using simulated pattern
+
+%set(groot, 'defaultAxesFontName','Helvetica')
+%set(groot, 'defaultAxesFontSize',12)
+
+InputUser.Phases={'Ni','M6C','ZrC','Ferrite'};
+
+%% Settings
+Settings_Cor.gfilt=1; %use a high pass filter (1)
+Settings_Cor.gfilt_s=4; %low pass filter sigma (4)
+Settings_Cor.radius=0; %use a radius mask (0)
+Settings_Cor.radius_frac=0.85; %fraction of the pattern width to use as the mask (0.85)
+Settings_Cor.hotpixel=1; %hot pixel correction (1)
+Settings_Cor.hot_thresh=1000; %hot pixel threshold (1000)
+Settings_Cor.resize=1; %resize correction (1)
+Settings_Cor.size=300; %image height
+Settings_Cor.SplitBG=1; %split chip fix (1)
+Settings_Cor.RealBG=0; %use a real BG (0)
+%Settings_Cor.EBSP_bgnum=30; (30)
+Settings_Cor.Square=1; %square crop (1)
+Settings_Cor.SquareCrop=1; %(1)
+Settings_Cor.LineError=1; %(1)
+Settings_Cor.MeanCentre=1; %(1)
+
+%RTI settings
+RTM.Phase_Folder='C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\phases';
+RTM.screensize=Settings_Cor.size;
+RTM.Sampling_Freq=8; %of SO3 space
+RTM.iterations=4;
+RTM.LPTsize=500;
+
+%add bits to path
+run('C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD')
+run('C:\Communal_MatlabPlugins\mtex-5.2.beta2\startup_mtex')
+
+%% Set up crystal symmetry and bands to index
+
+for i=1:length(InputUser.Phases)
+    [ ~,~,~,~,~, RTI_info ] = Phase_Builder_RTM(InputUser.Phases(i),RTM.Phase_Folder);
+    InputUser.BinFiles{1,i}=RTI_info.bin_file;
+    InputUser.cifnames{1,i}=RTI_info.cif_file;
+    crystals{i}=loadCIF(RTI_info.cif_file);
+end
+
+%% Generate a template
+
+% for reference of reasonable values.. not actually needed.
+InputUser.HDF5_file='yprime3.h5';
+InputUser.HDF5_folder='E:\Tom\GammaPrime_Data\V208C';
+[ MapData,MicroscopeData,~,EBSPData ]=bReadHDF5( InputUser );
+[Data_InputMap] = EBSD_Map(MapData,MicroscopeData);
+
+phase=1;
+
+true_ori=orientation.rand(1,crystals{phase});
+true_eulers=[true_ori.phi1,true_ori.Phi,true_ori.phi2];
+true_pc=[0.45,0.4,0.65];
+
+[template]=GenerateTemplate(phase,true_eulers,true_pc,RTM.screensize,-0.3944,InputUser,RTM.Phase_Folder);
+
+%% Generate a start orientation to refine the template against
+
+start_pc=[0.15*rand,0.15*rand,0]+true_pc; %initial value for PC
+start_pc_error=sqrt(sum((start_pc-true_pc).^2));
+
+% generate a small misorientation to the template
+% misori=orientation.rand(1,crystals{phase});
+% start_ori=true_ori*misori;
+
+start_misori=12;
+while start_misori>10 || start_misori<9
+    start_ori=orientation.rand(1,crystals{phase});
+    start_misori=angle(true_ori,start_ori)./degree;
+end
+start_eulers=[start_ori.phi1,start_ori.Phi,start_ori.phi2];
+[sample]=GenerateTemplate(phase,start_eulers,start_pc,RTM.screensize,-0.3944,InputUser,RTM.Phase_Folder);
+
+%start_eulers=[true_ori.phi1,true_ori.Phi,true_ori.phi2]+[0.25*rand,0.25*rand,0.25*rand]; %initial value for Eulers
+
+%% Single PC refinement (nb. TPM original version, not TBB version - both are in Astro_v2) - this needs updating 
+
+Refine.ss=0.08; %initial probe volume
+Refine.p=2; %order of polynomial to fit to tetrahedron
+Refine.n_its=150;
+Refine.reindex=1;
+Refine.print=1;
+
+t1=clock;
+pTime('Starting PC refinement',t1);
+[Refine]=PC_refine(start_eulers,Refine,start_pc,template,MicroscopeData,RTM,InputUser.Phases{1});
+pTime(['PC refined: ',num2str(100* Refine.Increase),'% increase'],t1);
+
+clear Eulers
+
+final_ori=orientation.byEuler(Refine.Eulers_out);
+final_misori=angle(true_ori,final_ori)./degree;
+final_pc_error=sqrt(sum((Refine.PC_out-true_pc).^2));
+
+disp(['start misorientation: ',num2str(start_misori),' degrees']);
+disp(['start PC error: ',num2str(start_pc_error)]);
+disp(['end misorientation: ',num2str(final_misori),' degrees']);
+disp(['end PC error: ',num2str(final_pc_error)]);
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

@@ -1,0 +1,1294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>RTM_TFS_MapMatch_Phasegroup_v2</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="RTM_TFS_MapMatch_Phasegroup_v2.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">File paths + phase builder</a>
+</li>
+<li>
+<a href="#3">Initial Settings</a>
+</li>
+<li>
+<a href="#4">Load astro and MTEX</a>
+</li>
+<li>
+<a href="#5">Load the map and patterns</a>
+</li>
+<li>
+<a href="#6">MTEX prefs</a>
+</li>
+<li>
+<a href="#7">RTM Loading - phase + dynamic pattern, and generate the RTM filter settings</a>
+</li>
+<li>
+<a href="#8">Generate the SO(3) Library</a>
+</li>
+<li>
+<a href="#9">Now run a pattern against each phase</a>
+</li>
+<li>
+<a href="#10">Now we want to sort the data by the highest PH for each phase to assign it to the best match</a>
+</li>
+<li>
+<a href="#11">save the results</a>
+</li>
+<li>
+<a href="#12">Dynamic plot XCF histograms for all the phases</a>
+</li>
+<li>
+<a href="#13">Filter the XCF values based on the histograms</a>
+</li>
+<li>
+<a href="#14">IPF and orientation things</a>
+</li>
+<li>
+<a href="#15">Set IPFs (dynamically)</a>
+</li>
+<li>
+<a href="#16">Plot the IPF key</a>
+</li>
+<li>
+<a href="#17">Plot the IPF maps (dodgy)</a>
+</li>
+<li>
+<a href="#18">Plotting Original Phase Data with particle boundary identification</a>
+</li>
+<li>
+<a href="#19">Plotting matched data with particle boundary identification</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% Refined Template Matching for TFS data using phase group approach</span>
+
+<span class="comment">% This code can be used to first identify crystallographic similar phases,</span>
+<span class="comment">% and reduce data set to run all phases</span>
+<span class="comment">% Example is Ni and NbC, the code will select points where the XCF is over</span>
+<span class="comment">% a certain value to run NbC only, and the rest where Ni-XCF is low, bypass</span>
+<span class="comment">% NbC and continue to run all the remaining phases that will take longer (ie phases</span>
+<span class="comment">% with bigger unit cells and reflections)</span>
+
+<span class="comment">% RTM based on RTM_TFS_MapMatch by T B Britton</span>
+<span class="comment">% Phase group added by M Tse - 25/09/2025</span>
+
+clear
+home
+close <span class="string">all</span>
+</pre>
+<h2 id="2">File paths + phase builder</h2>
+<p>InputUser.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'; InputUser.Astro_loc='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';</p>
+<pre class="codeinput">InputUser.mtex_location=<span class="string">'C:\Users\Hardworkers\Documents\GitHub\mtex-5.11.2'</span>;
+InputUser.Astro_loc=<span class="string">'C:\Users\Hardworkers\Documents\GitHub\AstroEBSD_v2'</span>;
+
+<span class="comment">% TFSpath = 'I:\EBSD_Data\2025-07-25T13_22_14_AB1\2025-07-25T13_52_56';</span>
+TFSpath=<span class="string">'C:\Users\Hardworkers\Documents\EBSD_Data\2025-09-04T15_23_36_Martins_Testing_Data\2025-09-04T15_30_30'</span>;
+
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases\phasefiles'</span>);
+InputUser.Phase_Input  = {<span class="string">'Nickel_20kV'</span>,<span class="string">'NbC_20kV'</span>,<span class="string">'Cr23C6_20kV'</span>}; <span class="comment">%Si, Ferrite, Ti_alpha_20</span>
+
+<span class="comment">% IMPORTANT - Setting phase group approach</span>
+<span class="comment">% Upper bound - XCF to decide if the phase is highly similar</span>
+Threshold.MainPhase = 0.45; <span class="comment">% Set threshold for main(first) phase for matching, decides skipping of subsequent phases</span>
+<span class="comment">% Lower bound - XCF to decide if the phase is something completely different</span>
+Threshold.WrongPhase = 0.25; <span class="comment">%Set threshold, decides skipping of subsequent phases</span>
+
+PatLoadSingle=1; <span class="comment">%0 = load the patterns at the start, 1 = load the patterns inside the for loop</span>
+feedback_number=1; <span class="comment">%choose how many patterns it processes before updating the console</span>
+</pre>
+<h2 id="3">Initial Settings</h2>
+<pre class="codeinput">
+<span class="comment">% Euler angles (Bunge) and PC</span>
+<span class="comment">% eangs_start=[176.81 19.31 225.90]*pi/180;%demo</span>
+<span class="comment">% PC - this needs to be reasonably accurate</span>
+Settings_PCin.start= [0.5026610 0.3391891 0.4896482]; <span class="comment">% In Bruker convention - [PCX PCY DD]</span>
+<span class="comment">% Settings_PCin.range = [0.001 0.001 0.001];</span>
+
+<span class="comment">% play with these</span>
+RTM.screensize = 128; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq= 9; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.iterations = 6;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 128; <span class="comment">%LPT size used in pixels</span>
+
+<span class="comment">%background correction settings</span>
+Settings_CorX.gfilt=0; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.resize=1; <span class="comment">%resize correction</span>
+Settings_CorX.size=[RTM.screensize RTM.screensize]; <span class="comment">%image height</span>
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+
+RTM.singleprecision= 1; <span class="comment">%use single precision (1) or double (0)</span>
+
+<span class="comment">% %set up the PC refinement algorithm</span>
+<span class="comment">% Refine.ss=0.08; %initial probe volume</span>
+<span class="comment">% Refine.p=2; %order of polynomial to fit to tetrahedron</span>
+<span class="comment">% Refine.n_its=100;</span>
+<span class="comment">% Refine.reindex=1;</span>
+<span class="comment">% Refine.print=1;</span>
+</pre>
+<h2 id="4">Load astro and MTEX</h2>
+<pre class="codeinput">
+<span class="comment">% InputUser.mtex_location='I:\mtex-5.11.2';</span>
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="comment">% InputUser.Astro_loc='I:\AstroEBSD_v2';</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.Astro_loc,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="5">Load the map and patterns</h2>
+<h2 id="6">MTEX prefs</h2>
+<pre class="codeinput">setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);      <span class="comment">%TFS</span>
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofplane'</span>); <span class="comment">%TFS</span>
+
+<span class="comment">% load data</span>
+[ebsd,ebsd_header] = bIDX_to_EBSD_v2(TFSpath);
+ebsd.scanUnit=<span class="string">'um'</span>; <span class="comment">% update scan unit</span>
+ebsd.prop.pat_number=1:ebsd_header.TotalNumberOfPoints;
+
+<span class="keyword">if</span> PatLoadSingle == 0
+    disp(<span class="string">'Loading all patterns at start'</span>)
+    pattern_loc=[ebsd.x_in,ebsd.y_in]; <span class="comment">%note this is in 0 based indexing, whole map</span>
+    [loaded_TFS_patterns] = loadPat_TFS(TFSpath,pattern_loc,1); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+    allProcessedPatterns=loaded_TFS_patterns.pat_proc;
+    clear <span class="string">loaded_TFS_patterns</span> <span class="comment">%just to tidy up memory</span>
+<span class="keyword">else</span>
+    disp(<span class="string">'Loading patterns inside the parallel loop'</span>)
+<span class="keyword">end</span>
+
+<span class="comment">% clear loaded_TFS_patterns %just to tidy up memory</span>
+
+<span class="comment">%plot the EBSD phase data -helps you select a point for later</span>
+figure;
+plot(ebsd);
+</pre>
+<pre class="codeoutput error">Undefined function 'bIDX_to_EBSD_v2' for input arguments of type 'char'.
+
+Error in RTM_TFS_MapMatch_Phasegroup_v2 (line 98)
+[ebsd,ebsd_header] = bIDX_to_EBSD_v2(TFSpath);
+</pre>
+<h2 id="7">RTM Loading - phase + dynamic pattern, and generate the RTM filter settings</h2>
+<pre class="codeinput">
+<span class="comment">%load the crystallographic information</span>
+n_phase=size(InputUser.Phase_Input,2);
+
+clear <span class="string">RTM_info</span> <span class="string">screen_int</span>
+Phase_Num=zeros(n_phase,1);
+<span class="keyword">for</span> n=1:n_phase
+    [ ~,~,~,~,Phase_Num(n), RTM_info(n) ] = Phase_Builder_RTM( {InputUser.Phase_Input{n}},RTM.Phase_Folder); <span class="comment">%#ok&lt;CCAT1&gt;</span>
+    <span class="comment">%build the look up table for the dynamical patterns</span>
+    [screen_int{n}] = Cube_Generate(RTM_info(n).bin_file,RTM_info(n).isHex);
+<span class="keyword">end</span>
+
+<span class="comment">%set up the initial filter settings for the RTM approach</span>
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+</pre>
+<h2 id="8">Generate the SO(3) Library</h2>
+<pre class="codeinput">[ text_out ] = pNameClock;
+fprintf(<span class="string">'%s: Pattern library generating.\n'</span>,text_out);
+
+[EBSD_geom ] = EBSP_Gnom( RTM, Settings_PCin.start);
+
+library_G_n=cell(n_phase,1);
+template_library_n=cell(n_phase,1);
+cs_list_n=cell(n_phase+1,1);
+cs_list_n{1}=<span class="string">'notIndexed'</span>;
+<span class="keyword">for</span> n=1:n_phase
+    <span class="comment">%populate fundamental zone of SO(3)</span>
+    cs_phase=loadCIF(RTM_info(n).cif_file);
+    [ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+    <span class="comment">% generate the library</span>
+    [ template_library ] = Library_Gen(EBSD_geom,screen_int{n},RTM_info(n).isHex,library_G,2,SettingsXCF);
+
+    <span class="comment">%put these in the bigger cell</span>
+    library_G_n{n}=library_G;
+    template_library_n{n}=template_library;
+    cs_list_n{n+1}=cs_phase;
+<span class="keyword">end</span>
+
+clear <span class="string">library_G</span> <span class="string">template_library</span>
+
+[ text_out ] = pNameClock;
+fprintf(<span class="string">'%s: Pattern library generated.\n'</span>,text_out);
+</pre>
+<h2 id="9">Now run a pattern against each phase</h2>
+<pre class="codeinput">fprintf(<span class="string">'%s: Map matching started.\n'</span>,text_out);
+
+pattot = ebsd_header.TotalNumberOfPoints;
+usePar=1; <span class="comment">%use the parallel loop for the library testing</span>
+
+
+<span class="comment">% Initialise data storage arrays</span>
+G_SO3_map=zeros(3,3,n_phase,ebsd_header.TotalNumberOfPoints);
+G_Refined_SO3_map=G_SO3_map;
+Library_PH_map=zeros(n_phase,ebsd_header.TotalNumberOfPoints);
+SO3_PH_map=Library_PH_map;
+
+tic
+
+<span class="comment">% MAIN LOOP FOR PATTERN MATCHING BEGINS HERE</span>
+
+<span class="comment">% Pattern Loading in parallel or all at once</span>
+<span class="keyword">parfor</span> patnum = 1:pattot
+    <span class="comment">% Pattern loading and preparation</span>
+    <span class="keyword">if</span> PatLoadSingle == 1
+        pattern_loc=[ebsd(patnum).x_in,ebsd(patnum).y_in];
+        [loaded_TFS_patterns] = loadPat_TFS(TFSpath,pattern_loc,1);
+        exppattern=loaded_TFS_patterns.pat_proc;
+    <span class="keyword">else</span>
+        exppattern=loaded_TFS_patterns.pat_proc;
+    <span class="keyword">end</span>
+
+    [ pattern1 ] = EBSP_BGCor( exppattern, Settings_CorX);
+    [Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+
+    <span class="comment">% Temporary storage for current pattern</span>
+    G_SO3_n=zeros(3,3,n_phase);
+    G_Refined_SO3_n=G_SO3_n;
+    Library_PH_n=zeros(n_phase,1);
+    SO3_PH_n=Library_PH_n;
+    skip_phase_2 = 0; <span class="comment">% Reset skip flag for each new pattern</span>
+    local_usePar = 0; <span class="comment">% Set fLibraryTest to run serially within the main parfor loop (usually 0 is ok)</span>
+
+
+
+
+    <span class="comment">% NEW LOGIC</span>
+    <span class="keyword">for</span> n = 1:n_phase
+
+        <span class="comment">% Logic for bypassing phase 2</span>
+        <span class="keyword">if</span> n == 2 &amp;&amp; skip_phase_2 == 1
+            skip_phase_2 = 0; <span class="comment">% Reset the flag</span>
+            <span class="keyword">continue</span>;         <span class="comment">% Skips to n=3</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">% PHASE PROCESSING (fLibraryTest and refine5)</span>
+        [G_SO3, Library_PH, ~, ~] = fLibraryTest(template_library_n{n}, library_G_n{n}, Pat_Ref_r.FFT, SettingsXCF, XCF_data_fill, local_usePar);
+        [G_Refined_SO3, regout_RSO3] = refine5(Pat_Ref_r, EBSD_geom, EBSD_geom.PC, G_SO3, SettingsXCF, screen_int{n}, RTM_info(n).isHex, RTM);
+
+        <span class="comment">% Store the results in the temporary 'n' arrays</span>
+        G_SO3_n(:,:,n) = G_SO3;
+        G_Refined_SO3_n(:,:,n) = G_Refined_SO3;
+        Library_PH_n(n) = Library_PH;
+        SO3_PH_n(n) = regout_RSO3(4); <span class="comment">% 4th value is the normalized PH</span>
+
+        <span class="comment">% Logic for the refinements</span>
+        <span class="keyword">if</span> n == 1 <span class="comment">%Logic for phase 1</span>
+            <span class="keyword">if</span> SO3_PH_n(n) &gt; Threshold.MainPhase
+
+            <span class="keyword">elseif</span> SO3_PH_n(n) &lt; Threshold.WrongPhase
+                skip_phase_2 = 1;
+            <span class="keyword">else</span>
+
+            <span class="keyword">end</span>
+
+
+        <span class="keyword">elseif</span> n == 2 <span class="comment">% Logic for phase 2</span>
+            <span class="comment">% Check if the exit condition was set by Phase 1</span>
+            <span class="keyword">if</span> SO3_PH_n(1) &gt; Threshold.MainPhase
+                <span class="keyword">break</span>; <span class="comment">% Exit the internal phase loop (n=1 to n_phase)</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span> <span class="comment">% end of phase refinement loop</span>
+
+
+
+    <span class="comment">% Sorting the data into storage</span>
+    G_SO3_map(:,:,:,patnum) = G_SO3_n;
+    G_Refined_SO3_map(:,:,:,patnum) = G_Refined_SO3_n;
+    Library_PH_map(:,patnum) = Library_PH_n;
+    SO3_PH_map(:,patnum) = SO3_PH_n;
+
+    <span class="comment">% Display progress - broken placement</span>
+    <span class="comment">% if feedback_number*round(n/feedback_number) == n</span>
+    <span class="comment">%         disp(['Pattern ' int2str(n) ' of ' int2str(pattot) ' patterns matched']);</span>
+    <span class="comment">% end</span>
+
+<span class="keyword">end</span> <span class="comment">% end of patnum = 1:pattot</span>
+
+toc
+fprintf(<span class="string">'Pattern matching completed. Total time: %f seconds.\n'</span>, toc);
+</pre>
+<h2 id="10">Now we want to sort the data by the highest PH for each phase to assign it to the best match</h2>
+<pre class="codeinput">
+<span class="comment">% Take these EBSD values and put back into an EBSD container</span>
+
+<span class="comment">% Gs_Refined_SO3=G_Refined_SO3*Detector_tilt.'; %use .' as the real transpose, which is the inverse as this is a rotation matrix</span>
+<span class="comment">% rot=rotation.byMatrix(Gs_Refined_SO3'); %use this rotation as an active/passive is important</span>
+<span class="comment">%</span>
+<span class="comment">% prop_new=ebsd(patnum).prop;</span>
+<span class="comment">% prop_new.XCF=regout_RSO3(4);</span>
+<span class="comment">% prop_new.Phi1_old=prop_new.Phi1;</span>
+<span class="comment">% prop_new.Phi2_old=prop_new.Phi2;</span>
+<span class="comment">% prop_new.PHI_old=prop_new.PHI;</span>
+<span class="comment">% prop_new.Phi1=rot.phi1./degree;</span>
+<span class="comment">% prop_new.Phi2=rot.phi2./degree;</span>
+<span class="comment">% prop_new.PHI=rot.Phi./degree;</span>
+<span class="comment">%</span>
+<span class="comment">% ebsdtemp = EBSD(rot,1,cs_phase,prop_new,'unitCell',calcUnitCell([prop_new.y,prop_new.x]));</span>
+<span class="comment">%</span>
+<span class="comment">% angle(ebsdtemp.orientations,ebsd(patnum).orientations)*180/pi;</span>
+
+Detector_tilt = RTM.Rx(ebsd_header.SpecimenTilt-pi/2); <span class="comment">%use this to convert between the EBSD detector and sample frames</span>
+
+maxG=zeros(3,3,pattot); <span class="comment">%highest g matrix, SO(3) refined, from the different phase correlations</span>
+magG_Sample=maxG; <span class="comment">%convert this into the sample frame</span>
+
+<span class="comment">%subsetting this for our demo</span>
+test_ph1=SO3_PH_map(:,1:pattot);
+test_G1=G_Refined_SO3_map(:,:,:,1:pattot);
+
+rot_new=ebsd(1:pattot).rotations; <span class="comment">%take the ebsd container, and use this to populate the rotations</span>
+prop_new=ebsd(1:pattot).prop; <span class="comment">%same with the properties</span>
+
+<span class="comment">%preallocation arrays</span>
+propt_XCF=zeros(size(prop_new.x));
+propt_Phi1_old=propt_XCF;
+propt_Phi2_old=propt_XCF;
+propt_PHI_old=propt_XCF;
+
+propt_Phi1=propt_XCF;
+propt_Phi2=propt_XCF;
+propt_Phi=propt_XCF;
+
+<span class="comment">% Sort the data by the highest PH for each phase</span>
+[maxPH, maxPhaseNum] = max(test_ph1, [], 1);
+
+<span class="keyword">for</span> patnum=1:pattot
+    maxG(:,:,patnum) = test_G1(:,:,maxPhaseNum(patnum),patnum); <span class="comment">%extract the best Gmatrix</span>
+    magG_Sample(:,:,patnum)=maxG(:,:,patnum)*Detector_tilt.'; <span class="comment">%calculate this in the sample</span>
+    rot_new(patnum)=rotation.byMatrix(magG_Sample(:,:,patnum)'); <span class="comment">%replace the rotation with the updated rotation, and use this rotation as an active/passive is important</span>
+
+    propt_XCF(patnum)=maxPH(patnum);
+
+    <span class="comment">%there is something odd about this carrying forward - we could not fix</span>
+    <span class="comment">%at the time - multiple euler angles were returned</span>
+
+    <span class="comment">% propt_Phi1_old(patnum)=prop_new(patnum).Phi1(1);</span>
+    <span class="comment">% propt_Phi2_old(patnum)=prop_new(patnum).Phi2(1);</span>
+    <span class="comment">% propt_PHI_old(patnum)=prop_new(patnum).PHI(1);</span>
+
+    propt_Phi1(patnum)=rot_new(patnum).phi1./degree;
+    propt_Phi2(patnum)=rot_new(patnum).phi2./degree;
+    propt_Phi(patnum)=rot_new(patnum).Phi./degree;
+<span class="keyword">end</span>
+
+<span class="comment">%put these into the properties structure</span>
+prop_new.XCF=propt_XCF;
+<span class="comment">% prop_new.Phi1_old=propt_Phi1_old; %there is something odd about this carrying forward - we could not fix at the time</span>
+<span class="comment">% prop_new.Phi2_old=propt_Phi2_old;</span>
+<span class="comment">% prop_new.PHI_old=propt_PHI_old;</span>
+
+prop_new.Phi1=propt_Phi1;
+prop_new.Phi2=propt_Phi2;
+prop_new.Phi=propt_Phi;
+<span class="comment">%create a new EBSD container for the data</span>
+ebsdnew = EBSD(rot_new,maxPhaseNum(:),cs_list_n,prop_new,<span class="string">'unitCell'</span>,calcUnitCell([prop_new.y,prop_new.x]));
+
+figure;
+plot(ebsd); title(<span class="string">'TFS Data'</span>)
+nextAxis
+plot(ebsdnew); title(<span class="string">'RTM Data'</span>)
+</pre>
+<h2 id="11">save the results</h2>
+<pre class="codeinput">
+<span class="comment">%create a results folder</span>
+file1_name_us=TFSpath;
+file1_name_us(strfind(file1_name_us,<span class="string">' '</span>))=<span class="string">'_'</span>;
+
+resultsdir=fullfile(file1_name_us,<span class="string">'results_rtm'</span>);
+<span class="keyword">if</span> isdir(resultsdir) == 0; mkdir(resultsdir); <span class="keyword">end</span>
+
+<span class="comment">%copy the m file use to run the code</span>
+mf_long=mfilename(<span class="string">'fullpath'</span>);
+[f1,f2,f3]=fileparts(mf_long);
+mf_start=[mf_long <span class="string">'.m'</span>];
+mf_end=fullfile(resultsdir,[f2 <span class="string">'.m'</span>]);
+<span class="keyword">try</span>
+copyfile(mf_start,mf_end)
+<span class="keyword">catch</span>
+    warning(<span class="string">'m file not saved, likely due to spaces in the file name'</span>);
+<span class="keyword">end</span>
+<span class="comment">%save the mat file</span>
+matname=fullfile(resultsdir,<span class="string">'MatpMatch.mat'</span>);
+
+save(matname);
+</pre>
+<h2 id="12">Dynamic plot XCF histograms for all the phases</h2>
+<pre class="codeinput">ebsd_plot=ebsdnew;
+binedges=linspace(0,1,20);
+
+<span class="comment">%Extract the phase names automatically</span>
+all_phase_names = ebsdnew.mineralList;      <span class="comment">% Read phase names in indexed dataset</span>
+all_phase_names = all_phase_names(~strcmp(all_phase_names, <span class="string">'notIndexed'</span>));  <span class="comment">% Remove 'notIndexed' name</span>
+
+figure;
+t = tiledlayout(<span class="string">'flow'</span>); <span class="comment">% Use tiledlayout for better control</span>
+
+<span class="comment">% Plot for all phases combined</span>
+nexttile;
+histogram(ebsd_plot.prop.XCF(:), binedges, <span class="string">'Normalization'</span>, <span class="string">'probability'</span>);
+title(<span class="string">'All'</span>);
+ylim([0 0.2]);
+ylabel(<span class="string">'Probability'</span>);
+xlabel(<span class="string">'XCF'</span>);
+
+<span class="comment">% Loop through each phase and plot</span>
+<span class="keyword">for</span> i = 1:length(all_phase_names)
+    phase_name = ebsd_plot.mineralList{i+1};
+    nexttile;
+    histogram(ebsd_plot(phase_name).prop.XCF(:), binedges, <span class="string">'Normalization'</span>, <span class="string">'probability'</span>);
+    title(phase_name);
+    ylim([0 0.2]);
+    ylabel(<span class="string">'Probability'</span>);
+    xlabel(<span class="string">'XCF'</span>);
+<span class="keyword">end</span>
+
+hold <span class="string">off</span>
+</pre>
+<h2 id="13">Filter the XCF values based on the histograms</h2>
+<pre class="codeinput">threshold_XCFs=[0.25 0.5 0 ]; <span class="comment">% Change values for [phase1 phase2 phase3]</span>
+
+<span class="keyword">for</span> n=1:n_phase
+    filter_id=find(ebsd_plot.prop.XCF  &lt; threshold_XCFs(n) &amp; ebsd_plot.phase == n);
+    ebsd_plot(filter_id).phase=0;
+<span class="keyword">end</span>
+</pre>
+<h2 id="14">IPF and orientation things</h2>
+<pre class="codeinput">
+<span class="comment">% Calculating misorientation of a phase</span>
+
+odf = calcDensity(ebsd_plot(all_phase_names{3}).orientations,<span class="string">'halfwidth'</span>,5*degree);
+mdf = calcMDF(odf);
+
+<span class="comment">%plot the axis</span>
+figure;
+plotAxisDistribution(mdf)
+
+<span class="comment">%plot the angle</span>
+figure;
+plotAngleDistribution(mdf)
+hold <span class="string">on</span>
+plotAngleDistribution(ebsd_plot(all_phase_names{3}).CS,ebsd_plot(all_phase_names{3}).CS)
+hold <span class="string">off</span>
+legend(<span class="string">'data MDF'</span>,<span class="string">'uniform ODF'</span>)
+</pre>
+<h2 id="15">Set IPFs (dynamically)</h2>
+<pre class="codeinput">
+<span class="comment">% Generate IPF Keys</span>
+<span class="keyword">for</span> x = 1:n_phase
+    <span class="comment">% Get the current phase from the cell array</span>
+    current_phase = all_phase_names{x};
+
+    <span class="comment">% Access the ebsd data for the current phase</span>
+    current_ebsd = ebsd_plot(current_phase);
+
+    key_name = [<span class="string">'ipfKey'</span>, num2str(x)];
+
+    <span class="comment">% The TSL key creation can be slightly different for the first phase</span>
+    <span class="comment">% and the rest, so we handle that with an if/else block.</span>
+    <span class="keyword">if</span> x == 1
+       <span class="comment">% The first ipfKey is created differently</span>
+        eval([key_name, <span class="string">' = ipfTSLKey(current_ebsd);'</span>]);
+    <span class="keyword">else</span>
+        <span class="comment">% The subsequent ipfKeys use the .CS property</span>
+        eval([key_name, <span class="string">' = ipfTSLKey(current_ebsd.CS);'</span>]);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre>
+<h2 id="16">Plot the IPF key</h2>
+<pre class="codeinput">
+<span class="comment">% Assumed variable: ipfKeys</span>
+f1 = figure;
+
+<span class="comment">% Loop through each ipfKey and plot it</span>
+<span class="keyword">for</span> q = 1:n_phase
+    key_name = strcat(<span class="string">'ipfKey'</span>, num2str(q));
+    plot(eval(key_name)); <span class="comment">%Added eval to force it to read the variable and not as characters</span>
+
+    <span class="comment">% Add nextAxis to prepare for the next plot</span>
+    <span class="keyword">if</span> q &lt; n_phase
+        nextAxis;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">% Edited till here 25 Sept</span>
+</pre>
+<h2 id="17">Plot the IPF maps (dodgy)</h2>
+<pre class="codeinput">
+<span class="comment">%{
+</span><span class="comment">% Initial IPF maps
+</span><span class="comment">
+</span><span class="comment">orientations = {'X', 'Y', 'Z'};
+</span><span class="comment">for i = 1:numel(orientations)
+</span><span class="comment">    orientation = orientations{i};
+</span><span class="comment">    nextAxis;
+</span><span class="comment">    hold on;
+</span><span class="comment">    for j = 1:n_phase
+</span><span class="comment">        % Construct the color variable name dynamically
+</span><span class="comment">        color_var = ['colors_', orientation, num2str(j), 'i'];
+</span><span class="comment">
+</span><span class="comment">        % Plotting each phase
+</span><span class="comment">        plot(ebsd(all_phase_names{j}), eval(color_var), 'micronbar', 'off');
+</span><span class="comment">    end
+</span><span class="comment">    title(['all IPF-', orientation]);
+</span><span class="comment">    hold off;
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">%% now generate the matched and refined IPF colour maps of the individual phases
+</span><span class="comment">
+</span><span class="comment">directions = {vector3d.X, vector3d.Y, vector3d.Z};
+</span><span class="comment">direction_names = {'X', 'Y', 'Z'};
+</span><span class="comment">
+</span><span class="comment">% Loop through each phase
+</span><span class="comment">for i = 1:length(all_phase_names)
+</span><span class="comment">    current_phase_name = all_phase_names{i};
+</span><span class="comment">    current_ebsd = ebsd(current_phase_name);
+</span><span class="comment">    current_ipfKey = eval(strcat('ipfKey',num2str(i)));
+</span><span class="comment">
+</span><span class="comment">    % Loop through each direction (X, Y, Z) for the current phase
+</span><span class="comment">    for j = 1:length(directions)
+</span><span class="comment">        current_direction = directions{j};
+</span><span class="comment">        current_direction_name = direction_names{j};
+</span><span class="comment">
+</span><span class="comment">        % Set the direction for the IPF key
+</span><span class="comment">        current_ipfKey.inversePoleFigureDirection = current_direction;
+</span><span class="comment">
+</span><span class="comment">        % Generate the colors
+</span><span class="comment">        colors = current_ipfKey.orientation2color(current_ebsd.orientations);
+</span><span class="comment">
+</span><span class="comment">        % Create the dynamic variable name (e.g., colors_X1i, colors_Y2i)
+</span><span class="comment">        variable_name = ['colors_', current_direction_name, num2str(i), 'i'];
+</span><span class="comment">
+</span><span class="comment">        % Assign the colors to the dynamically named variable
+</span><span class="comment">        eval([variable_name, ' = colors;']);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">%}</span>
+</pre>
+<h2 id="18">Plotting Original Phase Data with particle boundary identification</h2>
+<pre class="codeinput">
+<span class="comment">% Set the colours of the phases - may need to change phase name</span>
+ebsd(<span class="string">'Nickel'</span>).color = str2rgb(<span class="string">'silver'</span>);
+<span class="comment">% ebsd('Aluminium Nickel (1/1)').color = str2rgb('aquamarine');</span>
+ebsd(<span class="string">'Niobium Carbide (1/1)'</span>).color = str2rgb(<span class="string">'orange'</span>);
+ebsd(<span class="string">'Chromium Carbide - tau'</span>).color = str2rgb(<span class="string">'orchid'</span>);
+
+
+<span class="comment">% Calculate phase boundaries</span>
+OGgrains_indexed = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,90*degree) ;<span class="comment">% 'angle', 75*degree); % May need to change degree</span>
+
+<span class="comment">% Smooth phase boundaries in case appearing pixelated</span>
+OGgrains_smooth = smooth(OGgrains_indexed);
+
+figure;
+plot(ebsd)
+<span class="comment">% hold on</span>
+<span class="comment">% plot(OGgrains_smooth,'linewidth',0.1);</span>
+<span class="comment">% hold off</span>
+lgd = legend( <span class="string">'Cr_{23}C_{6}'</span>,<span class="string">'\gamma-matrix'</span>,<span class="string">'NbC'</span>,<span class="string">'\beta-NiAl'</span>);
+fontsize(lgd,14,<span class="string">'points'</span>)
+<span class="comment">%fontsize(12)</span>
+<span class="comment">%title('Original Data');</span>
+<span class="comment">% plot(grains_smooth, grains_smooth.phase);</span>
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span>
+</pre>
+<h2 id="19">Plotting matched data with particle boundary identification</h2>
+<pre class="codeinput">
+<span class="comment">% Set the colours of the phases - may need to change phase name</span>
+ebsd_plot(<span class="string">'Nickel'</span>).color = str2rgb(<span class="string">'silver'</span>);
+<span class="comment">% ebsd_plot('Aluminium Nickel (1/1)').color = str2rgb('aquamarine');</span>
+ebsd_plot(<span class="string">'Niobium Carbide (1/1)'</span>).color = str2rgb(<span class="string">'orange'</span>);
+ebsd_plot(<span class="string">'Chromium Carbide - tau'</span>).color = str2rgb(<span class="string">'orchid'</span>);
+
+
+<span class="comment">% Calculate phase boundaries</span>
+grains_indexed = calcGrains(ebsd_plot(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,90*degree) ;<span class="comment">% 'angle', 75*degree); % May need to change degree</span>
+
+<span class="comment">% Smooth phase boundaries in case appearing pixelated</span>
+grains_smooth = smooth(grains_indexed);
+
+figure;
+plot(grains_smooth,<span class="string">'linewidth'</span>,0.1);
+legend(<span class="string">'\gamma-matrix'</span>, <span class="string">'NbC'</span>, <span class="string">'Cr_{23}C_{6}'</span>,<span class="string">'\beta-NiAl'</span>);
+<span class="comment">%title('Including Grains-smoothed');</span>
+<span class="comment">% plot(grains_smooth, grains_smooth.phase);</span>
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% Refined Template Matching for TFS data using phase group approach 
+
+% This code can be used to first identify crystallographic similar phases,
+% and reduce data set to run all phases 
+% Example is Ni and NbC, the code will select points where the XCF is over
+% a certain value to run NbC only, and the rest where Ni-XCF is low, bypass
+% NbC and continue to run all the remaining phases that will take longer (ie phases
+% with bigger unit cells and reflections) 
+
+% RTM based on RTM_TFS_MapMatch by T B Britton 
+% Phase group added by M Tse - 25/09/2025 
+
+clear
+home
+close all
+
+%% File paths + phase builder
+% InputUser.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+% InputUser.Astro_loc='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+
+
+InputUser.mtex_location='C:\Users\Hardworkers\Documents\GitHub\mtex-5.11.2';
+InputUser.Astro_loc='C:\Users\Hardworkers\Documents\GitHub\AstroEBSD_v2';
+
+% TFSpath = 'I:\EBSD_Data\2025-07-25T13_22_14_AB1\2025-07-25T13_52_56'; 
+TFSpath='C:\Users\Hardworkers\Documents\EBSD_Data\2025-09-04T15_23_36_Martins_Testing_Data\2025-09-04T15_30_30';
+
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,'phases\phasefiles');
+InputUser.Phase_Input  = {'Nickel_20kV','NbC_20kV','Cr23C6_20kV'}; %Si, Ferrite, Ti_alpha_20
+
+% IMPORTANT - Setting phase group approach 
+% Upper bound - XCF to decide if the phase is highly similar
+Threshold.MainPhase = 0.45; % Set threshold for main(first) phase for matching, decides skipping of subsequent phases
+% Lower bound - XCF to decide if the phase is something completely different 
+Threshold.WrongPhase = 0.25; %Set threshold, decides skipping of subsequent phases
+
+PatLoadSingle=1; %0 = load the patterns at the start, 1 = load the patterns inside the for loop
+feedback_number=1; %choose how many patterns it processes before updating the console
+%% Initial Settings
+
+% Euler angles (Bunge) and PC
+% eangs_start=[176.81 19.31 225.90]*pi/180;%demo
+% PC - this needs to be reasonably accurate
+Settings_PCin.start= [0.5026610 0.3391891 0.4896482]; % In Bruker convention - [PCX PCY DD]
+% Settings_PCin.range = [0.001 0.001 0.001];
+
+% play with these
+RTM.screensize = 128; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq= 9; %Set the SO(3) sampling freq in degrees
+RTM.iterations = 6;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 128; %LPT size used in pixels
+
+%background correction settings
+Settings_CorX.gfilt=0; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.resize=1; %resize correction
+Settings_CorX.size=[RTM.screensize RTM.screensize]; %image height
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+RTM.singleprecision= 1; %use single precision (1) or double (0)
+
+% %set up the PC refinement algorithm
+% Refine.ss=0.08; %initial probe volume
+% Refine.p=2; %order of polynomial to fit to tetrahedron
+% Refine.n_its=100;
+% Refine.reindex=1;
+% Refine.print=1;
+
+%% Load astro and MTEX
+
+% InputUser.mtex_location='I:\mtex-5.11.2';
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(InputUser.mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+% InputUser.Astro_loc='I:\AstroEBSD_v2';
+try astro_loadcheck;
+catch
+    run(fullfile(InputUser.Astro_loc,"start_AstroEBSD.m"));
+end
+
+%% Load the map and patterns
+%% MTEX prefs
+setMTEXpref('xAxisDirection','east');      %TFS
+setMTEXpref('zAxisDirection','outofplane'); %TFS
+
+% load data
+[ebsd,ebsd_header] = bIDX_to_EBSD_v2(TFSpath);
+ebsd.scanUnit='um'; % update scan unit
+ebsd.prop.pat_number=1:ebsd_header.TotalNumberOfPoints;
+
+if PatLoadSingle == 0
+    disp('Loading all patterns at start')
+    pattern_loc=[ebsd.x_in,ebsd.y_in]; %note this is in 0 based indexing, whole map
+    [loaded_TFS_patterns] = loadPat_TFS(TFSpath,pattern_loc,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+    allProcessedPatterns=loaded_TFS_patterns.pat_proc;
+    clear loaded_TFS_patterns %just to tidy up memory
+else
+    disp('Loading patterns inside the parallel loop')
+end
+
+% clear loaded_TFS_patterns %just to tidy up memory
+
+%plot the EBSD phase data -helps you select a point for later
+figure;
+plot(ebsd);
+
+%% RTM Loading - phase + dynamic pattern, and generate the RTM filter settings
+%load the crystallographic information
+n_phase=size(InputUser.Phase_Input,2);
+
+clear RTM_info screen_int
+Phase_Num=zeros(n_phase,1);
+for n=1:n_phase
+    [ ~,~,~,~,Phase_Num(n), RTM_info(n) ] = Phase_Builder_RTM( {InputUser.Phase_Input{n}},RTM.Phase_Folder); %#ok<CCAT1>
+    %build the look up table for the dynamical patterns
+    [screen_int{n}] = Cube_Generate(RTM_info(n).bin_file,RTM_info(n).isHex);
+end
+
+%set up the initial filter settings for the RTM approach
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+%% Generate the SO(3) Library
+[ text_out ] = pNameClock;
+fprintf('%s: Pattern library generating.\n',text_out);
+
+[EBSD_geom ] = EBSP_Gnom( RTM, Settings_PCin.start);
+
+library_G_n=cell(n_phase,1);
+template_library_n=cell(n_phase,1);
+cs_list_n=cell(n_phase+1,1);
+cs_list_n{1}='notIndexed';
+for n=1:n_phase
+    %populate fundamental zone of SO(3)
+    cs_phase=loadCIF(RTM_info(n).cif_file);
+    [ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+    % generate the library
+    [ template_library ] = Library_Gen(EBSD_geom,screen_int{n},RTM_info(n).isHex,library_G,2,SettingsXCF);
+
+    %put these in the bigger cell
+    library_G_n{n}=library_G;
+    template_library_n{n}=template_library;
+    cs_list_n{n+1}=cs_phase;
+end
+
+clear library_G template_library
+
+[ text_out ] = pNameClock;
+fprintf('%s: Pattern library generated.\n',text_out);
+
+%% Now run a pattern against each phase
+fprintf('%s: Map matching started.\n',text_out);
+
+pattot = ebsd_header.TotalNumberOfPoints;
+usePar=1; %use the parallel loop for the library testing
+
+
+% Initialise data storage arrays 
+G_SO3_map=zeros(3,3,n_phase,ebsd_header.TotalNumberOfPoints);
+G_Refined_SO3_map=G_SO3_map;
+Library_PH_map=zeros(n_phase,ebsd_header.TotalNumberOfPoints);
+SO3_PH_map=Library_PH_map;
+
+tic
+
+% MAIN LOOP FOR PATTERN MATCHING BEGINS HERE 
+
+% Pattern Loading in parallel or all at once
+parfor patnum = 1:pattot
+    % Pattern loading and preparation
+    if PatLoadSingle == 1
+        pattern_loc=[ebsd(patnum).x_in,ebsd(patnum).y_in]; 
+        [loaded_TFS_patterns] = loadPat_TFS(TFSpath,pattern_loc,1);
+        exppattern=loaded_TFS_patterns.pat_proc;
+    else
+        exppattern=loaded_TFS_patterns.pat_proc; 
+    end
+
+    [ pattern1 ] = EBSP_BGCor( exppattern, Settings_CorX);
+    [Pat_Ref_r,XCF_data_fill] = refine_prep(pattern1,SettingsXCF,RTM);
+
+    % Temporary storage for current pattern 
+    G_SO3_n=zeros(3,3,n_phase);
+    G_Refined_SO3_n=G_SO3_n;
+    Library_PH_n=zeros(n_phase,1);
+    SO3_PH_n=Library_PH_n;
+    skip_phase_2 = 0; % Reset skip flag for each new pattern
+    local_usePar = 0; % Set fLibraryTest to run serially within the main parfor loop (usually 0 is ok)
+    
+    
+
+
+    % NEW LOGIC
+    for n = 1:n_phase
+        
+        % Logic for bypassing phase 2
+        if n == 2 && skip_phase_2 == 1
+            skip_phase_2 = 0; % Reset the flag
+            continue;         % Skips to n=3
+        end
+        
+        % PHASE PROCESSING (fLibraryTest and refine5)
+        [G_SO3, Library_PH, ~, ~] = fLibraryTest(template_library_n{n}, library_G_n{n}, Pat_Ref_r.FFT, SettingsXCF, XCF_data_fill, local_usePar);
+        [G_Refined_SO3, regout_RSO3] = refine5(Pat_Ref_r, EBSD_geom, EBSD_geom.PC, G_SO3, SettingsXCF, screen_int{n}, RTM_info(n).isHex, RTM);
+        
+        % Store the results in the temporary 'n' arrays
+        G_SO3_n(:,:,n) = G_SO3;
+        G_Refined_SO3_n(:,:,n) = G_Refined_SO3;
+        Library_PH_n(n) = Library_PH;
+        SO3_PH_n(n) = regout_RSO3(4); % 4th value is the normalized PH
+        
+        % Logic for the refinements 
+        if n == 1 %Logic for phase 1 
+            if SO3_PH_n(n) > Threshold.MainPhase
+                
+            elseif SO3_PH_n(n) < Threshold.WrongPhase
+                skip_phase_2 = 1;
+            else
+                
+            end
+
+            
+        elseif n == 2 % Logic for phase 2
+            % Check if the exit condition was set by Phase 1 
+            if SO3_PH_n(1) > Threshold.MainPhase
+                break; % Exit the internal phase loop (n=1 to n_phase)
+            end
+            
+        end
+    end % end of phase refinement loop
+   
+
+
+    % Sorting the data into storage
+    G_SO3_map(:,:,:,patnum) = G_SO3_n;
+    G_Refined_SO3_map(:,:,:,patnum) = G_Refined_SO3_n;
+    Library_PH_map(:,patnum) = Library_PH_n;
+    SO3_PH_map(:,patnum) = SO3_PH_n;
+
+    % Display progress - broken placement
+    % if feedback_number*round(n/feedback_number) == n
+    %         disp(['Pattern ' int2str(n) ' of ' int2str(pattot) ' patterns matched']);
+    % end 
+    
+end % end of patnum = 1:pattot
+
+toc
+fprintf('Pattern matching completed. Total time: %f seconds.\n', toc);
+
+
+%% Now we want to sort the data by the highest PH for each phase to assign it to the best match
+
+
+% Take these EBSD values and put back into an EBSD container
+
+% Gs_Refined_SO3=G_Refined_SO3*Detector_tilt.'; %use .' as the real transpose, which is the inverse as this is a rotation matrix
+% rot=rotation.byMatrix(Gs_Refined_SO3'); %use this rotation as an active/passive is important
+% 
+% prop_new=ebsd(patnum).prop;
+% prop_new.XCF=regout_RSO3(4);
+% prop_new.Phi1_old=prop_new.Phi1;
+% prop_new.Phi2_old=prop_new.Phi2;
+% prop_new.PHI_old=prop_new.PHI;
+% prop_new.Phi1=rot.phi1./degree;
+% prop_new.Phi2=rot.phi2./degree;
+% prop_new.PHI=rot.Phi./degree;
+% 
+% ebsdtemp = EBSD(rot,1,cs_phase,prop_new,'unitCell',calcUnitCell([prop_new.y,prop_new.x]));
+% 
+% angle(ebsdtemp.orientations,ebsd(patnum).orientations)*180/pi;
+
+Detector_tilt = RTM.Rx(ebsd_header.SpecimenTilt-pi/2); %use this to convert between the EBSD detector and sample frames
+
+maxG=zeros(3,3,pattot); %highest g matrix, SO(3) refined, from the different phase correlations
+magG_Sample=maxG; %convert this into the sample frame
+
+%subsetting this for our demo
+test_ph1=SO3_PH_map(:,1:pattot); 
+test_G1=G_Refined_SO3_map(:,:,:,1:pattot);
+
+rot_new=ebsd(1:pattot).rotations; %take the ebsd container, and use this to populate the rotations
+prop_new=ebsd(1:pattot).prop; %same with the properties
+
+%preallocation arrays
+propt_XCF=zeros(size(prop_new.x));
+propt_Phi1_old=propt_XCF;
+propt_Phi2_old=propt_XCF;
+propt_PHI_old=propt_XCF;
+
+propt_Phi1=propt_XCF;
+propt_Phi2=propt_XCF;
+propt_Phi=propt_XCF;
+
+% Sort the data by the highest PH for each phase
+[maxPH, maxPhaseNum] = max(test_ph1, [], 1);
+
+for patnum=1:pattot
+    maxG(:,:,patnum) = test_G1(:,:,maxPhaseNum(patnum),patnum); %extract the best Gmatrix
+    magG_Sample(:,:,patnum)=maxG(:,:,patnum)*Detector_tilt.'; %calculate this in the sample
+    rot_new(patnum)=rotation.byMatrix(magG_Sample(:,:,patnum)'); %replace the rotation with the updated rotation, and use this rotation as an active/passive is important
+
+    propt_XCF(patnum)=maxPH(patnum);
+
+    %there is something odd about this carrying forward - we could not fix
+    %at the time - multiple euler angles were returned
+
+    % propt_Phi1_old(patnum)=prop_new(patnum).Phi1(1);
+    % propt_Phi2_old(patnum)=prop_new(patnum).Phi2(1);
+    % propt_PHI_old(patnum)=prop_new(patnum).PHI(1);
+
+    propt_Phi1(patnum)=rot_new(patnum).phi1./degree;
+    propt_Phi2(patnum)=rot_new(patnum).phi2./degree;
+    propt_Phi(patnum)=rot_new(patnum).Phi./degree;
+end
+
+%put these into the properties structure
+prop_new.XCF=propt_XCF;
+% prop_new.Phi1_old=propt_Phi1_old; %there is something odd about this carrying forward - we could not fix at the time
+% prop_new.Phi2_old=propt_Phi2_old;
+% prop_new.PHI_old=propt_PHI_old;
+
+prop_new.Phi1=propt_Phi1;
+prop_new.Phi2=propt_Phi2;
+prop_new.Phi=propt_Phi;
+%create a new EBSD container for the data
+ebsdnew = EBSD(rot_new,maxPhaseNum(:),cs_list_n,prop_new,'unitCell',calcUnitCell([prop_new.y,prop_new.x]));
+
+figure;
+plot(ebsd); title('TFS Data')
+nextAxis
+plot(ebsdnew); title('RTM Data')
+
+%% save the results
+
+%create a results folder
+file1_name_us=TFSpath;
+file1_name_us(strfind(file1_name_us,' '))='_';
+
+resultsdir=fullfile(file1_name_us,'results_rtm');
+if isdir(resultsdir) == 0; mkdir(resultsdir); end
+
+%copy the m file use to run the code
+mf_long=mfilename('fullpath');
+[f1,f2,f3]=fileparts(mf_long);
+mf_start=[mf_long '.m'];
+mf_end=fullfile(resultsdir,[f2 '.m']);
+try
+copyfile(mf_start,mf_end)
+catch
+    warning('m file not saved, likely due to spaces in the file name');
+end
+%save the mat file
+matname=fullfile(resultsdir,'MatpMatch.mat');
+
+save(matname);
+
+
+
+%% Dynamic plot XCF histograms for all the phases
+
+ebsd_plot=ebsdnew;
+binedges=linspace(0,1,20);
+
+%Extract the phase names automatically 
+all_phase_names = ebsdnew.mineralList;      % Read phase names in indexed dataset
+all_phase_names = all_phase_names(~strcmp(all_phase_names, 'notIndexed'));  % Remove 'notIndexed' name
+
+figure;
+t = tiledlayout('flow'); % Use tiledlayout for better control
+
+% Plot for all phases combined
+nexttile;
+histogram(ebsd_plot.prop.XCF(:), binedges, 'Normalization', 'probability');
+title('All');
+ylim([0 0.2]);
+ylabel('Probability');
+xlabel('XCF');
+
+% Loop through each phase and plot
+for i = 1:length(all_phase_names)
+    phase_name = ebsd_plot.mineralList{i+1};
+    nexttile;
+    histogram(ebsd_plot(phase_name).prop.XCF(:), binedges, 'Normalization', 'probability');
+    title(phase_name);
+    ylim([0 0.2]);
+    ylabel('Probability');
+    xlabel('XCF');
+end
+
+hold off
+
+
+%% Filter the XCF values based on the histograms 
+
+threshold_XCFs=[0.25 0.5 0 ]; % Change values for [phase1 phase2 phase3]
+
+for n=1:n_phase
+    filter_id=find(ebsd_plot.prop.XCF  < threshold_XCFs(n) & ebsd_plot.phase == n);
+    ebsd_plot(filter_id).phase=0;
+end
+
+%% IPF and orientation things 
+
+% Calculating misorientation of a phase 
+
+odf = calcDensity(ebsd_plot(all_phase_names{3}).orientations,'halfwidth',5*degree); 
+mdf = calcMDF(odf);
+
+%plot the axis
+figure;
+plotAxisDistribution(mdf)
+
+%plot the angle
+figure;
+plotAngleDistribution(mdf)
+hold on
+plotAngleDistribution(ebsd_plot(all_phase_names{3}).CS,ebsd_plot(all_phase_names{3}).CS)
+hold off
+legend('data MDF','uniform ODF')
+
+
+
+%% Set IPFs (dynamically)
+
+% Generate IPF Keys 
+for x = 1:n_phase
+    % Get the current phase from the cell array
+    current_phase = all_phase_names{x};
+    
+    % Access the ebsd data for the current phase
+    current_ebsd = ebsd_plot(current_phase);
+
+    key_name = ['ipfKey', num2str(x)];
+    
+    % The TSL key creation can be slightly different for the first phase
+    % and the rest, so we handle that with an if/else block.
+    if x == 1
+       % The first ipfKey is created differently
+        eval([key_name, ' = ipfTSLKey(current_ebsd);']);
+    else
+        % The subsequent ipfKeys use the .CS property
+        eval([key_name, ' = ipfTSLKey(current_ebsd.CS);']);
+    end
+end
+
+
+%% Plot the IPF key 
+
+% Assumed variable: ipfKeys
+f1 = figure;
+
+% Loop through each ipfKey and plot it
+for q = 1:n_phase
+    key_name = strcat('ipfKey', num2str(q));
+    plot(eval(key_name)); %Added eval to force it to read the variable and not as characters 
+    
+    % Add nextAxis to prepare for the next plot
+    if q < n_phase
+        nextAxis;
+    end
+end
+% Edited till here 25 Sept 
+
+%% Plot the IPF maps (dodgy)
+%{
+% Initial IPF maps
+
+orientations = {'X', 'Y', 'Z'};
+for i = 1:numel(orientations)
+    orientation = orientations{i};
+    nextAxis;
+    hold on;
+    for j = 1:n_phase
+        % Construct the color variable name dynamically
+        color_var = ['colors_', orientation, num2str(j), 'i'];
+        
+        % Plotting each phase
+        plot(ebsd(all_phase_names{j}), eval(color_var), 'micronbar', 'off');
+    end
+    title(['all IPF-', orientation]);
+    hold off;
+end
+
+
+%% now generate the matched and refined IPF colour maps of the individual phases 
+
+directions = {vector3d.X, vector3d.Y, vector3d.Z};
+direction_names = {'X', 'Y', 'Z'};
+
+% Loop through each phase
+for i = 1:length(all_phase_names)
+    current_phase_name = all_phase_names{i};
+    current_ebsd = ebsd(current_phase_name);
+    current_ipfKey = eval(strcat('ipfKey',num2str(i)));
+    
+    % Loop through each direction (X, Y, Z) for the current phase
+    for j = 1:length(directions)
+        current_direction = directions{j};
+        current_direction_name = direction_names{j};
+        
+        % Set the direction for the IPF key
+        current_ipfKey.inversePoleFigureDirection = current_direction;
+        
+        % Generate the colors
+        colors = current_ipfKey.orientation2color(current_ebsd.orientations);
+        
+        % Create the dynamic variable name (e.g., colors_X1i, colors_Y2i)
+        variable_name = ['colors_', current_direction_name, num2str(i), 'i'];
+        
+        % Assign the colors to the dynamically named variable
+        eval([variable_name, ' = colors;']);
+    end
+end
+%}
+
+%% Plotting Original Phase Data with particle boundary identification
+
+% Set the colours of the phases - may need to change phase name 
+ebsd('Nickel').color = str2rgb('silver'); 
+% ebsd('Aluminium Nickel (1/1)').color = str2rgb('aquamarine');
+ebsd('Niobium Carbide (1/1)').color = str2rgb('orange');
+ebsd('Chromium Carbide - tau').color = str2rgb('orchid');
+
+
+% Calculate phase boundaries 
+OGgrains_indexed = calcGrains(ebsd('indexed'),'angle',90*degree) ;% 'angle', 75*degree); % May need to change degree
+
+% Smooth phase boundaries in case appearing pixelated
+OGgrains_smooth = smooth(OGgrains_indexed);
+
+figure;
+plot(ebsd)
+% hold on 
+% plot(OGgrains_smooth,'linewidth',0.1);
+% hold off
+lgd = legend( 'Cr_{23}C_{6}','\gamma-matrix','NbC','\beta-NiAl');
+fontsize(lgd,14,'points')
+%fontsize(12)
+%title('Original Data');
+% plot(grains_smooth, grains_smooth.phase);
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end
+
+%% Plotting matched data with particle boundary identification
+
+% Set the colours of the phases - may need to change phase name 
+ebsd_plot('Nickel').color = str2rgb('silver'); 
+% ebsd_plot('Aluminium Nickel (1/1)').color = str2rgb('aquamarine');
+ebsd_plot('Niobium Carbide (1/1)').color = str2rgb('orange');
+ebsd_plot('Chromium Carbide - tau').color = str2rgb('orchid');
+
+
+% Calculate phase boundaries 
+grains_indexed = calcGrains(ebsd_plot('indexed'),'angle',90*degree) ;% 'angle', 75*degree); % May need to change degree
+
+% Smooth phase boundaries in case appearing pixelated
+grains_smooth = smooth(grains_indexed);
+
+figure;
+plot(grains_smooth,'linewidth',0.1);
+legend('\gamma-matrix', 'NbC', 'Cr_{23}C_{6}','\beta-NiAl');
+%title('Including Grains-smoothed');
+% plot(grains_smooth, grains_smooth.phase);
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end
+##### SOURCE END #####
+-->
+</body>
+</html>

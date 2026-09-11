@@ -1,0 +1,5 @@
+source\decks\patterns
+source\decks\Generic
+source\decks\PCA
+source\decks\RTM
+source\decks\patterns

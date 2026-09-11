@@ -84,11 +84,23 @@ addpath([Astro_FP,link, 'modules',link,'rtm',link,'bin']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'example_patterns']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'logsample']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'runRTM']);
+addpath([Astro_FP,link, 'modules',link,'rtm',link,'direct_space']);
 addpath([Astro_FP,link, 'modules',link,'rtm',link,'misc_refine']);
+
+% some pre-configurations
+addpath([Astro_FP,link, 'config',link,'RTM']);
+addpath([Astro_FP,link, 'config',link,'PCA']);
+addpath([Astro_FP,link, 'config',link,'Plotting']);
+addpath([Astro_FP,link, 'config',link,'StructureFactor']);
 
 addpath([Astro_FP,link, 'modules',link,'AstroECP']);
 
 addpath([Astro_FP,link, 'utils']);
+addpath([Astro_FP,link, 'utils']);
+addpath([Astro_FP,link, 'utils',link,'structureFactor']);
+addpath([Astro_FP,link, 'utils',link,'rwthColors']);
+
+
 addpath([Astro_FP,link, 'phases']);
 addpath([Astro_FP,link, 'testing']);
 
@@ -101,6 +113,8 @@ addpath([Astro_FP,link, 'modules',link,'TFSRKDScripts']);
 addpath([Astro_FP,link, 'modules',link,'TFSRKDScripts',link,'TFSRKDUtils']);
 
 addpath([Astro_FP]);
+
+addpath([Astro_FP, link, 'doc', link 'makeDoc'])
 
 disp('AstroEBSD file paths loaded');
 

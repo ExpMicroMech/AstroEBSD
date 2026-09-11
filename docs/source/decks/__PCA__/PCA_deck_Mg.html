@@ -1,0 +1,570 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>PCA_deck_Mg</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="PCA_deck_Mg.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">clear and reset</a>
+</li>
+<li>
+<a href="#3">DIRECTORIES info %% InputUser.OSC_folder="C:\Promo\EBSD\50_45\eps5\area5"</a>
+</li>
+<li>
+<a href="#5">CRITICAL settings and setup - these determine which analysis to run.</a>
+</li>
+<li>
+<a href="#7">MEDIUM LEVEL settings - you may fairly frequently want to change these.</a>
+</li>
+<li>
+<a href="#8">LOWEST LEVEL settings - most users will not need to adjust these.</a>
+</li>
+<li>
+<a href="#11">Add packages to the path</a>
+</li>
+<li>
+<a href="#12">Start the anaysis</a>
+</li>
+<li>
+<a href="#13">References</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% PCA with RTM - for AstroEBSD v2 - T P McAuliffe &amp; T B Britton 19/02/20</span>
+
+<span class="comment">% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="comment">% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES</span>
+<span class="comment">% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND</span>
+<span class="comment">% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS</span>
+<span class="comment">% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN</span>
+<span class="comment">% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN</span>
+<span class="comment">% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+
+<span class="comment">% Requirements:</span>
+<span class="comment">%     MATLAB R2018a or above:</span>
+<span class="comment">%       statistics/machine-learning, global</span>
+<span class="comment">%       optimisation, parallel computing toolboxes.</span>
+<span class="comment">%</span>
+<span class="comment">%     MTEX version 5.2.beta2 or above</span>
+<span class="comment">%</span>
+<span class="comment">% PCA developed by McAuliffe et al [1] following Wilkinson et al [2].</span>
+<span class="comment">% RTM developed by Foden et al [3].</span>
+
+<span class="comment">% Example DATA is available at https://doi.org/10.5281/zenodo.3737987.</span>
+</pre>
+<h2 id="2">clear and reset</h2>
+<pre class="codeinput">clear <span class="string">variables</span>; close <span class="string">all</span>;
+</pre>
+<h2 id="3">DIRECTORIES info %% InputUser.OSC_folder="C:\Promo\EBSD\50_45\eps5\area5"</h2>
+<pre class="codeinput">InputUser.HDF5_folder=<span class="string">"C:\Users\berners\AstroEBSD"</span>; <span class="comment">%folder where the h5/bcf is located</span>
+InputUser.Phase_Folder=<span class="string">"C:\Users\berners\AstroEBSD\phases"</span>
+InputUser.Mode = <span class="string">'Folder'</span>;
+InputUser.issorted=2 <span class="comment">%if we get a xy sorted output</span>
+InputUser.EBSD_folder=<span class="string">'C:\Users\berners\AstroEBSD\50_45_3mm_eps5\test'</span>;
+<span class="comment">% Cell array of .H5 files to run PCA on: can be everything in the</span>
+<span class="comment">% directory, or specific filenames. Example syntax:</span>
+files= {<span class="string">'map20230612102528054.osc'</span>};
+
+
+InputUser.PC_simulation=[0.506,0.316,0.665] <span class="comment">% get these from AStro EBSD</span>
+
+
+<span class="comment">% Can also do:</span>
+<span class="comment">%filelist=dir([InputUser.HDF5_folder,'/*.h5']);</span>
+<span class="comment">%files = {filelist.name}.';</span>
+<span class="comment">%clear filelist</span>
+
+<span class="comment">% This is the folder in which the outputs will be saved.</span>
+InputUser.SavingFolder=<span class="string">'C:\Users\berners\AstroEBSD'</span>;
+InputUser.PatternFlip=1;
+<span class="comment">% Plugin locations</span>
+<span class="comment">% InputUser.MTEX_loc='C:\Communal_MatlabPlugins\mtex-5.2.beta2';</span>
+<span class="comment">% InputUser.Astro_loc='C:\Users\tpm416\Documents\GitHub\AstroEBSD';</span>
+InputUser.MTEX_loc=<span class="string">'C:\Users\berners\mtex'</span>;
+
+InputUser.Astro_loc=<span class="string">'C:\Users\berners\AstroEBSD'</span>;
+</pre>
+<pre class="codeoutput">
+InputUser = 
+
+  struct with fields:
+
+    OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+
+
+InputUser = 
+
+  struct with fields:
+
+      OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+     HDF5_folder: "C:\Users\berners\AstroEBSD"
+    Phase_Folder: "C:\Users\berners\AstroEBSD\phases"
+
+
+InputUser = 
+
+  struct with fields:
+
+      OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+     HDF5_folder: "C:\Users\berners\AstroEBSD"
+    Phase_Folder: "C:\Users\berners\AstroEBSD\phases"
+            Mode: 'Folder'
+        issorted: 2
+
+
+InputUser = 
+
+  struct with fields:
+
+       OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+      HDF5_folder: "C:\Users\berners\AstroEBSD"
+     Phase_Folder: "C:\Users\berners\AstroEBSD\phases"
+             Mode: 'Folder'
+         issorted: 2
+      EBSD_folder: 'C:\Users\berners\AstroEBSD\50_45_3mm_eps5\test'
+    PC_simulation: [0.5060 0.3160 0.6650]
+
+</pre>
+<h2 id="5">CRITICAL settings and setup - these determine which analysis to run.</h2>
+<p>YES = 1, NO = 0</p>
+<pre class="codeinput">
+<span class="comment">%These need to be the names of '.pha' files in the '\phases\phasefiles'</span>
+<span class="comment">%folder. There need to be corresponding '.cif' and '.BIN' files in 'cifs'</span>
+<span class="comment">%and 'masterpatterns' folders. - Only relevant to RTM analyses.</span>
+InputUser.Phases={<span class="string">'Mg_20kv_em'</span>,<span class="string">'C36_20_kv_em'</span>};
+</pre>
+<pre class="codeinput">InputUser.SampleTilt=70
+InputUser.CameraTilt=5.7
+
+
+<span class="comment">% Run PCA on EBSD, EDX, or both</span>
+PCA_Setup.PCA_EBSD=1;
+PCA_Setup.PCA_EDX=0;
+
+<span class="comment">% Do it with a relative weighting (applied to the EBSD data)?</span>
+PCA_Setup.weighted=1;
+PCA_Setup.EBSD_weighting=1; <span class="comment">%EBSD weighting. Can give as a vector and script will loop. (1)</span>
+
+<span class="comment">% Run the RTM (requires EBSD PCA)</span>
+PCA_Setup.RTM=1;
+PCA_Setup.ishex=1
+<span class="comment">% Introduce a spatial weighting kernel after Guo et al [4]</span>
+<span class="comment">% This will be convolved with the data matrix with stride 1 - each pattern</span>
+<span class="comment">% is a weighted sum of its kernel. Kernel fn can be adjusted in LL settings.</span>
+PCA_Setup.SpatialKernel=1;
+PCA_Setup.KernelRadius=3;<span class="comment">%n in pixels - must be ODD</span>
+
+<span class="comment">% Pattern centre refinement settings</span>
+Refine.run=0 <span class="comment">%Do you want RTM PC refinement to run? If = 0 uses .h5 loaded PC model.</span>
+Refine.phase=1; <span class="comment">%Which phase number do you want to select points for? (Number in InputUser.Phases)</span>
+</pre>
+<pre class="codeoutput">
+InputUser = 
+
+  struct with fields:
+
+       OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+      HDF5_folder: "C:\Users\berners\AstroEBSD"
+     Phase_Folder: "C:\Users\berners\AstroEBSD\phases"
+             Mode: 'Folder'
+         issorted: 2
+      EBSD_folder: 'C:\Users\berners\AstroEBSD\50_45_3mm_eps5\test'
+    PC_simulation: [0.5060 0.3160 0.6650]
+     SavingFolder: 'C:\Users\berners\AstroEBSD'
+      PatternFlip: 1
+         MTEX_loc: 'C:\Users\berners\mtex'
+        Astro_loc: 'C:\Users\berners\AstroEBSD'
+           Phases: {'Mg_20kv_em'  'C36_20_kv_em'}
+       SampleTilt: 70
+
+
+InputUser = 
+
+  struct with fields:
+
+       OSC_folder: "C:\Promo\EBSD\50_45\eps5\area5"
+      HDF5_folder: "C:\Users\berners\AstroEBSD"
+     Phase_Folder: "C:\Users\berners\AstroEBSD\phases"
+             Mode: 'Folder'
+         issorted: 2
+      EBSD_folder: 'C:\Users\berners\AstroEBSD\50_45_3mm_eps5\test'
+    PC_simulation: [0.5060 0.3160 0.6650]
+     SavingFolder: 'C:\Users\berners\AstroEBSD'
+      PatternFlip: 1
+         MTEX_loc: 'C:\Users\berners\mtex'
+        Astro_loc: 'C:\Users\berners\AstroEBSD'
+           Phases: {'Mg_20kv_em'  'C36_20_kv_em'}
+       SampleTilt: 70
+       CameraTilt: 5.7000
+
+
+PCA_Setup = 
+
+  struct with fields:
+
+          PCA_EBSD: 1
+           PCA_EDX: 0
+          weighted: 1
+    EBSD_weighting: 1
+               RTM: 1
+             ishex: 1
+
+
+Refine = 
+
+  struct with fields:
+
+    run: 0
+
+</pre>
+<h2 id="7">MEDIUM LEVEL settings - you may fairly frequently want to change these.</h2>
+<pre class="codeinput">printing=1; <span class="comment">% Do you want files to display and save?</span>
+
+<span class="comment">% Dimension of square tiling (3 = 3x3 grid) %select '1' if no tiling wanted</span>
+<span class="comment">% This has a big effect on RAM</span>
+PCA_Setup.crop_factor=1;
+
+<span class="comment">% This systematically chooses number of components to retain in the tiles</span>
+PCA_Setup.variance_tolerance=0.1;<span class="comment">% in percent. (0.1)</span>
+
+<span class="comment">% Square dimension EBSPs are cropped to - this has a big effect on RAM</span>
+RTM_setup.screensize=200; <span class="comment">%(120 - 300 usual)</span>
+</pre>
+<h2 id="8">LOWEST LEVEL settings - most users will not need to adjust these.</h2>
+<pre class="codeinput">
+<span class="comment">% Extra PCA options</span>
+PCA_Setup.MedFilt=0;<span class="comment">% Median filter label map (0)</span>
+PCA_Setup.components=[10];<span class="comment">% if not blank, then will override number of components to retain with this number (for every tile).</span>
+PCA_Setup.run_one_tile=[]; <span class="comment">%if not blank, pipeline will ONLY run on this tile.</span>
+
+<span class="comment">% RTM procedure settings</span>
+RTM_setup.Sampling_Freq=8; <span class="comment">%of SO3 space (7 - 10)</span>
+RTM_setup.iterations=4; <span class="comment">%(4)</span>
+RTM_setup.LPTsize=500; <span class="comment">%(500)</span>
+</pre>
+<pre class="codeinput">RTM_setup.parsearch=0; <span class="comment">%0: no parallelisation ; 1: search template library in parallel ; 2: search patterns in parallel</span>
+</pre>
+<p>Spatial kernel settings</p>
+<pre class="codeinput">PCA_Setup.KernelFnLabel=<span class="string">'Guo'</span>; <span class="comment">%for labelling</span>
+PCA_Setup.KernelFunction = @(distance,r) ((1 - (distance)./r).^2).^2;
+<span class="comment">%check with k=GenerateKernel(PCA_Setup.KernelFunction,PCA_Setup.KernelRadius);</span>
+
+<span class="comment">% AstroEBSD based background correction</span>
+Settings_Cor.gfilt=1; <span class="comment">%use a high pass filter (1)</span>
+Settings_Cor.gfilt_s=4; <span class="comment">%low pass filter sigma (4)</span>
+Settings_Cor.radius=1; <span class="comment">%use a radius mask (0)</span>
+Settings_Cor.radius_frac=0.65; <span class="comment">%fraction of the pattern width to use as the mask (0.85)</span>
+Settings_Cor.hotpixel=0; <span class="comment">%hot pixel correction (0)</span>
+Settings_Cor.hot_thresh=1000; <span class="comment">%hot pixel threshold (1000)</span>
+Settings_Cor.resize=1; <span class="comment">%resize correction (1)</span>
+Settings_Cor.size=RTM_setup.screensize; <span class="comment">%image height</span>
+Settings_Cor.SplitBG=0; <span class="comment">%split chip fwix (1)</span>
+Settings_Cor.RealBG=0; <span class="comment">%use a real BG (0)</span>
+<span class="comment">%Settings_Cor.EBSP_bgnum=30; (30)</span>
+Settings_Cor.Square=1; <span class="comment">%square crop (1)</span>
+Settings_Cor.SquareCrop=1; <span class="comment">%(1)</span>
+Settings_Cor.LineError=1; <span class="comment">%(1)</span>
+Settings_Cor.MeanCentre=1; <span class="comment">%(1)</span>
+Settings_Cor.channum=2048; <span class="comment">% channels in the EDS spectra (if any) - usually 2048</span>
+
+<span class="comment">% PC Refinement specifics</span>
+Refine.num_pts=6; <span class="comment">%number of points to use for the refinement step</span>
+Refine.ss=0.08; <span class="comment">%initial probe volume</span>
+Refine.p=2; <span class="comment">%order of polynomial to fit to tetrahedron</span>
+Refine.n_its=10; <span class="comment">%number of interations</span>
+Refine.debug=1; <span class="comment">%plot the EBSPs if you need to debug</span>
+</pre>
+<h2 id="11">Add packages to the path</h2>
+<pre class="codeinput">
+<span class="comment">%run([InputUser.MTEX_loc,'\startup_mtex']);</span>
+run([InputUser.Astro_loc,<span class="string">'\start_AstroEBSD'</span>]);
+</pre>
+<pre class="codeoutput">Loading AstroEBSD 2.0  AstroEBSD file paths loaded
+</pre>
+<h2 id="12">Start the anaysis</h2>
+<pre class="codeinput">
+<span class="comment">%... sanity check your settings... this is helpful but won't catch everything!</span>
+SettingsReadout
+<span class="comment">%... and run</span>
+PCArun_withRTM_seriesloading
+</pre>
+<pre class="codeoutput"> 
+ 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Warning: Not running EDS, so PCA_Setup.weighted changed to zero 
+Running PCA with RTM on EBSD data
+Warning: You are not using any tiling. Be careful of RAM issues. 
+...using variance tolerance 0.1
+...and a spatial kernel of size 3
+...with template matching for 2 phases, at SO3 sampling frequency of 8 degrees
+Warning: You are running with 10 components fixed for every tile 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ 
+ 
+C:\Promo\EBSD\50_45\eps5\area5\map20230612102528054.osc
+</pre>
+<pre class="codeoutput error">Unrecognized field name "CS".
+
+Error in bReadOSC (line 23)
+ebsd_map=EBSD.load(InputUser.OSCFullFile,InputUser.CS,'convertEuler2SpatialReferenceFrame','setting 2')
+
+Error in PCArun_withRTM_seriesloading (line 64)
+[MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadOSC( InputUser );
+
+Error in PCA_deck_Mg (line 156)
+PCArun_withRTM_seriesloading 
+</pre>
+<h2 id="13">References</h2>
+<p>[1] doi.org/10.1016/j.ultramic.2020.112944 [2] doi.org/10.1016/j.ultramic.2018.09.011 [3] doi.org/10.1016/j.ultramic.2019.112845 [4] doi.org/10.1080/10618600.2014.912135</p>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% PCA with RTM - for AstroEBSD v2 - T P McAuliffe & T B Britton 19/02/20
+
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+% Requirements:
+%     MATLAB R2018a or above:
+%       statistics/machine-learning, global
+%       optimisation, parallel computing toolboxes.
+%    
+%     MTEX version 5.2.beta2 or above
+%
+% PCA developed by McAuliffe et al [1] following Wilkinson et al [2].
+% RTM developed by Foden et al [3].
+
+% Example DATA is available at https://doi.org/10.5281/zenodo.3737987.
+
+%% clear and reset
+clear variables; close all;
+
+%% DIRECTORIES info %%
+InputUser.OSC_folder="C:\Promo\EBSD\50_45\eps5\area5"
+InputUser.HDF5_folder="C:\Users\berners\AstroEBSD"; %folder where the h5/bcf is located
+InputUser.Phase_Folder="C:\Users\berners\AstroEBSD\phases"
+InputUser.Mode = 'Folder';
+InputUser.issorted=2 %if we get a xy sorted output
+InputUser.EBSD_folder='C:\Users\berners\AstroEBSD\50_45_3mm_eps5\test';
+% Cell array of .H5 files to run PCA on: can be everything in the
+% directory, or specific filenames. Example syntax:
+files= {'map20230612102528054.osc'};
+
+
+InputUser.PC_simulation=[0.506,0.316,0.665] % get these from AStro EBSD
+
+
+% Can also do:
+%filelist=dir([InputUser.HDF5_folder,'/*.h5']);
+%files = {filelist.name}.';
+%clear filelist
+
+% This is the folder in which the outputs will be saved.
+InputUser.SavingFolder='C:\Users\berners\AstroEBSD';
+InputUser.PatternFlip=1;
+% Plugin locations
+% InputUser.MTEX_loc='C:\Communal_MatlabPlugins\mtex-5.2.beta2';
+% InputUser.Astro_loc='C:\Users\tpm416\Documents\GitHub\AstroEBSD';
+InputUser.MTEX_loc='C:\Users\berners\mtex';
+
+InputUser.Astro_loc='C:\Users\berners\AstroEBSD';
+%%
+
+%% CRITICAL settings and setup - these determine which analysis to run.
+% YES = 1, NO = 0
+
+%These need to be the names of '.pha' files in the '\phases\phasefiles'
+%folder. There need to be corresponding '.cif' and '.BIN' files in 'cifs'
+%and 'masterpatterns' folders. - Only relevant to RTM analyses.
+InputUser.Phases={'Mg_20kv_em','C36_20_kv_em'};
+%%
+InputUser.SampleTilt=70
+InputUser.CameraTilt=5.7
+
+
+% Run PCA on EBSD, EDX, or both
+PCA_Setup.PCA_EBSD=1;
+PCA_Setup.PCA_EDX=0;
+
+% Do it with a relative weighting (applied to the EBSD data)?
+PCA_Setup.weighted=1;
+PCA_Setup.EBSD_weighting=1; %EBSD weighting. Can give as a vector and script will loop. (1)
+
+% Run the RTM (requires EBSD PCA)
+PCA_Setup.RTM=1;
+PCA_Setup.ishex=1
+% Introduce a spatial weighting kernel after Guo et al [4]
+% This will be convolved with the data matrix with stride 1 - each pattern
+% is a weighted sum of its kernel. Kernel fn can be adjusted in LL settings.
+PCA_Setup.SpatialKernel=1;
+PCA_Setup.KernelRadius=3;%n in pixels - must be ODD
+
+% Pattern centre refinement settings
+Refine.run=0 %Do you want RTM PC refinement to run? If = 0 uses .h5 loaded PC model.
+Refine.phase=1; %Which phase number do you want to select points for? (Number in InputUser.Phases)
+
+%% MEDIUM LEVEL settings - you may fairly frequently want to change these.
+printing=1; % Do you want files to display and save?
+
+% Dimension of square tiling (3 = 3x3 grid) %select '1' if no tiling wanted
+% This has a big effect on RAM
+PCA_Setup.crop_factor=1;
+
+% This systematically chooses number of components to retain in the tiles
+PCA_Setup.variance_tolerance=0.1;% in percent. (0.1)
+
+% Square dimension EBSPs are cropped to - this has a big effect on RAM
+RTM_setup.screensize=200; %(120 - 300 usual)
+
+%% LOWEST LEVEL settings - most users will not need to adjust these.
+
+% Extra PCA options
+PCA_Setup.MedFilt=0;% Median filter label map (0)
+PCA_Setup.components=[10];% if not blank, then will override number of components to retain with this number (for every tile).
+PCA_Setup.run_one_tile=[]; %if not blank, pipeline will ONLY run on this tile.
+
+% RTM procedure settings
+RTM_setup.Sampling_Freq=8; %of SO3 space (7 - 10)
+RTM_setup.iterations=4; %(4)
+RTM_setup.LPTsize=500; %(500)
+%%
+RTM_setup.parsearch=0; %0: no parallelisation ; 1: search template library in parallel ; 2: search patterns in parallel
+%%
+% Spatial kernel settings
+PCA_Setup.KernelFnLabel='Guo'; %for labelling
+PCA_Setup.KernelFunction = @(distance,r) ((1 - (distance)./r).^2).^2;
+%check with k=GenerateKernel(PCA_Setup.KernelFunction,PCA_Setup.KernelRadius);
+
+% AstroEBSD based background correction
+Settings_Cor.gfilt=1; %use a high pass filter (1)
+Settings_Cor.gfilt_s=4; %low pass filter sigma (4)
+Settings_Cor.radius=1; %use a radius mask (0)
+Settings_Cor.radius_frac=0.65; %fraction of the pattern width to use as the mask (0.85)
+Settings_Cor.hotpixel=0; %hot pixel correction (0)
+Settings_Cor.hot_thresh=1000; %hot pixel threshold (1000)
+Settings_Cor.resize=1; %resize correction (1)
+Settings_Cor.size=RTM_setup.screensize; %image height
+Settings_Cor.SplitBG=0; %split chip fwix (1)
+Settings_Cor.RealBG=0; %use a real BG (0)
+%Settings_Cor.EBSP_bgnum=30; (30)
+Settings_Cor.Square=1; %square crop (1)
+Settings_Cor.SquareCrop=1; %(1)
+Settings_Cor.LineError=1; %(1)
+Settings_Cor.MeanCentre=1; %(1)
+Settings_Cor.channum=2048; % channels in the EDS spectra (if any) - usually 2048
+
+% PC Refinement specifics
+Refine.num_pts=6; %number of points to use for the refinement step
+Refine.ss=0.08; %initial probe volume
+Refine.p=2; %order of polynomial to fit to tetrahedron
+Refine.n_its=10; %number of interations
+Refine.debug=1; %plot the EBSPs if you need to debug
+
+%% Add packages to the path
+%run([InputUser.MTEX_loc,'\startup_mtex']);
+run([InputUser.Astro_loc,'\start_AstroEBSD']);
+
+%% Start the anaysis
+
+%... sanity check your settings... this is helpful but won't catch everything!
+SettingsReadout
+%... and run
+PCArun_withRTM_seriesloading 
+
+%% References
+% [1] doi.org/10.1016/j.ultramic.2020.112944
+% [2] doi.org/10.1016/j.ultramic.2018.09.011
+% [3] doi.org/10.1016/j.ultramic.2019.112845
+% [4] doi.org/10.1080/10618600.2014.912135
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

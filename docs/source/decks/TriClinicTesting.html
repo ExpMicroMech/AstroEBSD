@@ -1,0 +1,574 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>TriClinicTesting</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="TriClinicTesting.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Input Variables</a>
+</li>
+<li>
+<a href="#3">Load MTEX</a>
+</li>
+<li>
+<a href="#4">Generate a reference pattern (simulation) if we want it</a>
+</li>
+<li>
+<a href="#5">Simulate a single pattern</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">close <span class="string">all</span>;
+clear;
+home;
+</pre>
+<h2 id="2">Input Variables</h2>
+<pre class="codeinput">
+<span class="comment">%Toolboxes</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+xebsd_location=<span class="string">'C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks'</span>;
+
+<span class="comment">%Simulation</span>
+
+Input_Data.Phase_Input{1}=<span class="string">'TriClinicTest'</span>;
+</pre>
+<h2 id="3">Load MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then this will be used to start MTEX up</span>
+
+
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">% %% Load the h5 file</span>
+<span class="comment">% % file1_folder='D:\Ebru\Si indents2\Take 2\h5oina\patterns';</span>
+<span class="comment">% file1_folder='C:\Users\benja\OneDrive\Documents\GitHub\xEBSDv4\test';</span>
+<span class="comment">% % file1_name='Take 2 Specimen 1 Aztec optimisation Sensitivity_map2';</span>
+<span class="comment">% file1_name='Take 2 Specimen 1 Initiial Tests Sensitivity_200Hz';</span>
+<span class="comment">% file1_full=fullfile(file1_folder,[file1_name '.h5oina']);</span>
+<span class="comment">%</span>
+<span class="comment">% file_dset='1';</span>
+<span class="comment">% [ebsd_data,header_data,h5oina_contents]=H5OINA_Read(file1_full);</span>
+<span class="comment">% [ebsd] = H5OINA_Convert(ebsd_data,header_data,file_dset);</span>
+
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+
+<span class="comment">% detector_Euler=double(header_data.s1.Detector_Orientation_Euler);</span>
+<span class="comment">% g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));</span>
+<span class="comment">% g_tilt=Input_Data.Rx(double(header_data.s1.Tilt_Angle));</span>
+
+detector_Euler=eye(3);
+g_camera=eye(3);
+g_tilt=eye(3);
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Generate a reference pattern (simulation) if we want it</h2>
+<pre class="codeinput">
+<span class="comment">%simulate this pattern</span>
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'BinFiles'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+</pre>
+<pre class="codeoutput error">Error: File: C:\Users\berners\AstroEBSD_v2\modules\rtm\bin\Phase_Builder_RTM.m
+Line: 151 Column: 1
+This statement is not inside any function.
+ (It follows the END that terminates the definition of the function
+ "Phase_Builder_RTM".)
+
+Error in TriClinicTesting (line 65)
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+</pre>
+<h2 id="5">Simulate a single pattern</h2>
+<pre class="codeinput">PatternInfo.ScreenHeight=250;
+PatternInfo.ScreenWidth=250;
+PC=[0.7 0.39 0.19]; <span class="comment">%PCx, PCy, DD</span>
+<span class="comment">% eangs=[15,37,45]; %in degrees</span>
+eangs=[-106,177,180+12]; <span class="comment">%in degrees</span>
+<span class="comment">% gmatrix_mtex=eye(3);</span>
+gmatrix=Input_Data.Rz(eangs(3)*degree)*Input_Data.Rx(eangs(2)*degree)*Input_Data.Rz(eangs(1)*degree);
+
+
+[EBSD_geom ] = EBSP_Gnom( PatternInfo,PC); <span class="comment">%you can change PC_in if you want</span>
+[Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+
+figure;
+pPattern(Pattern_Sim,EBSD_geom);
+
+<span class="comment">%Load the sterogram</span>
+
+<span class="comment">%</span>
+sim_name=<span class="string">'TriClinic_Hemi_20240806_220650'</span>;
+
+simulation_file=[sim_name <span class="string">'.bwkd'</span>];
+pattern_file=[sim_name <span class="string">'.txt'</span>];
+
+[file1_array,set_proj] = read_sim(simulation_file,pattern_file);
+xwid=size(file1_array,2);
+yhig=size(file1_array,1);
+<span class="keyword">if</span> set_proj == 0
+    yhig=yhig/2;
+<span class="keyword">end</span>
+
+figure;
+subplot(1,2,1);
+imagesc(file1_array); axis <span class="string">xy</span>; axis <span class="string">equal</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>);
+
+file1_array_fixed=file1_array;
+file1_array_fixed(yhig+1:end,:)=fliplr(file1_array(yhig+1:end,:));
+
+subplot(1,2,2);
+imagesc(fliplr(file1_array_fixed)); axis <span class="string">xy</span>; axis <span class="string">equal</span>; axis <span class="string">tight</span>; colormap(<span class="string">'gray'</span>);
+
+<span class="comment">% Build the interpolant</span>
+
+[gy,gx]=ndgrid(linspace(-1,1,yhig),linspace(-1,1,xwid));
+screen_ing_s=struct;
+screen_int_s.pp=griddedInterpolant(gy,gx,flipud(rot90(file1_array_fixed(1:yhig,:),3)),<span class="string">'cubic'</span>); <span class="comment">%rz+</span>
+screen_int_s.pm=griddedInterpolant(gy,gx,flipud(rot90(file1_array(yhig+1:end,:))),<span class="string">'cubic'</span>); <span class="comment">%rz-</span>
+
+[x,y,z]=sphere(200);
+<span class="comment">% r_sphere=[x(:),y(:),z(:)];</span>
+<span class="comment">% r_sphere_len=dot(r_sphere,r_sphere,2);</span>
+<span class="comment">% r_sphere_norm=r_sphere./repmat(r_sphere_len,1,3);</span>
+<span class="comment">%</span>
+<span class="comment">% rn_x=r_sphere_norm(:,1);</span>
+<span class="comment">% rn_y=r_sphere_norm(:,2);</span>
+<span class="comment">% rn_z=r_sphere_norm(:,3);</span>
+<span class="comment">%</span>
+<span class="comment">% s_inds_p=find(rn_z &gt;= 0);</span>
+<span class="comment">% s_inds_m=find(rn_z  &lt; 0);</span>
+<span class="comment">%</span>
+<span class="comment">% pn_xp= rn_x(s_inds_p)./(1+rn_z(s_inds_p));</span>
+<span class="comment">% pn_yp= rn_y(s_inds_p)./(1+rn_z(s_inds_p));</span>
+<span class="comment">%</span>
+<span class="comment">% pn_xm=-rn_x(s_inds_m)./(1-rn_z(s_inds_m));</span>
+<span class="comment">% pn_ym=-rn_y(s_inds_m)./(1-rn_z(s_inds_m));</span>
+<span class="comment">%</span>
+<span class="comment">% ebsp_p=screen_int.pp(pn_xp,pn_yp);</span>
+<span class="comment">% ebsp_m=screen_int.pm(pn_xm,pn_ym);</span>
+<span class="comment">%</span>
+<span class="comment">% ebsp_i=zeros(size(rn_x));</span>
+<span class="comment">% ebsp_i(s_inds_p)=ebsp_p;</span>
+<span class="comment">% ebsp_i(s_inds_m)=ebsp_m;</span>
+
+[ebsp_i] = Stereo_Sample(x,y,z,screen_int_s);
+
+ebsp_i=reshape(ebsp_i,size(x,1),size(x,2));
+
+figure;
+<span class="comment">% subplot(1,2,1);</span>
+ebsp_i=ebsp_i./max(ebsp_i(:));
+ebsp_i=ebsp_i-min(ebsp_i(:));
+surf(x,y,z,ebsp_i,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+axis <span class="string">equal</span>; colormap(<span class="string">'gray'</span>);
+xlabel(<span class="string">'X'</span>); ylabel(<span class="string">'Y'</span>); zlabel(<span class="string">'Z'</span>);
+view(0,0)
+
+[i_data] = Cube_Sample(x(:),y(:),z(:),screen_int,screen_int.isHex);
+i_data=i_data./max(i_data(:));
+i_data=i_data-min(i_data(:));
+
+i_data=reshape(i_data,size(x,1),size(x,2));
+<span class="comment">% subplot(1,2,2);</span>
+hold <span class="string">on</span>;
+surf(x+2,y,z,i_data,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+axis <span class="string">equal</span>; colormap(<span class="string">'gray'</span>);
+xlabel(<span class="string">'X'</span>); ylabel(<span class="string">'Y'</span>); zlabel(<span class="string">'Z'</span>);
+view(0,0)
+
+
+[Pattern_Sim_c]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+[Pattern_Sim_s]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int_s);
+
+figure;
+subplot(1,2,1)
+pPattern(Pattern_Sim_c,EBSD_geom);
+subplot(1,2,2)
+pPattern(Pattern_Sim_s,EBSD_geom);
+
+
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% %% Plot a map</span>
+<span class="comment">% figure;</span>
+<span class="comment">% I1=subplot(1,1,1);</span>
+<span class="comment">% plot(ebsd,ebsd.prop.Band_Contrast);</span>
+<span class="comment">% mtexColorbar;</span>
+<span class="comment">% mtexColorMap('gray');</span>
+<span class="comment">%</span>
+<span class="comment">% %select a point</span>
+<span class="comment">% [xi,yj]=ginput(1);</span>
+<span class="comment">%</span>
+<span class="comment">% %find the point in the map that is closed to this</span>
+<span class="comment">%</span>
+<span class="comment">% dist_plot=(ebsd.prop.x-xi).^2+(ebsd.prop.y-yj).^2;</span>
+<span class="comment">% [~,min_i]=min(dist_plot(:));</span>
+<span class="comment">% hold on;</span>
+<span class="comment">% scatter(ebsd(min_i).prop.x,ebsd(min_i).prop.y);</span>
+<span class="comment">%</span>
+<span class="comment">% %Simulate and plot this pattern - useful to check that conventions are ok for the XCF</span>
+<span class="comment">% pattern_number=min_i;</span>
+<span class="comment">%</span>
+<span class="comment">% Pattern_Size=double([header_data.s1.Pattern_Width header_data.s1.Pattern_Height]);</span>
+<span class="comment">% [Pat_Exp]=loadEBSP_T(file1_full,Pattern_Size,pattern_number);</span>
+<span class="comment">%</span>
+<span class="comment">% %sort out the pattern centre for this pattern</span>
+<span class="comment">% PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];</span>
+<span class="comment">% [PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,Pattern_Size);</span>
+<span class="comment">% [EBSD_geom ] = EBSP_Gnom( PatternInfo,PC_pattern_Astro); %you can change PC_in if you want</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% % Pattern Orientation</span>
+<span class="comment">% gmatrix_mtex=ebsd(pattern_number).orientations.matrix;</span>
+<span class="comment">% [Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix_mtex'*g_tilt*g_camera',screen_int);</span>
+<span class="comment">%</span>
+<span class="comment">% %plot the pattern pair</span>
+<span class="comment">% figure;</span>
+<span class="comment">% subplot(1,2,1);</span>
+<span class="comment">% I1=pPattern(Pat_Exp,EBSD_geom);</span>
+<span class="comment">% subplot(1,2,2);</span>
+<span class="comment">% I1=pPattern(Pattern_Sim,EBSD_geom);</span>
+
+<span class="comment">% %%</span>
+<span class="comment">% sim_name='Si_hemi_20240806_122403';</span>
+<span class="comment">%</span>
+<span class="comment">% simulation_file=[sim_name '.bwkd'];</span>
+<span class="comment">% pattern_file=[sim_name '.txt'];</span>
+<span class="comment">%</span>
+<span class="comment">% [file1_array,set_proj] = read_sim(simulation_file,pattern_file);</span>
+<span class="comment">%</span>
+<span class="comment">% figure; imagesc(file1_array); axis equal;</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+close all;
+clear;
+home;
+
+
+%% Input Variables
+
+%Toolboxes
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+xebsd_location='C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks';
+
+%Simulation
+
+Input_Data.Phase_Input{1}='TriClinicTest';
+
+%% Load MTEX
+
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then this will be used to start MTEX up
+
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+% %% Load the h5 file
+% % file1_folder='D:\Ebru\Si indents2\Take 2\h5oina\patterns';
+% file1_folder='C:\Users\benja\OneDrive\Documents\GitHub\xEBSDv4\test';
+% % file1_name='Take 2 Specimen 1 Aztec optimisation Sensitivity_map2';
+% file1_name='Take 2 Specimen 1 Initiial Tests Sensitivity_200Hz';
+% file1_full=fullfile(file1_folder,[file1_name '.h5oina']);
+% 
+% file_dset='1';
+% [ebsd_data,header_data,h5oina_contents]=H5OINA_Read(file1_full);
+% [ebsd] = H5OINA_Convert(ebsd_data,header_data,file_dset);
+
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+% detector_Euler=double(header_data.s1.Detector_Orientation_Euler);
+% g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+% g_tilt=Input_Data.Rx(double(header_data.s1.Tilt_Angle));
+
+detector_Euler=eye(3);
+g_camera=eye(3);
+g_tilt=eye(3);
+
+%% Generate a reference pattern (simulation) if we want it
+
+%simulate this pattern
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'BinFiles'); %location of the binary files used for RTM
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%% Simulate a single pattern
+PatternInfo.ScreenHeight=250;
+PatternInfo.ScreenWidth=250;
+PC=[0.7 0.39 0.19]; %PCx, PCy, DD
+% eangs=[15,37,45]; %in degrees
+eangs=[-106,177,180+12]; %in degrees
+% gmatrix_mtex=eye(3);
+gmatrix=Input_Data.Rz(eangs(3)*degree)*Input_Data.Rx(eangs(2)*degree)*Input_Data.Rz(eangs(1)*degree);
+
+
+[EBSD_geom ] = EBSP_Gnom( PatternInfo,PC); %you can change PC_in if you want
+[Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+
+figure;
+pPattern(Pattern_Sim,EBSD_geom);
+
+%Load the sterogram
+
+%
+sim_name='TriClinic_Hemi_20240806_220650';
+
+simulation_file=[sim_name '.bwkd'];
+pattern_file=[sim_name '.txt'];
+
+[file1_array,set_proj] = read_sim(simulation_file,pattern_file);
+xwid=size(file1_array,2);
+yhig=size(file1_array,1);
+if set_proj == 0
+    yhig=yhig/2;
+end
+
+figure; 
+subplot(1,2,1);
+imagesc(file1_array); axis xy; axis equal; axis tight; colormap('gray');
+
+file1_array_fixed=file1_array;
+file1_array_fixed(yhig+1:end,:)=fliplr(file1_array(yhig+1:end,:));
+
+subplot(1,2,2);
+imagesc(fliplr(file1_array_fixed)); axis xy; axis equal; axis tight; colormap('gray');
+
+% Build the interpolant
+
+[gy,gx]=ndgrid(linspace(-1,1,yhig),linspace(-1,1,xwid));
+screen_ing_s=struct;
+screen_int_s.pp=griddedInterpolant(gy,gx,flipud(rot90(file1_array_fixed(1:yhig,:),3)),'cubic'); %rz+
+screen_int_s.pm=griddedInterpolant(gy,gx,flipud(rot90(file1_array(yhig+1:end,:))),'cubic'); %rz-
+
+[x,y,z]=sphere(200);
+% r_sphere=[x(:),y(:),z(:)];
+% r_sphere_len=dot(r_sphere,r_sphere,2);
+% r_sphere_norm=r_sphere./repmat(r_sphere_len,1,3);
+% 
+% rn_x=r_sphere_norm(:,1);
+% rn_y=r_sphere_norm(:,2);
+% rn_z=r_sphere_norm(:,3);
+% 
+% s_inds_p=find(rn_z >= 0);
+% s_inds_m=find(rn_z  < 0);
+% 
+% pn_xp= rn_x(s_inds_p)./(1+rn_z(s_inds_p));
+% pn_yp= rn_y(s_inds_p)./(1+rn_z(s_inds_p));
+% 
+% pn_xm=-rn_x(s_inds_m)./(1-rn_z(s_inds_m));
+% pn_ym=-rn_y(s_inds_m)./(1-rn_z(s_inds_m));
+% 
+% ebsp_p=screen_int.pp(pn_xp,pn_yp);
+% ebsp_m=screen_int.pm(pn_xm,pn_ym);
+% 
+% ebsp_i=zeros(size(rn_x));
+% ebsp_i(s_inds_p)=ebsp_p;
+% ebsp_i(s_inds_m)=ebsp_m;
+
+[ebsp_i] = Stereo_Sample(x,y,z,screen_int_s);
+
+ebsp_i=reshape(ebsp_i,size(x,1),size(x,2));
+
+figure;
+% subplot(1,2,1);
+ebsp_i=ebsp_i./max(ebsp_i(:));
+ebsp_i=ebsp_i-min(ebsp_i(:));
+surf(x,y,z,ebsp_i,'EdgeColor','none');
+axis equal; colormap('gray');
+xlabel('X'); ylabel('Y'); zlabel('Z');
+view(0,0)
+
+[i_data] = Cube_Sample(x(:),y(:),z(:),screen_int,screen_int.isHex);
+i_data=i_data./max(i_data(:));
+i_data=i_data-min(i_data(:));
+
+i_data=reshape(i_data,size(x,1),size(x,2));
+% subplot(1,2,2);
+hold on;
+surf(x+2,y,z,i_data,'EdgeColor','none');
+axis equal; colormap('gray');
+xlabel('X'); ylabel('Y'); zlabel('Z');
+view(0,0)
+
+
+[Pattern_Sim_c]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+[Pattern_Sim_s]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int_s);
+
+figure;
+subplot(1,2,1)
+pPattern(Pattern_Sim_c,EBSD_geom);
+subplot(1,2,2)
+pPattern(Pattern_Sim_s,EBSD_geom);
+
+
+% 
+% 
+% %% Plot a map
+% figure; 
+% I1=subplot(1,1,1);
+% plot(ebsd,ebsd.prop.Band_Contrast);
+% mtexColorbar;
+% mtexColorMap('gray');
+% 
+% %select a point
+% [xi,yj]=ginput(1);
+% 
+% %find the point in the map that is closed to this
+% 
+% dist_plot=(ebsd.prop.x-xi).^2+(ebsd.prop.y-yj).^2;
+% [~,min_i]=min(dist_plot(:));
+% hold on;
+% scatter(ebsd(min_i).prop.x,ebsd(min_i).prop.y);
+% 
+% %Simulate and plot this pattern - useful to check that conventions are ok for the XCF
+% pattern_number=min_i;
+% 
+% Pattern_Size=double([header_data.s1.Pattern_Width header_data.s1.Pattern_Height]);
+% [Pat_Exp]=loadEBSP_T(file1_full,Pattern_Size,pattern_number);
+% 
+% %sort out the pattern centre for this pattern
+% PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+% [PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,Pattern_Size);
+% [EBSD_geom ] = EBSP_Gnom( PatternInfo,PC_pattern_Astro); %you can change PC_in if you want
+% 
+% 
+% % Pattern Orientation
+% gmatrix_mtex=ebsd(pattern_number).orientations.matrix;
+% [Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix_mtex'*g_tilt*g_camera',screen_int);
+% 
+% %plot the pattern pair
+% figure;
+% subplot(1,2,1);
+% I1=pPattern(Pat_Exp,EBSD_geom);
+% subplot(1,2,2);
+% I1=pPattern(Pattern_Sim,EBSD_geom);
+
+% %%
+% sim_name='Si_hemi_20240806_122403';
+% 
+% simulation_file=[sim_name '.bwkd'];
+% pattern_file=[sim_name '.txt'];
+% 
+% [file1_array,set_proj] = read_sim(simulation_file,pattern_file);
+% 
+% figure; imagesc(file1_array); axis equal;
+##### SOURCE END #####
+-->
+</body>
+</html>

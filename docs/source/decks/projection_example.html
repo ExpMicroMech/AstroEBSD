@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>projection_example</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="projection_example.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Input Variables</a>
+</li>
+<li>
+<a href="#3">Load MTEX</a>
+</li>
+<li>
+<a href="#4">rotation matricies</a>
+</li>
+<li>
+<a href="#5">Generate a reference pattern (simulation) if we want it</a>
+</li>
+<li>
+<a href="#6">Simulate a single pattern</a>
+</li>
+<li>
+<a href="#7">Simulate a sphere</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% Example projection deck</span>
+<span class="comment">%</span>
+<span class="comment">% This will help simulate a single pattern using different dynamical</span>
+<span class="comment">% templates</span>
+
+<span class="comment">% close all;</span>
+clear;
+home;
+</pre>
+<h2 id="2">Input Variables</h2>
+<pre class="codeinput">
+<span class="comment">%Toolboxes</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+xebsd_location=<span class="string">'C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks'</span>;
+
+<span class="comment">%Simulation - uncomment the simulationt type you want</span>
+
+<span class="comment">% Input_Data.Phase_Input{1}='Si'; %bin --&gt; dynamicS template - use CTRL+U</span>
+<span class="comment">% in dynamics to get the special menu to generate the bin file</span>
+
+<span class="comment">% Input_Data.Phase_Input{1}='Si_bwkd'; %bkwd dynamical template</span>
+<span class="comment">% Input_Data.Phase_Input{1}='Si_Emsoft'; %EMsoft output file</span>
+Input_Data.Phase_Input{1}=<span class="string">'Si_MapSweeper'</span>; <span class="comment">%Mapsweeper output file</span>
+<span class="comment">% Input_Data.Phase_Input{1}='TriclinicTest'; %special DynamicS output for checking that the cube is arranged properly</span>
+</pre>
+<h2 id="3">Load MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then this will be used to start MTEX up</span>
+
+
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">rotation matricies</h2>
+<pre class="codeinput">Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+
+<span class="comment">% detector_Euler=double(header_data.s1.Detector_Orientation_Euler);</span>
+<span class="comment">% g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));</span>
+<span class="comment">% g_tilt=Input_Data.Rx(double(header_data.s1.Tilt_Angle));</span>
+
+detector_Euler=eye(3);
+g_camera=eye(3);
+g_tilt=eye(3);
+</pre>
+<h2 id="5">Generate a reference pattern (simulation) if we want it</h2>
+<pre class="codeinput">
+<span class="comment">%simulate this pattern</span>
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'BinFiles'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+</pre>
+<pre class="codeoutput error">Error: File: C:\Users\berners\AstroEBSD_v2\modules\rtm\bin\Phase_Builder_RTM.m
+Line: 151 Column: 1
+This statement is not inside any function.
+ (It follows the END that terminates the definition of the function
+ "Phase_Builder_RTM".)
+
+Error in projection_example (line 67)
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+</pre>
+<h2 id="6">Simulate a single pattern</h2>
+<pre class="codeinput">PatternInfo.ScreenHeight=250;
+PatternInfo.ScreenWidth=250;
+PC=[0.5 0.3 0.6]; <span class="comment">%PCx, PCy, DD %which way is up/Bruker convention</span>
+
+<span class="comment">% PC=[0.7 0.39 0.19]; %PCx, PCy, DD</span>
+<span class="comment">% eangs=[15,37,45]; %in degrees</span>
+eangs=[-106,177,180+12]; <span class="comment">%in degrees</span>
+<span class="comment">% gmatrix_mtex=eye(3);</span>
+gmatrix=Input_Data.Rz(eangs(3)*degree)*Input_Data.Rx(eangs(2)*degree)*Input_Data.Rz(eangs(1)*degree);
+
+
+[EBSD_geom ] = EBSP_Gnom( PatternInfo,PC); <span class="comment">%you can change PC_in if you want</span>
+[Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+
+figure;
+pPattern(Pattern_Sim,EBSD_geom);
+</pre>
+<h2 id="7">Simulate a sphere</h2>
+<pre class="codeinput">figure;
+[x,y,z]=sphere(2000);
+[ebsp_i2] = Cube_Sample(x,y,z,screen_int,screen_int.isHex);
+ebsp_i2=reshape(ebsp_i2,size(x,1),size(x,2));
+surf(x,y,z,ebsp_i2,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+axis <span class="string">equal</span>; colormap(<span class="string">'gray'</span>);
+xlabel(<span class="string">'X'</span>); ylabel(<span class="string">'Y'</span>); zlabel(<span class="string">'Z'</span>);
+view(0,0)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% Example projection deck
+%
+% This will help simulate a single pattern using different dynamical
+% templates
+
+% close all;
+clear;
+home;
+
+
+%% Input Variables
+
+%Toolboxes
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+xebsd_location='C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks';
+
+%Simulation - uncomment the simulationt type you want
+
+% Input_Data.Phase_Input{1}='Si'; %bin REPLACE_WITH_DASH_DASH> dynamicS template - use CTRL+U
+% in dynamics to get the special menu to generate the bin file
+
+% Input_Data.Phase_Input{1}='Si_bwkd'; %bkwd dynamical template
+% Input_Data.Phase_Input{1}='Si_Emsoft'; %EMsoft output file
+Input_Data.Phase_Input{1}='Si_MapSweeper'; %Mapsweeper output file
+% Input_Data.Phase_Input{1}='TriclinicTest'; %special DynamicS output for checking that the cube is arranged properly
+
+%% Load MTEX
+
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then this will be used to start MTEX up
+
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+%% rotation matricies
+
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+% detector_Euler=double(header_data.s1.Detector_Orientation_Euler);
+% g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+% g_tilt=Input_Data.Rx(double(header_data.s1.Tilt_Angle));
+
+detector_Euler=eye(3);
+g_camera=eye(3);
+g_tilt=eye(3);
+
+%% Generate a reference pattern (simulation) if we want it
+
+%simulate this pattern
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'BinFiles'); %location of the binary files used for RTM
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%% Simulate a single pattern
+PatternInfo.ScreenHeight=250;
+PatternInfo.ScreenWidth=250;
+PC=[0.5 0.3 0.6]; %PCx, PCy, DD %which way is up/Bruker convention
+
+% PC=[0.7 0.39 0.19]; %PCx, PCy, DD
+% eangs=[15,37,45]; %in degrees
+eangs=[-106,177,180+12]; %in degrees
+% gmatrix_mtex=eye(3);
+gmatrix=Input_Data.Rz(eangs(3)*degree)*Input_Data.Rx(eangs(2)*degree)*Input_Data.Rz(eangs(1)*degree);
+
+
+[EBSD_geom ] = EBSP_Gnom( PatternInfo,PC); %you can change PC_in if you want
+[Pattern_Sim]=EBSP_gen( EBSD_geom,gmatrix*g_tilt*g_camera',screen_int);
+
+figure;
+pPattern(Pattern_Sim,EBSD_geom);
+
+%% Simulate a sphere
+
+figure;
+[x,y,z]=sphere(2000);
+[ebsp_i2] = Cube_Sample(x,y,z,screen_int,screen_int.isHex);
+ebsp_i2=reshape(ebsp_i2,size(x,1),size(x,2));
+surf(x,y,z,ebsp_i2,'EdgeColor','none');
+axis equal; colormap('gray');
+xlabel('X'); ylabel('Y'); zlabel('Z');
+view(0,0)
+
+##### SOURCE END #####
+-->
+</body>
+</html>

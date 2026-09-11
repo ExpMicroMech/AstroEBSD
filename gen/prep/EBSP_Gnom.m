@@ -22,6 +22,12 @@ if isfield(PatternInfo,'screensize')
     PatternInfo.size(1)=PatternInfo.screensize;
 end
 
+%working for h5oina
+if isfield(PatternInfo,'Pattern_Height')
+    PatternInfo.size(2)=double(PatternInfo.Pattern_Width);
+    PatternInfo.size(1)=double(PatternInfo.Pattern_Height);
+end
+
 if isfield(PatternInfo,'ij')
     EBSP.ij=PatternInfo.ij;
 else

@@ -27,6 +27,11 @@ function [screen_int,facedata] = Cube_Generate(BinFile,isHex,varargin)
 %microanalysis 19 (2013), 1255-1265 doi:10.1017/S1431927613001840
 %
 resize_on = 0;
+splitAtoms= 0;
+
+if nargin <=1
+isHex = 0;
+end
 
 normalisation='mean_std';
 for i=1:size(varargin,2)
@@ -120,39 +125,21 @@ if strcmp(ext,'.bin')||strcmp(ext,'')
     % screen_int2.p4=griddedInterpolant(gx,gy,4+0*facedata(:,:,4),'cubic'); %x-
     % screen_int2.p5=griddedInterpolant(gx,gy,5+0*facedata(:,:,5),'cubic'); %y-
     % screen_int2.p6=griddedInterpolant(gx,gy,6+0*facedata(:,:,6),'cubic'); %z-
-elseif strcmpi(ext,'.h5')
-    filepath=BinFile;
-    em_h5_n=h5read(filepath,'/EMData/EBSDmaster/mLPNH'); %% we read both southern an northern hemisphere, to be in the future able to account for monoclinic / triclinic symmetries
-    em_h5_s=h5read(filepath,'/EMData/EBSDmaster/mLPSH');
-    %%
-    if ndims(em_h5_n)==4 %% assume, this is the same for both
-        em_h5_n=sum(em_h5_n,[3,4]);
-        em_h5_s=sum(em_h5_s,[3,4]);%normalisation %sometimes the lambert seems to have 4 dims, if there is more than one atom type in the unit cell
-    else
-        em_h5_n=sum(em_h5_n,[3]);
+else if strcmp(ext,'.h5')
+    filepath = BinFile;
+    % disp(filepath)
+    em_h5_n = h5read(filepath, '/EMData/EBSDmaster/mLPNH'); %% we read both southern an northern hemisphere, to be in the future able to account for monoclinic / triclinic symmetries
+    em_h5_s = h5read(filepath, '/EMData/EBSDmaster/mLPSH');
+    weights = h5read(filepath, '/EMData/EBSDmaster/Z2percent');
+    weights = reshape(weights,1,1,1,numel(weights));
 
-        em_h5_s=sum(em_h5_s,[3]);
-    end
-
-    %% normalisation
-    if strcmp(normalisation,'min_max')
-        em_h5_n=em_h5_n-min(em_h5_n(:));
-        em_h5_s=em_h5_s-min(em_h5_s(:));
-        em_h5_n=em_h5_n./max(em_h5_n(:));
-        em_h5_s=em_h5_s./max(em_h5_s(:));
-    else
-        em_h5_n=em_h5_n-mean(em_h5_n(:));
-        em_h5_s=em_h5_s-mean(em_h5_s(:));
-        em_h5_n=em_h5_n./std(em_h5_n(:));
-        em_h5_s=em_h5_s./std(em_h5_s(:));
-    end
-    %% Build the interpolant
-    screen_int.p1=griddedInterpolant(em_h5_n,'cubic');
-    screen_int.p2=griddedInterpolant(em_h5_s,'cubic');
-    screen_int.simSource="EMsoft";
-    screen_int.isHex=isHex;
-    facedata=0;
-
+   %%
+   if splitAtoms ==0
+      [screen_int,facedata] =  buildGriddedInterpolantEmsoft(em_h5_n,em_h5_s,weights,isHex);
+   else
+     [screen_int,facedata] =  buildGriddedInterpolantEmsoftAtomSplit(em_h5_n,em_h5_s,weights,isHex);
+     screen_int.atomType = h5read(filepath, '/CrystalData/Atomtypes');
+   end
 elseif strcmpi(ext,'.bwkd')
 
     simulation_file=BinFile;
@@ -237,4 +224,65 @@ function [sim1_data]=read_text(simulation_file)
     sim1_data=textscan(sim1_fid,'%s','Delimiter','\n');
     fclose(sim1_fid);
     sim1_data=sim1_data{1};
+end
+
+function [screen_int, facedata] = buildGriddedInterpolantEmsoft(em_h5_n,em_h5_s,weights,isHex)
+    if ndims(em_h5_n)==4 %%assume, this is the same for both
+    em_h5_n=em_h5_n.*weights;
+    em_h5_s=em_h5_s.*weights;
+    em_h5_n=sum(em_h5_n,[3,4]);
+    em_h5_s=sum(em_h5_s,[3,4]);%normalisation %sometimes the lambert seems to have 4 dims, we still need to find out why
+    
+   else
+     em_h5_n=sum(em_h5_n,[3]);
+     
+    em_h5_s=sum(em_h5_s,[3]);
+   end
+    % em_h5_n=rescale(em_h5_n,0,1);
+    % em_h5_s=rescale(em_h5_s,0,1);
+    em_h5_n=em_h5_n-mean(em_h5_n(:));
+    em_h5_s=em_h5_s-mean(em_h5_s(:));
+    em_h5_n=em_h5_n/std(em_h5_n(:));
+    em_h5_s=em_h5_s/std(em_h5_s(:));
+
+    
+    %%
+    screen_int.p1=griddedInterpolant(em_h5_n,'cubic','nearest');
+    screen_int.p2=griddedInterpolant(em_h5_s,'cubic','nearest');
+    screen_int.simSource="EMsoft";
+    screen_int.isHex=isHex;
+    facedata=0;
+end
+
+function [screen_int, facedata] = buildGriddedInterpolantEmsoftAtomSplit(em_h5_n,em_h5_s,weights,isHex)
+    % EMSoft structure : npx npy, voltage Bins, atom positions.
+    emptyPatternsN = zeros(size(em_h5_n,1), size(em_h5_n,2), size(em_h5_n,3)); % for now we do not care for the enrgy weighting. 
+    emptyPatternsS = zeros(size(emptyPatternsN));
+
+
+    if ndims(em_h5_n)==4 %%assume, this is the same for both
+        for atomNum =1:size(em_h5_n,4)
+            emptyPatternsN = em_h5_n(:,:,:,atomNum);
+            emptyPatternsS = em_h5_s(:,:,:,atomNum);
+            % emptyPatternsN=emptyPatternsN;
+            emptyPatternsN=sum(emptyPatternsN,[3]);
+            emptyPatternsS=sum(emptyPatternsS,[3]);%normalisation %sometimes the lambert seems to have 4 dims, we still need to find out why
+
+            % normalisation
+            emptyPatternsS=emptyPatternsS-mean(emptyPatternsS(:));
+            emptyPatternsN=emptyPatternsN-mean(emptyPatternsN(:));
+            emptyPatternsS=emptyPatternsS/std(emptyPatternsS(:));
+            emptyPatternsN=emptyPatternsN/std(emptyPatternsN(:));
+            %%
+            screen_int.(sprintf("a%i",atomNum)).p1=griddedInterpolant(emptyPatternsN,'cubic','nearest');
+            screen_int.(sprintf("a%i",atomNum)).p2=griddedInterpolant(emptyPatternsS,'cubic','nearest');
+            screen_int.simSource="EMsoft";
+            screen_int.isHex=isHex;
+            facedata=0;
+        end
+    end
+
+
+
+
 end

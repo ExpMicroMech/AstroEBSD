@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>extract_EBSP_from_h5oina</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="extract_EBSP_from_h5oina.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1></h1>
+<!--introduction-->
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">EBSD pattern extract</a>
+</li>
+<li>
+<a href="#3">Start MTEX and AstroEBSD</a>
+</li>
+<li>
+<a href="#4">Load the EBSD data, and pattern</a>
+</li>
+<li>
+<a href="#5">Simulate the pattern</a>
+</li>
+</ul>
+</div>
+<h2 id="1">EBSD pattern extract</h2>
+<pre class="codeinput">clear; close <span class="string">all</span>; clc;
+</pre>
+<pre class="codeinput">Input_Data.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+Input_Data.astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+</pre>
+<h2 id="3">Start MTEX and AstroEBSD</h2>
+<pre class="codeinput">
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.mtex_location,<span class="string">"startup_mtex.m"</span>));
+<span class="keyword">end</span>
+
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(Input_Data.astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Load the EBSD data, and pattern</h2>
+<pre class="codeinput">InputUser.HDF5_folder = <span class="string">'C:\Users\benja\Documents\EBSD\ECP\20251216-Si'</span>;
+InputUser.h5oina=<span class="string">'Test1 Si_Middle Site 4 Map Data 12'</span>; <span class="comment">%exclud the h5oina ending</span>
+InputUser.warningOn = 0; <span class="comment">%turn off warnings</span>
+InputUser.patterntype = <span class="string">'Processed'</span>; <span class="comment">%can be Processed or Unprocessed</span>
+<span class="comment">% Read raw .h5oina container and MapInfo</span>
+[ebsd_original,dataset_header]=load_h5oina(InputUser.h5oina,InputUser.HDF5_folder,InputUser.warningOn);
+
+<span class="comment">%load a pattern and plot it</span>
+pattern_number=2;
+[EBSDPat]=bReadEBSP_h5oina(pattern_number,dataset_header,InputUser);
+
+<span class="comment">%create the pattern geometry</span>
+[ EBSD_Geometry ] = EBSP_Gnom( dataset_header,[ebsd_original(pattern_number).PCx ebsd_original(pattern_number).PCy ebsd_original(pattern_number).DD]);
+
+<span class="comment">%plot this pattern</span>
+figure;
+subplot(1,3,1);
+pPattern(EBSDPat,EBSD_Geometry);
+title(<span class="string">'Experimental'</span>)
+</pre>
+<pre class="codeoutput error">Error using h5infoc
+Unable to open 'C:\Users\benja\Documents\EBSD\ECP\20251216-Si\Test1 Si_Middle
+Site 4 Map Data 12.h5oina'. File or folder not found.
+
+Error in h5info (line 125)
+    hinfo = h5infoc(filename,location, useUtf8);
+
+Error in load_h5oina&gt;loadEBSD_h5oina_getopt_i (line 133)
+all = h5info(fname);
+
+Error in load_h5oina (line 53)
+[ebsd_o,EBSDdata,opt_o,ebsdpm2,EBSDdata2]= loadEBSD_h5oina_getopt_i(h5_original,warningOn);
+
+Error in extract_EBSP_from_h5oina (line 25)
+[ebsd_original,dataset_header]=load_h5oina(InputUser.h5oina,InputUser.HDF5_folder,InputUser.warningOn);
+</pre>
+<h2 id="5">Simulate the pattern</h2>
+<pre class="codeinput">
+<span class="comment">%simulate this pattern</span>
+Input_Data.Phase_Input{1}=<span class="string">'Si_20kv_HR'</span>;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+<span class="comment">%build the phase</span>
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+<span class="comment">%create the rotation matricies we use</span>
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+
+<span class="comment">%create the detector rotations required</span>
+detector_Euler=double(dataset_header.Detector_Orientation_Euler);
+g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+g_tilt=Input_Data.Rx(double(dataset_header.Tilt_Angle));
+
+<span class="comment">%simulate the pattern</span>
+gmatrix_mtex=ebsd_original(pattern_number).orientations.matrix;
+
+[Pattern_Sim]=EBSP_gen( EBSD_Geometry,gmatrix_mtex'*g_tilt*g_camera',screen_int);
+
+subplot(1,3,2);
+pPattern(Pattern_Sim,EBSD_Geometry);
+title(<span class="string">'Simulation'</span>)
+
+s1=subplot(1,3,3);
+Plot_EBSPAnnotated( EBSDPat,EBSD_Geometry,[],gmatrix_mtex'*g_tilt*g_camera',Crystal_UCell{1},Crystal_Family{1},s1);
+title(<span class="string">'Annotated'</span>)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% 
+%% EBSD pattern extract
+clear; close all; clc;
+%%
+Input_Data.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+Input_Data.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+
+%% Start MTEX and AstroEBSD
+try EBSD;
+catch
+    run(fullfile(Input_Data.mtex_location,"startup_mtex.m"));
+end
+
+try astro_loadcheck
+catch
+    run(fullfile(Input_Data.astro_location,"start_AstroEBSD.m"));
+end
+
+%% Load the EBSD data, and pattern
+InputUser.HDF5_folder = 'C:\Users\benja\Documents\EBSD\ECP\20251216-Si';
+InputUser.h5oina='Test1 Si_Middle Site 4 Map Data 12'; %exclud the h5oina ending
+InputUser.warningOn = 0; %turn off warnings
+InputUser.patterntype = 'Processed'; %can be Processed or Unprocessed
+% Read raw .h5oina container and MapInfo
+[ebsd_original,dataset_header]=load_h5oina(InputUser.h5oina,InputUser.HDF5_folder,InputUser.warningOn);
+
+%load a pattern and plot it
+pattern_number=2;
+[EBSDPat]=bReadEBSP_h5oina(pattern_number,dataset_header,InputUser);
+
+%create the pattern geometry
+[ EBSD_Geometry ] = EBSP_Gnom( dataset_header,[ebsd_original(pattern_number).PCx ebsd_original(pattern_number).PCy ebsd_original(pattern_number).DD]);
+
+%plot this pattern
+figure;
+subplot(1,3,1);
+pPattern(EBSDPat,EBSD_Geometry);
+title('Experimental')
+
+%% Simulate the pattern
+
+%simulate this pattern
+Input_Data.Phase_Input{1}='Si_20kv_HR';
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+%build the phase
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%create the rotation matricies we use
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%create the detector rotations required
+detector_Euler=double(dataset_header.Detector_Orientation_Euler);
+g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+g_tilt=Input_Data.Rx(double(dataset_header.Tilt_Angle));
+
+%simulate the pattern
+gmatrix_mtex=ebsd_original(pattern_number).orientations.matrix;
+
+[Pattern_Sim]=EBSP_gen( EBSD_Geometry,gmatrix_mtex'*g_tilt*g_camera',screen_int);
+
+subplot(1,3,2);
+pPattern(Pattern_Sim,EBSD_Geometry);
+title('Simulation')
+
+s1=subplot(1,3,3);
+Plot_EBSPAnnotated( EBSDPat,EBSD_Geometry,[],gmatrix_mtex'*g_tilt*g_camera',Crystal_UCell{1},Crystal_Family{1},s1);
+title('Annotated')
+##### SOURCE END #####
+-->
+</body>
+</html>

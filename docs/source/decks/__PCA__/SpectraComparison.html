@@ -1,0 +1,430 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>SpectraComparison</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-08-11">
+<meta name="DC.source" content="SpectraComparison.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Matched RC-spectra comparison to averages - for AstroEBSD v2 - T P McAuliffe 19/02/20</a>
+</li>
+<li>
+<a href="#2">Average-spectra</a>
+</li>
+<li>
+<a href="#3">RC-Spectra</a>
+</li>
+<li>
+<a href="#4">RC-average comparison</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Matched RC-spectra comparison to averages - for AstroEBSD v2 - T P McAuliffe 19/02/20</h2>
+<pre class="codeinput">
+<span class="comment">% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="comment">% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES</span>
+<span class="comment">% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND</span>
+<span class="comment">% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS</span>
+<span class="comment">% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN</span>
+<span class="comment">% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN</span>
+<span class="comment">% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+
+clear <span class="string">all</span>
+home
+
+<span class="comment">%Choose the input patterns (RC-EBSPs) you want to compare to library.</span>
+<span class="comment">%These will be created from the PCA_deck file</span>
+load(<span class="string">'asdf\Results.mat'</span>);
+cd(<span class="string">'asdf\weighting1_vt0,05'</span>)
+
+<span class="comment">% Set up and locate plugins</span>
+InputUser.MTEX_loc=<span class="string">'C:\Communal_MatlabPlugins\mtex-5.2.beta2'</span>;
+InputUser.Astro_loc=<span class="string">'C:\Users\tpm416\Documents\GitHub\AstroEBSD'</span>;
+
+run([InputUser.MTEX_loc,<span class="string">'\startup_mtex'</span>]);
+run([InputUser.Astro_loc,<span class="string">'\start_AstroEBSD'</span>]);
+
+<span class="comment">%colourmap</span>
+cmap=cbrewer(<span class="string">'qual'</span>,<span class="string">'Dark2'</span>,15); <span class="comment">%can be useful to change the number in here dep on how many phases you are using</span>
+</pre>
+<h2 id="2">Average-spectra</h2>
+<pre class="codeinput">phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+<span class="keyword">for</span> phase=1:size(InputUser.Phases,2)
+    phaselocs{phase}=find(num==phase);
+
+    meanspectra_by_phase{phase}=mean(tile.av_spectra(:,phaselocs{phase}),2);
+    stdev_by_phase{phase}=std(tile.av_spectra(:,phaselocs{phase}),[],2);
+    stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+<span class="keyword">end</span>
+
+<span class="comment">%</span>
+figure
+<span class="keyword">for</span> phase=1:size(InputUser.Phases,2)
+
+
+    region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+    region(:,2)=2.*stderror_by_phase{phase};
+
+    h=area(region,<span class="string">'LineStyle'</span>,<span class="string">'none'</span>,<span class="string">'FaceColor'</span>,cmap(phase,:));
+    hold <span class="string">on</span>
+    h(1).FaceColor=[1,1,1];
+    h(1).FaceAlpha=0;
+    h(1).EdgeColor=[1,1,1];
+    h(2).FaceAlpha=0.2;
+    xlim([1,1000]);
+
+
+    p(phase)=plot(meanspectra_by_phase{phase},<span class="string">'Color'</span>,0.8.*cmap(phase,:),<span class="string">'LineWidth'</span>,1);
+
+    plotted(phase)=~isnan(region(1,1));
+
+<span class="keyword">end</span>
+xlim([1,800])
+ylim([0,12])
+
+legend(p(plotted),InputUser.Phases(plotted))
+print(<span class="string">'Av_spectra'</span>,<span class="string">'-dpng'</span>,<span class="string">'-r300'</span>)
+</pre>
+<h2 id="3">RC-Spectra</h2>
+<p>averaging</p>
+<pre class="codeinput">phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+<span class="keyword">for</span> phase=1:size(InputUser.Phases,2)
+    phaselocs{phase}=find(num==phase);
+
+    meanspectra_by_phase{phase}=mean(tile.spec(:,phaselocs{phase}),2);
+    stdev_by_phase{phase}=std(tile.spec(:,phaselocs{phase}),[],2);
+    stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+<span class="keyword">end</span>
+
+<span class="comment">%</span>
+figure
+<span class="keyword">for</span> phase=1:size(InputUser.Phases,2)
+
+
+    region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+    region(:,2)=2.*stderror_by_phase{phase};
+
+    h=area(region,<span class="string">'LineStyle'</span>,<span class="string">'none'</span>,<span class="string">'FaceColor'</span>,cmap(phase,:));
+    hold <span class="string">on</span>
+    h(1).FaceColor=[1,1,1];
+    h(1).FaceAlpha=0;
+    h(1).EdgeColor=[1,1,1];
+
+    h(2).FaceAlpha=0.5;
+
+    xlim([1,1000]);
+
+    p(phase)=plot(meanspectra_by_phase{phase},<span class="string">'Color'</span>,0.8.*cmap(phase,:),<span class="string">'LineWidth'</span>,1);
+
+    plotted(phase)=~isnan(region(1,1));
+
+<span class="keyword">end</span>
+xlim([1,800])
+
+legend(p(plotted),InputUser.Phases(plotted));
+print(<span class="string">'RC-spectra'</span>,<span class="string">'-dpng'</span>,<span class="string">'-r300'</span>)
+</pre>
+<h2 id="4">RC-average comparison</h2>
+<p>averaging</p>
+<pre class="codeinput">phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+<span class="keyword">for</span> phase=1:size(InputUser.Phases,2)
+    figure
+    <span class="keyword">for</span> type=1:2
+
+        <span class="keyword">if</span> type==1
+            spec=tile.spec;
+            c=[1,0,0];
+        <span class="keyword">else</span>
+            spec=tile.av_spectra;
+            c=[0,0,1];
+        <span class="keyword">end</span>
+        spec=spec./std(spec,[],1);
+
+        phaselocs{phase}=find(num==phase);
+
+        meanspectra_by_phase{phase}=mean(spec(:,phaselocs{phase}),2);
+        stdev_by_phase{phase}=std(spec(:,phaselocs{phase}),[],2);
+        stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+        region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+        region(:,2)=2.*stderror_by_phase{phase};
+
+        h=area(region,<span class="string">'LineStyle'</span>,<span class="string">'none'</span>,<span class="string">'FaceColor'</span>,c);
+        hold <span class="string">on</span>
+        h(1).FaceColor=[1,1,1];
+        h(1).FaceAlpha=0;
+        h(1).EdgeColor=[1,1,1];
+
+        h(2).FaceAlpha=0.2;
+        xlim([1,1000]);
+
+        p2(type)=plot(meanspectra_by_phase{phase},<span class="string">'LineWidth'</span>,1,<span class="string">'Color'</span>,0.8.*c);
+
+        plotted(phase)=~isnan(region(1,1));
+    <span class="keyword">end</span>
+    hold <span class="string">off</span>
+
+xlim([1,800])
+ylim([0,12])
+print([InputUser.Phases{phase},<span class="string">'_RC-average_comparison'</span>],<span class="string">'-dpng'</span>,<span class="string">'-r300'</span>)
+
+legend(p2,<span class="string">'RCC'</span>,<span class="string">'Average'</span>)
+
+<span class="keyword">end</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Matched RC-spectra comparison to averages - for AstroEBSD v2 - T P McAuliffe 19/02/20
+
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+clear all
+home
+
+%Choose the input patterns (RC-EBSPs) you want to compare to library.
+%These will be created from the PCA_deck file
+load('asdf\Results.mat');
+cd('asdf\weighting1_vt0,05')
+
+% Set up and locate plugins
+InputUser.MTEX_loc='C:\Communal_MatlabPlugins\mtex-5.2.beta2';
+InputUser.Astro_loc='C:\Users\tpm416\Documents\GitHub\AstroEBSD';
+
+run([InputUser.MTEX_loc,'\startup_mtex']);
+run([InputUser.Astro_loc,'\start_AstroEBSD']);
+
+%colourmap
+cmap=cbrewer('qual','Dark2',15); %can be useful to change the number in here dep on how many phases you are using
+
+%% Average-spectra
+phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+for phase=1:size(InputUser.Phases,2)
+    phaselocs{phase}=find(num==phase);
+    
+    meanspectra_by_phase{phase}=mean(tile.av_spectra(:,phaselocs{phase}),2);
+    stdev_by_phase{phase}=std(tile.av_spectra(:,phaselocs{phase}),[],2);
+    stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+end
+
+%
+figure
+for phase=1:size(InputUser.Phases,2)
+    
+
+    region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+    region(:,2)=2.*stderror_by_phase{phase};
+
+    h=area(region,'LineStyle','none','FaceColor',cmap(phase,:));
+    hold on
+    h(1).FaceColor=[1,1,1];
+    h(1).FaceAlpha=0;
+    h(1).EdgeColor=[1,1,1];
+    h(2).FaceAlpha=0.2;
+    xlim([1,1000]);
+   
+
+    p(phase)=plot(meanspectra_by_phase{phase},'Color',0.8.*cmap(phase,:),'LineWidth',1);
+    
+    plotted(phase)=~isnan(region(1,1));
+
+end
+xlim([1,800])
+ylim([0,12])
+
+legend(p(plotted),InputUser.Phases(plotted))
+print('Av_spectra','-dpng','-r300')
+
+%% RC-Spectra
+% averaging
+phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+for phase=1:size(InputUser.Phases,2)
+    phaselocs{phase}=find(num==phase);
+    
+    meanspectra_by_phase{phase}=mean(tile.spec(:,phaselocs{phase}),2);
+    stdev_by_phase{phase}=std(tile.spec(:,phaselocs{phase}),[],2);
+    stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+end
+
+%
+figure
+for phase=1:size(InputUser.Phases,2)
+    
+
+    region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+    region(:,2)=2.*stderror_by_phase{phase};
+
+    h=area(region,'LineStyle','none','FaceColor',cmap(phase,:));
+    hold on
+    h(1).FaceColor=[1,1,1];
+    h(1).FaceAlpha=0;
+    h(1).EdgeColor=[1,1,1];
+    
+    h(2).FaceAlpha=0.5;
+    
+    xlim([1,1000]);
+
+    p(phase)=plot(meanspectra_by_phase{phase},'Color',0.8.*cmap(phase,:),'LineWidth',1);
+    
+    plotted(phase)=~isnan(region(1,1));
+
+end
+xlim([1,800])
+
+legend(p(plotted),InputUser.Phases(plotted));
+print('RC-spectra','-dpng','-r300')
+
+%% RC-average comparison
+% averaging
+phaselocs=cell(size(InputUser.Phases));
+[~,num]=max(RTM.Output.PeakHeight,[],2);
+
+for phase=1:size(InputUser.Phases,2)
+    figure
+    for type=1:2
+        
+        if type==1
+            spec=tile.spec;
+            c=[1,0,0];
+        else
+            spec=tile.av_spectra;
+            c=[0,0,1];
+        end
+        spec=spec./std(spec,[],1);
+        
+        phaselocs{phase}=find(num==phase);
+
+        meanspectra_by_phase{phase}=mean(spec(:,phaselocs{phase}),2);
+        stdev_by_phase{phase}=std(spec(:,phaselocs{phase}),[],2);
+        stderror_by_phase{phase}=stdev_by_phase{phase}./sqrt(length(phaselocs{phase}));
+
+        region(:,1)=meanspectra_by_phase{phase}-stderror_by_phase{phase};
+        region(:,2)=2.*stderror_by_phase{phase};
+
+        h=area(region,'LineStyle','none','FaceColor',c);
+        hold on
+        h(1).FaceColor=[1,1,1];
+        h(1).FaceAlpha=0;
+        h(1).EdgeColor=[1,1,1];
+        
+        h(2).FaceAlpha=0.2;
+        xlim([1,1000]);
+
+        p2(type)=plot(meanspectra_by_phase{phase},'LineWidth',1,'Color',0.8.*c);
+
+        plotted(phase)=~isnan(region(1,1));
+    end
+    hold off
+
+xlim([1,800])
+ylim([0,12])
+print([InputUser.Phases{phase},'_RC-average_comparison'],'-dpng','-r300')
+
+legend(p2,'RCC','Average')
+
+end
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

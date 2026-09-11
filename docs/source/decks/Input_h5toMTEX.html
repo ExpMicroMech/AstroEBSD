@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Input_h5toMTEX</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="Input_h5toMTEX.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Create the ebsd container and grains container</a>
+</li>
+<li>
+<a href="#3">Plot both</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear; home; close <span class="string">all</span>
+
+<span class="comment">%set where the data is</span>
+InputUser.HDF5_folder=<span class="string">'E:\Ben\'</span>; <span class="comment">%add trailing '\'</span>
+InputUser.HDF5_file= <span class="string">'Demo_Ben.h5'</span>; <span class="comment">%add ending '.h5'</span>
+
+<span class="comment">%create the crystal structure list</span>
+<span class="comment">% cs={'notIndexed',}; %crystal structure list</span>
+cs=loadCIF(<span class="string">'Fe-Iron-alpha'</span>);
+<span class="comment">% cs={'notIndexed',cs_phase};</span>
+
+[MapInfo_S.MapData,MicroscopeData,PhaseData,MapInfo_S.EBSPData ]=bReadHDF5( InputUser );
+[MapInfo_S.Data_InputMap] = EBSD_Map(MapInfo_S.MapData,MicroscopeData);
+
+MTEX_settings.grainangle=5; <span class="comment">%grain boundary in degrees</span>
+MTEX_settings.xpref=<span class="string">'west'</span>;
+MTEX_settings.ypref=<span class="string">'outOfPlane'</span>;
+</pre>
+<pre class="codeoutput error">Error using bReadHDF5
+E:\Ben\Demo_Ben.h5 H5 file cannot be found
+
+Error in Input_h5toMTEX (line 12)
+[MapInfo_S.MapData,MicroscopeData,PhaseData,MapInfo_S.EBSPData ]=bReadHDF5( InputUser );
+</pre>
+<h2 id="2">Create the ebsd container and grains container</h2>
+<pre class="codeinput">[ebsd] = h5_to_MTEX(MapInfo_S.Data_InputMap,MTEX_settings,{<span class="string">'notIndexed'</span>,cs});
+<span class="comment">% calc the grains</span>
+[grains,ebsd.grainId] = calcGrains(ebsd,<span class="string">'angle'</span>,MTEX_settings.grainangle*degree);
+</pre>
+<h2 id="3">Plot both</h2>
+<pre class="codeinput">phase_to_plot=ebsd(1).mineral;
+
+figure;
+colorKey = ipfHSVKey(cs(ebsd(1).phase));
+colorKey.inversePoleFigureDirection = xvector;
+plot(ebsd(phase_to_plot),colorKey.orientation2color(ebsd(phase_to_plot).orientations))
+hold <span class="string">on</span>; plot(grains(phase_to_plot).boundary,<span class="string">'color'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,1.5); hold <span class="string">off</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear; home; close all
+
+%set where the data is
+InputUser.HDF5_folder='E:\Ben\'; %add trailing '\'
+InputUser.HDF5_file= 'Demo_Ben.h5'; %add ending '.h5'
+
+%create the crystal structure list
+% cs={'notIndexed',}; %crystal structure list
+cs=loadCIF('Fe-Iron-alpha');
+% cs={'notIndexed',cs_phase};
+
+[MapInfo_S.MapData,MicroscopeData,PhaseData,MapInfo_S.EBSPData ]=bReadHDF5( InputUser );
+[MapInfo_S.Data_InputMap] = EBSD_Map(MapInfo_S.MapData,MicroscopeData);
+
+MTEX_settings.grainangle=5; %grain boundary in degrees
+MTEX_settings.xpref='west';
+MTEX_settings.ypref='outOfPlane';
+
+%% Create the ebsd container and grains container
+[ebsd] = h5_to_MTEX(MapInfo_S.Data_InputMap,MTEX_settings,{'notIndexed',cs});
+% calc the grains
+[grains,ebsd.grainId] = calcGrains(ebsd,'angle',MTEX_settings.grainangle*degree);
+
+%% Plot both
+phase_to_plot=ebsd(1).mineral;
+
+figure;
+colorKey = ipfHSVKey(cs(ebsd(1).phase));
+colorKey.inversePoleFigureDirection = xvector;
+plot(ebsd(phase_to_plot),colorKey.orientation2color(ebsd(phase_to_plot).orientations))
+hold on; plot(grains(phase_to_plot).boundary,'color','k','linewidth',1.5); hold off
+##### SOURCE END #####
+-->
+</body>
+</html>

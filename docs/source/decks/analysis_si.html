@@ -1,0 +1,969 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>This function will load a h5oina file into MTEX and plot various plots that you might find useful</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="analysis_si.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>This function will load a h5oina file into MTEX and plot various plots that you might find useful</h1>
+<!--introduction-->
+<p>it also has tools to load patterns</p>
+<p>written by Ben Britton 2023 Use as is</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">File and folder infos</a>
+</li>
+<li>
+<a href="#2">Other settings</a>
+</li>
+<li>
+<a href="#3">Load up AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#4">Load the H5 data</a>
+</li>
+<li>
+<a href="#5">Set the plotting preferences - this has to be validated for your instrument</a>
+</li>
+<li>
+<a href="#6">Now do some plots</a>
+</li>
+<li>
+<a href="#7">Extract the phase to plot</a>
+</li>
+<li>
+<a href="#8">Plot the map of phases/indexed data</a>
+</li>
+<li>
+<a href="#9">IPF-x, y and z</a>
+</li>
+<li>
+<a href="#10">Plot the PF - scatter</a>
+</li>
+<li>
+<a href="#11">Plot the IPF - scatter</a>
+</li>
+<li>
+<a href="#12">Simulate the pattern</a>
+</li>
+<li>
+<a href="#14">load all the patterns - this is memory intensive</a>
+</li>
+<li>
+<a href="#15">plot a single pattern</a>
+</li>
+<li>
+<a href="#16">Test Analysis on one patter</a>
+</li>
+<li>
+<a href="#18">Radon convert the map</a>
+</li>
+<li>
+<a href="#20">Do XCF stuff</a>
+</li>
+</ul>
+</div>
+<h2 id="1">File and folder infos</h2>
+<pre class="codeinput">
+<span class="comment">% Folder that contains the h5oina file you want to load</span>
+h5oina_folder=<span class="string">'E:\ECP expt'</span>;
+
+<span class="comment">%file that you want to load - omit the .h5oina</span>
+h5oina_file=<span class="string">'Si_ECP Specimen 1 Site 2 Map Data 4'</span>;
+
+<span class="comment">%location of MTEX 5.10.2</span>
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then it will start MTEX up</span>
+<span class="comment">% mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2';</span>
+mtex_location=<span class="string">'C:\Users\rmb07\Documents\MATLAB\mtex-5.10.2'</span>;
+
+<span class="comment">%location of astroEBSD</span>
+astro_location=<span class="string">'C:\Users\rmb07\Documents\GitHub\AstroEBSD_v2'</span>;
+<span class="comment">% astro_location='C:\Users\benja\OneDrive\Documents\Github\AstroEBSD';</span>
+</pre>
+<h2 id="2">Other settings</h2>
+<pre class="codeinput">mb_length = 40; <span class="comment">%micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen</span>
+</pre>
+<h2 id="3">Load up AstroEBSD and MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start astro if needed</span>
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Load the H5 data</h2>
+<pre class="codeinput">[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+
+<span class="comment">%if you want to plot the pattern matched data, you can change this here</span>
+ebsd=ebsd_original;
+<span class="comment">% ebsd=ebsd_patternmatched;</span>
+</pre>
+<pre class="codeoutput error">Undefined function 'load_h5oina_pm' for input arguments of type 'char'.
+
+Error in analysis_si (line 43)
+[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+</pre>
+<h2 id="5">Set the plotting preferences - this has to be validated for your instrument</h2>
+<pre class="codeinput">
+<span class="comment">%this is set up for the pFIB and Oxford Insturments systems at UBC</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);           <span class="comment">%aztec</span>
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofPlane'</span>);     <span class="comment">%aztec</span>
+setMTEXpref(<span class="string">'FontSize'</span>,12)
+</pre>
+<h2 id="6">Now do some plots</h2>
+<pre class="codeinput">
+<span class="comment">%band contrast</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="7">Extract the phase to plot</h2>
+<pre class="codeinput">
+<span class="comment">%select the mineral name</span>
+mineral_name=ebsd.CS.mineral;
+<span class="comment">% mineral_name='Magnesium';</span>
+</pre>
+<h2 id="8">Plot the map of phases/indexed data</h2>
+<pre class="codeinput">figure;
+plot(ebsd');
+
+<span class="comment">%overlay with Band Contrast</span>
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap(<span class="string">'gray'</span>);
+hold <span class="string">on</span>;
+plot(ebsd,<span class="string">'FaceAlpha'</span>,<span class="string">'0.3'</span>);
+hold <span class="string">on</span>;
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="9">IPF-x, y and z</h2>
+<p>compute the colors</p>
+<pre class="codeinput">ipfKey = ipfHSVKey(ebsd(mineral_name));
+
+<span class="comment">%plot the key</span>
+figure;
+plot(ipfKey)
+
+<span class="comment">% now generate the IPF colour maps</span>
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+<span class="comment">%now plot the three IPF coloured maps</span>
+figure;
+plot(ebsd(mineral_name),colors_X,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Y,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Z,<span class="string">'micronbar'</span>,<span class="string">'on'</span>);
+
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="10">Plot the PF - scatter</h2>
+<pre class="codeinput">
+<span class="comment">%plot planes as spots, and use a subset</span>
+figure
+plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)])
+<span class="comment">%you can plot all - but this takes a while..</span>
+<span class="comment">%plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)],'Points','all')</span>
+</pre>
+<h2 id="11">Plot the IPF - scatter</h2>
+<pre class="codeinput">figure
+plotIPDF(ebsd(mineral_name).orientations,[xvector yvector zvector])
+</pre>
+<h2 id="12">Simulate the pattern</h2>
+<pre class="codeinput">
+<span class="comment">%simulate this pattern</span>
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Input{1}=<span class="string">'Si_20kv_HR'</span>;
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,<span class="string">'masterpatterns'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+<span class="comment">% [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( Phases,Phase_Folder )</span>
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<pre class="codeinput">detector_Euler=double(dataset_header.Detector_Orientation_Euler);
+g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+g_tilt=Input_Data.Rx(double(dataset_header.Tilt_Angle));
+</pre>
+<h2 id="14">load all the patterns - this is memory intensive</h2>
+<p>pattern_number=100;</p>
+<pre class="codeinput">num_pats=size(ebsd,1);
+pat_array_raw=zeros([size(Pat_Exp,1),size(Pat_Exp,2),size(ebsd,1)]);
+pat_array_cor=zeros([size(Pat_Exp,1),size(Pat_Exp,2),size(ebsd,1)]);
+
+<span class="keyword">parfor</span> n=1:size(ebsd,1)
+    [pat_array_cor(:,:,n),pat_array_raw(:,:,n)]=loadEBSP_T(h5_original,dataset_header,n);
+<span class="keyword">end</span>
+</pre>
+<h2 id="15">plot a single pattern</h2>
+<pre class="codeinput">PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+<span class="comment">%load the patterns</span>
+[Pat_Exp,Raw_Exp]=loadEBSP_T(h5_original,dataset_header,pattern_number);
+Input_Data.size = size(Pat_Exp); <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+[EBSD_Geometry ] = EBSP_Gnom( Input_Data,PC_pattern_Astro); <span class="comment">%you can change PC_in if you want</span>
+
+<span class="comment">%simulate the pattern</span>
+gmatrix_mtex=ebsd_patternmatched(pattern_number).orientations.matrix;
+
+[Pattern_Sim]=EBSP_gen( EBSD_Geometry,gmatrix_mtex'*g_tilt*g_camera',screen_int);
+
+figure;
+subplot(1,3,1); pPattern(Raw_Exp,EBSD_Geometry);
+subplot(1,3,2); pPattern(Pat_Exp,EBSD_Geometry);
+subplot(1,3,3); pPattern(Pattern_Sim,EBSD_Geometry);
+</pre>
+<h2 id="16">Test Analysis on one patter</h2>
+<pre class="codeinput">
+<span class="comment">% EBSD pattern settings</span>
+
+<span class="comment">%background correction</span>
+Settings_Cor.gfilt=1; <span class="comment">%use a low pass filter (do you mean high pass?)</span>
+Settings_Cor.gfilt_s=4; <span class="comment">%low pass filter sigma</span>
+
+<span class="comment">%radius mask</span>
+Settings_Cor.radius=1; <span class="comment">%use a radius mask</span>
+Settings_Cor.radius_frac=0.95; <span class="comment">%fraction of the pattern width to use as the mask</span>
+
+<span class="comment">%hold pixel</span>
+Settings_Cor.hotpixel=0; <span class="comment">%hot pixel correction</span>
+Settings_Cor.hot_thresh=1000; <span class="comment">%hot pixel threshold</span>
+
+<span class="comment">%reside</span>
+Settings_Cor.resize=1; <span class="comment">%resize correction</span>
+Settings_Cor.size=240; <span class="comment">%image width</span>
+
+Settings_Cor.RealBG=0; <span class="comment">%use a real BG</span>
+Settings_Cor.EBSP_bgnum=30; <span class="comment">%number of real pattern to use for BG</span>
+
+<span class="comment">%radon searching</span>
+
+<span class="comment">%Peak Finder</span>
+Settings_Rad.theta_range=[-10 180 1]; <span class="comment">%theta min, theta max, theta step - in degrees</span>
+
+<span class="comment">%peak hunt</span>
+Settings_Rad.max_peaks=8; <span class="comment">%max number of peaks to return</span>
+Settings_Rad.num_peak=15; <span class="comment">%number of peaks to search for - peaks will be rejected</span>
+Settings_Rad.theta_search_pix=4; <span class="comment">%search size in theta steps</span>
+Settings_Rad.rho_search_per=0.1; <span class="comment">%radon search in fractions</span>
+Settings_Rad.min_peak_width=0.002; <span class="comment">%seperation of the peak width, in pixels</span>
+
+
+
+pattern_num=4;
+
+<span class="comment">%PC search ranges</span>
+PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+Settings_PCin.start=PC_pattern_Astro(:);
+Settings_PCin.range=[0.1 0.1 0.1];
+Settings_PCin.range=Settings_PCin.range(:);
+EBSP_one.PatternIn=pat_array_raw(:,:,pattern_num);
+
+<span class="comment">% EBSP_one.PatternIn=pat_array_cor(:,:,pattern_num);</span>
+
+<span class="comment">%</span>
+[Settings_Cor,Settings_Rad,Settings_PCin]=Astro_EBSPset(EBSP_one,Settings_Cor,Settings_Rad,Settings_PCin,Input_Data);
+</pre>
+<pre class="codeinput">
+<span class="comment">%convert all the pattern centre values</span>
+
+<span class="comment">%PC search ranges</span>
+</pre>
+<h2 id="18">Radon convert the map</h2>
+<pre class="codeinput">AreaData.max_pats=size(ebsd,1);
+
+<span class="comment">%do this once</span>
+PC_pattern_OI=[ebsd(1).prop.Pattern_Center_X, ebsd(1).prop.Pattern_Center_Y ebsd(1).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+PCFit_start=zeros(3,AreaData.max_pats);
+<span class="keyword">for</span> n=1:AreaData.max_pats
+    PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+    [PCFit_start(:,n),PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+<span class="keyword">end</span>
+</pre>
+<pre class="codeinput">Peak_Quality=zeros(AreaData.max_pats,2);
+Peak_Centres=zeros(Settings_Rad.max_peaks,2,AreaData.max_pats);
+Peak_NBands=zeros(AreaData.max_pats,1);
+
+
+PC_GA_options = optimoptions(<span class="string">'ga'</span>);
+PC_GA_options.FunctionTolerance=1E-3;
+PC_GA_options.UseParallel=false;
+PC_GA_options.MaxGenerations=15;
+PC_GA_options.PopulationSize=30;
+PC_GA_options.MaxStallGenerations=20;
+PC_GA_options.Display=<span class="string">'none'</span>;
+
+PC_out=zeros(3,AreaData.max_pats);
+
+PC_new=zeros(3,AreaData.max_pats);
+
+<span class="comment">%adjust to 'for' if needed (i.e. no Parallel Compute Toolbox)</span>
+tic
+<span class="keyword">parfor</span> n=1:AreaData.max_pats
+    <span class="comment">%read pattern &amp; correct</span>
+    pattern2 = pat_array_raw(:,:,n);
+    ebsp=struct;
+    [ ebsp.PatternIn] = EBSP_BGCor( pattern2,Settings_Cor );
+
+    <span class="comment">%     % radon convert</span>
+    <span class="comment">%     [ Peak_Centre_ok,Peak_Quality(n,:) ] = EBSP_RadHunt( EBSP_cor,Settings_Rad);</span>
+    <span class="comment">%</span>
+    <span class="comment">%     %count the number of bands</span>
+    <span class="comment">%     n_bands=size(Peak_Centre_ok,1);</span>
+    <span class="comment">%     Peak_NBands(n)=n_bands;</span>
+    <span class="comment">%     %fill in the peak centre data</span>
+    <span class="comment">%     Peak_Centre_full=zeros(Settings_Rad.max_peaks,2);</span>
+    <span class="comment">%     Peak_Centre_full(1:n_bands,:)=Peak_Centre_ok;</span>
+    <span class="comment">%     Peak_Centres(:,:,n)=Peak_Centre_full;</span>
+    <span class="comment">%</span>
+    <span class="comment">%     p=n;</span>
+    <span class="comment">%     Peak_Centre_full=Peak_Centres(:,:,n);</span>
+    <span class="comment">%     Peak_Centre_ok=Peak_Centre_full(1:Peak_Bands(p),:);</span>
+
+    <span class="comment">%save into array for the 2nd pass</span>
+    <span class="comment">%     peak_centres{n}=Peak_Centre_ok;</span>
+
+    <span class="comment">%find the pattern centre</span>
+    <span class="comment">%     clear Settings_PCin</span>
+    Settings_PCin=struct;
+    Phase_Num=1;
+    Settings_PCin.start=PCFit_start(:,n);
+    Settings_PCin.range=[0.1;0.1;0.1];
+    Settings_PCin.start=Settings_PCin.start(:);
+    Settings_PCin.range=Settings_PCin.range(:);
+    <span class="comment">%     [PC_out(:,n),PC_err]=PC_subfind(PCFit_start,PC_paty,PC_patx,Peak_Centre_full,outputs,Crystal_LUT,Crystal_UCell,num_phases,n,PC_GA_options,PCin.range);</span>
+    [EBSP_Fe_PCOut] = EBSP_PCSearch(ebsp,Settings_Cor,Settings_Rad,Settings_PCin,Phase_Num,Crystal_LUT,Crystal_UCell);
+    PC_new(:,n)=EBSP_Fe_PCOut.PC;
+    <span class="comment">%     PC_new_err(n)=</span>
+<span class="keyword">end</span>
+toc
+</pre>
+<h2 id="20">Do XCF stuff</h2>
+<pre class="codeinput">refpat=2412;
+Settings_Cor2=Settings_Cor;
+Settings_Cor2.resize=0;
+Settings_Cor2.radius=0;
+
+xSet.mesh   =  200;                        <span class="comment">% subpixel interpolation mesh (set to 200)</span>
+xSet.numroi =  40;                         <span class="comment">% will always be 19 in ring, 1 in centre, + more.</span>
+
+
+run(<span class="string">'C:\Users\rmb07\Documents\GitHub\xEBSDv3\start_xEBSD.m'</span>);
+
+[PatternData.Image1Cor,PatternData.BCCorOut] = EBSP_BGCor(pat_array_raw(:,:,refpat),Settings_Cor2);;
+
+<span class="comment">% figure;</span>
+<span class="comment">% subplot(1,2,1)</span>
+<span class="comment">% pPattern(pat_array_raw(:,:,refpat),EBSD_Geometry);</span>
+<span class="comment">% subplot(1,2,2)</span>
+<span class="comment">% pPattern(PatternData.Image1Cor,EBSD_Geometry);</span>
+
+PatternData.roisize = 2^(round(log2(PatternData.BCCorOut.size(1)))-2); <span class="comment">%auto set the ROI size</span>
+PatternData.filters = round([log2(PatternData.roisize)/2,log2(PatternData.roisize)/4,4*log2(PatternData.roisize),2*log2(PatternData.roisize)]);
+PatternData.Image_Boundary=[622;512;512];
+
+<span class="comment">% pick up image boundary and filter settings</span>
+<span class="comment">% [PatternData.filters,PatternData.Image_Boundary] = gBounROI(PatternData);</span>
+
+[xSet]=fROIloc(PatternData,xSet);
+[xSet] = fFiltersX(xSet,PatternData.filters);
+warning <span class="string">off</span> <span class="string">all</span>
+pctRunOnAll <span class="string">warning</span> <span class="string">off</span>
+
+[ref_fft,xSet]  = fROIExtract( xSet,PatternData.Image1Cor );
+
+xShifts=zeros(xSet.numroi,xSet.numroi);
+yShifts=zeros(xSet.numroi,xSet.numroi);
+PHs=zeros(xSet.numroi,xSet.numroi);
+
+tic
+<span class="keyword">parfor</span> pat=1:AreaData.max_pat
+
+    pattern_test = EBSP_BGCor(pat_array_raw(:,:,pat),Settings_Cor2);
+
+    [test_fft]      = fROIExtract( xSet,pattern_test);
+
+
+ xShift=zeros(xSet.numroi,1);
+        yShift=zeros(xSet.numroi,1);
+    <span class="keyword">for</span> roi=1:xSet.numroi
+
+        PH=zeros(xSet.numroi,1);
+        ref_fft2=ref_fft(:,:,roi);
+        test_fft2=test_fft(:,:,roi);
+
+        <span class="keyword">if</span> any(isnan([ref_fft2(:);test_fft2(:)])) == 1 <span class="comment">%if the FFTs contain no info</span>
+
+            xShift(roi)=NaN;
+            yShift(roi)=NaN;
+            PH(roi)=NaN;
+        <span class="keyword">else</span>
+            [xShift(roi),yShift(roi),PH(roi)] = fReg2(test_fft2,ref_fft2,xSet);
+        <span class="keyword">end</span>
+
+
+    <span class="keyword">end</span>
+    xShifts(:,pat)=xShift;
+    yShifts(:,pat)=yShift;
+    PHs(:,pat)=PH;
+<span class="keyword">end</span>
+toc
+<span class="comment">%</span>
+</pre>
+<pre class="codeinput">mXShift=mean(xShifts,1);
+mYShift=mean(yShifts,1);
+figure; plot(ebsd,mXShift-mean(mXShift));
+nextAxis;
+plot(ebsd,mYShift-mean(mYShift))
+
+<span class="comment">% figure;</span>
+<span class="comment">% for n=1:40</span>
+<span class="comment">% plot(ebsd,xShifts(n,:));</span>
+<span class="comment">% nextAxis</span>
+<span class="comment">% end</span>
+
+<span class="comment">% figure;</span>
+<span class="comment">% for n=1:40</span>
+<span class="comment">% plot(ebsd,yShifts(n,:));</span>
+<span class="comment">% nextAxis</span>
+<span class="comment">% end</span>
+xpos=ebsd.x;
+ypos=ebsd.y;
+
+[xDataXS, yDataXS, zDataXS] = prepareSurfaceData( xpos, ypos, mXShift );
+[xDataYS, yDataYS, zDataYS] = prepareSurfaceData( xpos, ypos, mYShift );
+
+<span class="comment">% Set up fittype and options.</span>
+ft = fittype( <span class="string">'poly11'</span> );
+
+<span class="comment">% Fit model to data.</span>
+[fitresultXS, gofXS] = fit( [xDataXS, yDataXS], zDataXS, ft );
+[fitresultYS, gofYS] = fit( [xDataYS, yDataYS], zDataYS, ft );
+
+x_grad=fitresultXS.p10;
+y_grad=fitresultYS.p01;
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% This function will load a h5oina file into MTEX and plot various plots that you might find useful
+% it also has tools to load patterns
+%
+% written by Ben Britton 2023
+% Use as is
+
+%% File and folder infos
+
+% Folder that contains the h5oina file you want to load
+h5oina_folder='E:\ECP expt';
+
+%file that you want to load - omit the .h5oina
+h5oina_file='Si_ECP Specimen 1 Site 2 Map Data 4';
+
+%location of MTEX 5.10.2
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then it will start MTEX up
+% mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.10.2';
+mtex_location='C:\Users\rmb07\Documents\MATLAB\mtex-5.10.2';
+
+%location of astroEBSD
+astro_location='C:\Users\rmb07\Documents\GitHub\AstroEBSD_v2';
+% astro_location='C:\Users\benja\OneDrive\Documents\Github\AstroEBSD';
+
+%% Other settings
+mb_length = 40; %micro bar length for plots - if you want to override, you can comment this out/clear this variable and the override will not happen
+
+%% Load up AstroEBSD and MTEX
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start astro if needed
+try astro_loadcheck
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+%% Load the H5 data
+[ebsd_original,dataset_header,ebsd_patternmatched,h5_original,h5_patternmatch] = load_h5oina_pm(h5oina_file,h5oina_folder);
+
+%if you want to plot the pattern matched data, you can change this here
+ebsd=ebsd_original;
+% ebsd=ebsd_patternmatched;
+%% Set the plotting preferences - this has to be validated for your instrument
+
+%this is set up for the pFIB and Oxford Insturments systems at UBC
+setMTEXpref('xAxisDirection','east');           %aztec
+setMTEXpref('zAxisDirection','outofPlane');     %aztec
+setMTEXpref('FontSize',12)
+%% Now do some plots
+
+%band contrast
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% Extract the phase to plot
+
+%select the mineral name
+mineral_name=ebsd.CS.mineral;
+% mineral_name='Magnesium';
+
+%% Plot the map of phases/indexed data
+figure;
+plot(ebsd');
+
+%overlay with Band Contrast
+figure;
+plot(ebsd,ebsd.prop.Band_Contrast); colormap('gray');
+hold on;
+plot(ebsd,'FaceAlpha','0.3');
+hold on;
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% IPF-x, y and z
+% compute the colors
+ipfKey = ipfHSVKey(ebsd(mineral_name));
+
+%plot the key
+figure;
+plot(ipfKey)
+
+% now generate the IPF colour maps
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+%now plot the three IPF coloured maps
+figure;
+plot(ebsd(mineral_name),colors_X,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Y,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Z,'micronbar','on');
+
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+%% Plot the PF - scatter
+
+%plot planes as spots, and use a subset
+figure
+plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)])
+%you can plot all - but this takes a while..
+%plotPDF(ebsd(mineral_name).orientations,[Miller(1,1,0,ebsd(mineral_name).CS) Miller(0,1,0,ebsd(mineral_name).CS) Miller(0,0,1,ebsd(mineral_name).CS)],'Points','all')
+
+%% Plot the IPF - scatter
+
+figure
+plotIPDF(ebsd(mineral_name).orientations,[xvector yvector zvector])
+
+
+%% Simulate the pattern
+
+%simulate this pattern
+Input_Data.astro_location=astro_location;
+Input_Data.Phase_Input{1}='Si_20kv_HR';
+Input_Data.Phase_Folder = fullfile(Input_Data.astro_location,'phases'); %location of the AstroEBSD phases super-folder
+Input_Data.Bin_loc = fullfile(Input_Data.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM(  {Input_Data.Phase_Input{1}},Input_Data.Phase_Folder);
+% [ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,num_Phases, RTM_info ] = Phase_Builder_RTM( Phases,Phase_Folder )
+
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+Input_Data.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+Input_Data.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+Input_Data.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+
+
+%%
+
+detector_Euler=double(dataset_header.Detector_Orientation_Euler);
+g_camera=Input_Data.Rz(detector_Euler(3))*Input_Data.Rx(detector_Euler(2))*Input_Data.Rz(detector_Euler(1));
+g_tilt=Input_Data.Rx(double(dataset_header.Tilt_Angle));
+
+%% load all the patterns - this is memory intensive
+% pattern_number=100;
+num_pats=size(ebsd,1);
+pat_array_raw=zeros([size(Pat_Exp,1),size(Pat_Exp,2),size(ebsd,1)]);
+pat_array_cor=zeros([size(Pat_Exp,1),size(Pat_Exp,2),size(ebsd,1)]);
+
+parfor n=1:size(ebsd,1)
+    [pat_array_cor(:,:,n),pat_array_raw(:,:,n)]=loadEBSP_T(h5_original,dataset_header,n);
+end
+
+%% plot a single pattern
+
+
+PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+%load the patterns
+[Pat_Exp,Raw_Exp]=loadEBSP_T(h5_original,dataset_header,pattern_number);
+Input_Data.size = size(Pat_Exp); %size of the library patterns and the resize of the raw EBSPs
+[EBSD_Geometry ] = EBSP_Gnom( Input_Data,PC_pattern_Astro); %you can change PC_in if you want
+
+%simulate the pattern
+gmatrix_mtex=ebsd_patternmatched(pattern_number).orientations.matrix;
+
+[Pattern_Sim]=EBSP_gen( EBSD_Geometry,gmatrix_mtex'*g_tilt*g_camera',screen_int);
+
+figure;
+subplot(1,3,1); pPattern(Raw_Exp,EBSD_Geometry);
+subplot(1,3,2); pPattern(Pat_Exp,EBSD_Geometry);
+subplot(1,3,3); pPattern(Pattern_Sim,EBSD_Geometry);
+
+
+
+%% Test Analysis on one patter
+
+
+% EBSD pattern settings
+
+%background correction
+Settings_Cor.gfilt=1; %use a low pass filter (do you mean high pass?)
+Settings_Cor.gfilt_s=4; %low pass filter sigma
+
+%radius mask
+Settings_Cor.radius=1; %use a radius mask
+Settings_Cor.radius_frac=0.95; %fraction of the pattern width to use as the mask
+
+%hold pixel
+Settings_Cor.hotpixel=0; %hot pixel correction
+Settings_Cor.hot_thresh=1000; %hot pixel threshold
+
+%reside
+Settings_Cor.resize=1; %resize correction
+Settings_Cor.size=240; %image width
+
+Settings_Cor.RealBG=0; %use a real BG
+Settings_Cor.EBSP_bgnum=30; %number of real pattern to use for BG
+
+%radon searching
+
+%Peak Finder
+Settings_Rad.theta_range=[-10 180 1]; %theta min, theta max, theta step - in degrees
+
+%peak hunt
+Settings_Rad.max_peaks=8; %max number of peaks to return
+Settings_Rad.num_peak=15; %number of peaks to search for - peaks will be rejected
+Settings_Rad.theta_search_pix=4; %search size in theta steps
+Settings_Rad.rho_search_per=0.1; %radon search in fractions
+Settings_Rad.min_peak_width=0.002; %seperation of the peak width, in pixels
+
+
+
+pattern_num=4;
+
+%PC search ranges
+PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+Settings_PCin.start=PC_pattern_Astro(:);
+Settings_PCin.range=[0.1 0.1 0.1];
+Settings_PCin.range=Settings_PCin.range(:);
+EBSP_one.PatternIn=pat_array_raw(:,:,pattern_num);
+
+% EBSP_one.PatternIn=pat_array_cor(:,:,pattern_num);
+
+%
+[Settings_Cor,Settings_Rad,Settings_PCin]=Astro_EBSPset(EBSP_one,Settings_Cor,Settings_Rad,Settings_PCin,Input_Data);
+
+%%
+%convert all the pattern centre values
+
+%PC search ranges
+
+%% Radon convert the map
+AreaData.max_pats=size(ebsd,1);
+
+%do this once
+PC_pattern_OI=[ebsd(1).prop.Pattern_Center_X, ebsd(1).prop.Pattern_Center_Y ebsd(1).prop.Detector_Distance];
+[PC_pattern_Astro,PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+
+PCFit_start=zeros(3,AreaData.max_pats);
+for n=1:AreaData.max_pats
+    PC_pattern_OI=[ebsd(pattern_number).prop.Pattern_Center_X, ebsd(pattern_number).prop.Pattern_Center_Y ebsd(pattern_number).prop.Detector_Distance];
+    [PCFit_start(:,n),PatternInfo] = PC_OI_to_Astro(PC_pattern_OI,dataset_header);
+end
+
+%%
+Peak_Quality=zeros(AreaData.max_pats,2);
+Peak_Centres=zeros(Settings_Rad.max_peaks,2,AreaData.max_pats);
+Peak_NBands=zeros(AreaData.max_pats,1);
+
+
+PC_GA_options = optimoptions('ga');
+PC_GA_options.FunctionTolerance=1E-3;
+PC_GA_options.UseParallel=false;
+PC_GA_options.MaxGenerations=15;
+PC_GA_options.PopulationSize=30;
+PC_GA_options.MaxStallGenerations=20;
+PC_GA_options.Display='none';
+
+PC_out=zeros(3,AreaData.max_pats);
+
+PC_new=zeros(3,AreaData.max_pats);
+
+%adjust to 'for' if needed (i.e. no Parallel Compute Toolbox)
+tic
+parfor n=1:AreaData.max_pats
+    %read pattern & correct
+    pattern2 = pat_array_raw(:,:,n);
+    ebsp=struct;
+    [ ebsp.PatternIn] = EBSP_BGCor( pattern2,Settings_Cor );
+
+    %     % radon convert
+    %     [ Peak_Centre_ok,Peak_Quality(n,:) ] = EBSP_RadHunt( EBSP_cor,Settings_Rad);
+    %
+    %     %count the number of bands
+    %     n_bands=size(Peak_Centre_ok,1);
+    %     Peak_NBands(n)=n_bands;
+    %     %fill in the peak centre data
+    %     Peak_Centre_full=zeros(Settings_Rad.max_peaks,2);
+    %     Peak_Centre_full(1:n_bands,:)=Peak_Centre_ok;
+    %     Peak_Centres(:,:,n)=Peak_Centre_full;
+    %
+    %     p=n;
+    %     Peak_Centre_full=Peak_Centres(:,:,n);
+    %     Peak_Centre_ok=Peak_Centre_full(1:Peak_Bands(p),:);
+
+    %save into array for the 2nd pass
+    %     peak_centres{n}=Peak_Centre_ok;
+
+    %find the pattern centre
+    %     clear Settings_PCin
+    Settings_PCin=struct;
+    Phase_Num=1;
+    Settings_PCin.start=PCFit_start(:,n);
+    Settings_PCin.range=[0.1;0.1;0.1];
+    Settings_PCin.start=Settings_PCin.start(:);
+    Settings_PCin.range=Settings_PCin.range(:);
+    %     [PC_out(:,n),PC_err]=PC_subfind(PCFit_start,PC_paty,PC_patx,Peak_Centre_full,outputs,Crystal_LUT,Crystal_UCell,num_phases,n,PC_GA_options,PCin.range);
+    [EBSP_Fe_PCOut] = EBSP_PCSearch(ebsp,Settings_Cor,Settings_Rad,Settings_PCin,Phase_Num,Crystal_LUT,Crystal_UCell);
+    PC_new(:,n)=EBSP_Fe_PCOut.PC;
+    %     PC_new_err(n)=
+end
+toc
+
+%% Do XCF stuff
+
+refpat=2412;
+Settings_Cor2=Settings_Cor;
+Settings_Cor2.resize=0;
+Settings_Cor2.radius=0;
+
+xSet.mesh   =  200;                        % subpixel interpolation mesh (set to 200)
+xSet.numroi =  40;                         % will always be 19 in ring, 1 in centre, + more.
+
+
+run('C:\Users\rmb07\Documents\GitHub\xEBSDv3\start_xEBSD.m');
+
+[PatternData.Image1Cor,PatternData.BCCorOut] = EBSP_BGCor(pat_array_raw(:,:,refpat),Settings_Cor2);;
+
+% figure;
+% subplot(1,2,1)
+% pPattern(pat_array_raw(:,:,refpat),EBSD_Geometry);
+% subplot(1,2,2)
+% pPattern(PatternData.Image1Cor,EBSD_Geometry);
+
+PatternData.roisize = 2^(round(log2(PatternData.BCCorOut.size(1)))-2); %auto set the ROI size
+PatternData.filters = round([log2(PatternData.roisize)/2,log2(PatternData.roisize)/4,4*log2(PatternData.roisize),2*log2(PatternData.roisize)]);
+PatternData.Image_Boundary=[622;512;512];
+
+% pick up image boundary and filter settings
+% [PatternData.filters,PatternData.Image_Boundary] = gBounROI(PatternData);
+
+[xSet]=fROIloc(PatternData,xSet);
+[xSet] = fFiltersX(xSet,PatternData.filters);
+warning off all
+pctRunOnAll warning off
+
+[ref_fft,xSet]  = fROIExtract( xSet,PatternData.Image1Cor );
+
+xShifts=zeros(xSet.numroi,xSet.numroi);
+yShifts=zeros(xSet.numroi,xSet.numroi);
+PHs=zeros(xSet.numroi,xSet.numroi);
+
+tic
+parfor pat=1:AreaData.max_pat
+
+    pattern_test = EBSP_BGCor(pat_array_raw(:,:,pat),Settings_Cor2);
+
+    [test_fft]      = fROIExtract( xSet,pattern_test);
+
+
+ xShift=zeros(xSet.numroi,1);
+        yShift=zeros(xSet.numroi,1);
+    for roi=1:xSet.numroi
+       
+        PH=zeros(xSet.numroi,1);
+        ref_fft2=ref_fft(:,:,roi);
+        test_fft2=test_fft(:,:,roi);
+
+        if any(isnan([ref_fft2(:);test_fft2(:)])) == 1 %if the FFTs contain no info
+
+            xShift(roi)=NaN;
+            yShift(roi)=NaN;
+            PH(roi)=NaN;
+        else
+            [xShift(roi),yShift(roi),PH(roi)] = fReg2(test_fft2,ref_fft2,xSet);
+        end
+
+
+    end
+    xShifts(:,pat)=xShift;
+    yShifts(:,pat)=yShift;
+    PHs(:,pat)=PH;
+end
+toc
+%
+%%
+mXShift=mean(xShifts,1);
+mYShift=mean(yShifts,1);
+figure; plot(ebsd,mXShift-mean(mXShift));  
+nextAxis;
+plot(ebsd,mYShift-mean(mYShift))
+
+% figure;
+% for n=1:40
+% plot(ebsd,xShifts(n,:));
+% nextAxis
+% end
+
+% figure;
+% for n=1:40
+% plot(ebsd,yShifts(n,:));
+% nextAxis
+% end
+xpos=ebsd.x;
+ypos=ebsd.y;
+
+[xDataXS, yDataXS, zDataXS] = prepareSurfaceData( xpos, ypos, mXShift );
+[xDataYS, yDataYS, zDataYS] = prepareSurfaceData( xpos, ypos, mYShift );
+
+% Set up fittype and options.
+ft = fittype( 'poly11' );
+
+% Fit model to data.
+[fitresultXS, gofXS] = fit( [xDataXS, yDataXS], zDataXS, ft );
+[fitresultYS, gofYS] = fit( [xDataYS, yDataYS], zDataYS, ft );
+
+x_grad=fitresultXS.p10;
+y_grad=fitresultYS.p01;
+
+##### SOURCE END #####
+-->
+</body>
+</html>

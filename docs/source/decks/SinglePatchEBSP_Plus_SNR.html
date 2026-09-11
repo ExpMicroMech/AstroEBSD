@@ -1,0 +1,1522 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>SinglePatchEBSP_Plus_SNR</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="SinglePatchEBSP_Plus_SNR.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Analyze single patterns captured at different settings, with each stored in a different submap folder.</a>
+</li>
+<li>
+<a href="#3">file locations</a>
+</li>
+<li>
+<a href="#4">Choose some settings</a>
+</li>
+<li>
+<a href="#5">Experiment 1 - exposure series</a>
+</li>
+<li>
+<a href="#6">Super resolution work</a>
+</li>
+<li>
+<a href="#7">upsample</a>
+</li>
+<li>
+<a href="#8">subsample a number from the original data to check how the dose/upsampling works</a>
+</li>
+<li>
+<a href="#9">Sum the patterns associated with the high spatial magnification area - frame integration experiment</a>
+</li>
+<li>
+<a href="#10">plot the line graph of exposure and signal to noise</a>
+</li>
+<li>
+<a href="#11">Plot the functions for the warping</a>
+</li>
+<li>
+<a href="#12">Load the zoomed in pattern</a>
+</li>
+<li>
+<a href="#13">Radon index the pattern</a>
+</li>
+<li>
+<a href="#14">Now start some pattern matching</a>
+</li>
+<li>
+<a href="#16">Use pattern matching to refine the PC</a>
+</li>
+<li>
+<a href="#17">Simulate patterns</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Analyze single patterns captured at different settings, with each stored in a different submap folder.</h2>
+<p>Suitable for TFS TruePix system</p>
+<pre class="codeinput">home; clear; close <span class="string">all</span>;
+</pre>
+<pre class="codeinput">InputUser.Astro_loc=<span class="string">'C:\Users\bbritt01\Documents\GitHub\AstroEBSD_v2'</span>;
+InputUser.mtex_location=<span class="string">'D:\MTEX\mtex-5.11.2'</span>;
+
+<span class="comment">%</span>
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.Astro_loc,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="3">file locations</h2>
+<pre class="codeinput">TFSProjectLocation_ExpTime = <span class="string">"D:\Ben\2025-08-14T13_03_51_Tianbi_Res_Map_ExpTime"</span>;  <span class="comment">%Exposure series Data</span>
+TFSProjectPath_SR = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_28_18"</span>; <span class="comment">%Super Resolution Data</span>
+TFSProjectPath_Spatial = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T13_02_16"</span>; <span class="comment">%Higher spatial magnification pattern data</span>
+TFSProjectPath_Zoom = <span class="string">"D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_46_24"</span>; <span class="comment">%zoomed in data (detector retracted)</span>
+
+InputUser.Phase_Input  = {<span class="string">'Si_20kv_HR2'</span>}; <span class="comment">%the phase for Radon and pattern matching etc.</span>
+
+ResultsDir=[<span class="string">'C:\Users\bbritt01\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'</span>];
+
+<span class="comment">%pattern file data info - exposure series</span>
+rawPatFileName = <span class="string">"f_00000.pak"</span>;
+procPatFileName = <span class="string">"row_00000.bin"</span>;
+
+<span class="keyword">if</span> isfolder(ResultsDir) == 0
+    mkdir(ResultsDir)
+<span class="keyword">end</span>
+
+<span class="comment">% Low level setting up for phase indexing etc. stuff - you shouldn't need to change this</span>
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+<span class="comment">% initial pattern centre, big patterns</span>
+PC_In_Start=[0.4948186 0.3136417 0.4913804]; <span class="comment">%this is for the TFSProjectPath_SR data</span>
+</pre>
+<pre class="codeoutput error">Error using mkdir
+Zugriff verweigert&#13;
+
+
+Error in SinglePatchEBSP_Plus_SNR (line 37)
+    mkdir(ResultsDir)
+</pre>
+<h2 id="4">Choose some settings</h2>
+<p>Define signal and noise radial bands (in pixels) - use for the SNR calculations these are selected assumping that a 256 pixel pattern is being used so half of the range is 128</p>
+<pre class="codeinput">signalRange = [2, 96];
+noiseRange  = [96, 128];
+angleToExclude = pi/12;
+
+<span class="comment">%Super resolution - choose the point to match the data to</span>
+<span class="comment">% ideally this should help with projection issues at the edge of the pattern</span>
+SR_ref_ebsd_xy=[25,30]; <span class="comment">%select a point as the reference</span>
+
+SR_sfac=10; <span class="comment">%this is the scale of upsampling for the higher magnification EBSP</span>
+</pre>
+<h2 id="5">Experiment 1 - exposure series</h2>
+<pre class="codeinput">disp(<span class="string">"Working on Exposure Series"</span>);
+
+<span class="comment">%load the project info</span>
+projectJson_exp = fullfile(TFSProjectLocation_ExpTime, <span class="string">"project.json"</span>);
+projectInfo_exp = ReadTFSJson(TFSProjectLocation_ExpTime, <span class="string">"project.json"</span>);
+
+<span class="comment">%sort out the site list</span>
+num_sites_exp=size(projectInfo_exp.Sites,1);
+site_ok=true(num_sites_exp,1);
+site_dir=cell(num_sites_exp,1);
+<span class="keyword">for</span> n=1:num_sites_exp
+    <span class="keyword">if</span> strcmpi(projectInfo_exp.Sites(n).Name,<span class="string">'LivePoint'</span>)
+        site_ok(n)=0;
+    <span class="keyword">else</span>
+        site_dir{n}=projectInfo_exp.Sites(n).Name;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+site_dir=site_dir(site_ok);
+num_sites_exp=size(site_dir,1);
+
+<span class="comment">%create the containers to count the data</span>
+allExposure = zeros(num_sites_exp,1);
+peakHeights    = zeros(num_sites_exp, 1);
+SNRValues      = zeros(num_sites_exp, 1);
+radialProfiles = cell(num_sites_exp, 1);
+stepVectors    = cell(num_sites_exp, 1);
+
+
+<span class="comment">% load information from one map to help build things</span>
+TFS_DataLoc=TFSProjectLocation_ExpTime + <span class="string">"\"</span> + site_dir(1);
+[ebsdtemp,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+allProcPatternsExposure = zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,num_sites_exp);
+allPatternsFFTExposure = allProcPatternsExposure;
+
+<span class="comment">%read the patterns</span>
+<span class="keyword">for</span> n = 1:num_sites_exp
+    TFS_DataLoc=TFSProjectLocation_ExpTime + <span class="string">"\"</span> + site_dir(n);
+    [ebsdtemp,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+    [loaded_TFS_patterns] = loadPat_TFS(TFS_DataLoc,[ebsdtemp.x ebsdtemp.y],1);
+    <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+    allProcPatternsExposure(:,:,n)=loaded_TFS_patterns.pat_proc;
+
+    allExposure(n) = (ebsd_header.ExposureTime - 0.0003) * 1e3; <span class="comment">% ms, removing the read out time</span>
+<span class="keyword">end</span>
+
+<span class="comment">%calcuate the FFTs and PS profiles</span>
+<span class="keyword">for</span> n=1:num_sites_exp
+    thisProcPattern = allProcPatternsExposure(:,:,n);
+
+    <span class="comment">% FFT power spectrum</span>
+    thisPatternFFT = abs(fftshift(fft2(thisProcPattern))).^2;
+    allPatternsFFTExposure(:,:,n) = thisPatternFFT;
+
+    <span class="comment">%PH</span>
+    peakHeights(n) = max(thisPatternFFT(:));
+
+    <span class="comment">%Radial profile</span>
+    <span class="comment">% [r_vec, radial_prof] = radial_profile(thisPatternFFT, 2);</span>
+    [stepVectors{n}, radial_prof] = radial_profile_ExcludeAngle(thisPatternFFT, 2, angleToExclude);
+    radialProfiles{n}=radial_prof;
+    <span class="comment">% Compute SNR from profile</span>
+    sig_band = radial_prof(stepVectors{n} &gt;= signalRange(1) &amp; stepVectors{n} &lt;= signalRange(2));
+    noi_band = radial_prof(stepVectors{n} &gt;= noiseRange(1)  &amp; stepVectors{n} &lt;= noiseRange(2));
+    SNRValues(n) = mean(sig_band) / mean(noi_band);
+
+<span class="keyword">end</span>
+
+<span class="comment">% save the patterns</span>
+<span class="keyword">for</span> n=1:num_sites_exp
+    exposure_dur_str=sprintf(<span class="string">'%04d'</span>,round(allExposure(n)));
+    imwrite(normalizeto16bit(flipud(allProcPatternsExposure(:,:,n))), fullfile(ResultsDir,[<span class="string">'ExpSeries_Pat_'</span>,exposure_dur_str,<span class="string">'ms.tif'</span>])); <span class="comment">%bg corrected</span>
+    imwrite(normalizeto16bit(flipud(log10(allPatternsFFTExposure(:,:,n)))), fullfile(ResultsDir,[<span class="string">'ExpSeries_FFT_'</span>, exposure_dur_str,<span class="string">'ms.tif'</span>])); <span class="comment">%FFT</span>
+<span class="keyword">end</span>
+
+disp(<span class="string">"Exposure series done"</span>);
+</pre>
+<h2 id="6">Super resolution work</h2>
+<pre class="codeinput">disp(<span class="string">"Working on Super Resolution"</span>);
+
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);      <span class="comment">%TFS</span>
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outofplane'</span>); <span class="comment">%TFS</span>
+
+<span class="comment">% load data</span>
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFSProjectPath_SR);
+ebsd.scanUnit=<span class="string">'um'</span>; <span class="comment">% update scan unit</span>
+ebsd.prop.pat_number=1:ebsd_header.TotalNumberOfPoints;
+
+pattern_loc=[ebsd.x_in,ebsd.y_in]; <span class="comment">%note this is in 0 based indexing, whole map</span>
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_SR,pattern_loc,1); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+allProcessedPatterns=loaded_TFS_patterns.pat_proc;
+clear <span class="string">loaded_TFS_patterns</span> <span class="comment">%just to tidy up memory</span>
+ebsd=gridify(ebsd);
+
+<span class="comment">%select the reference point for the superresolution experiment</span>
+ref_ebsd_pt=ebsd(SR_ref_ebsd_xy(2),SR_ref_ebsd_xy(1));
+
+<span class="comment">% Loop the patterns and workout scale etc</span>
+t_scale=zeros(1,ebsd_header.TotalNumberOfPoints);
+t_translation = zeros(2, ebsd_header.TotalNumberOfPoints);
+t_rotation = zeros(1, ebsd_header.TotalNumberOfPoints);
+t_peak = zeros(1, ebsd_header.TotalNumberOfPoints);
+
+disp(<span class="string">'Measuring the warping function and regular pattern averaging'</span>)
+
+<span class="comment">%measure the distortions and dewarp</span>
+
+imagestack=zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,ebsd_header.TotalNumberOfPoints);
+imagestack_weight=zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,ebsd_header.TotalNumberOfPoints)+1;
+
+OutPutSize = imref2d([ebsd_header.PatternHeight,ebsd_header.PatternWidth],1,1);
+weight_single=allProcessedPatterns(:,:,1)*0+1;
+
+SR_pattern_reference=allProcessedPatterns(:,:,ref_ebsd_pt.pat_number);
+
+<span class="keyword">parfor</span> pat=1:ebsd_header.TotalNumberOfPoints
+    [tform(pat),t_peak(pat)] = imregcorr(allProcessedPatterns(:,:,pat),SR_pattern_reference,Method=<span class="string">"phasecorr"</span>);
+    t_scale(:,pat)=tform(pat).Scale;
+    t_translation(:,pat)=tform(pat).Translation;
+    t_rotation(:,pat)=tform(pat).RotationAngle;
+
+    temp_image= imwarp(allProcessedPatterns(:,:,pat),tform(pat),<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,OutPutSize,FillValues=0);
+    temp_weight=imwarp(weight_single,tform(pat),<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,OutPutSize,FillValues=0);
+
+    imagestack(:,:,pat) = temp_image;
+    imagestack_weight(:,:,pat) = temp_weight;
+<span class="keyword">end</span>
+disp(<span class="string">'Warping function measured and dewarping (pixel) done'</span>)
+
+
+<span class="comment">%put the warp function in the EBSD container</span>
+ebsd.prop.t_rotation=rot90(reshape(t_rotation(1,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_translation_x=rot90(reshape(t_translation(1,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_translation_y=rot90(reshape(t_translation(2,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_scale=rot90(reshape(t_scale(1,:),ebsd_header.Width,60),1);
+pattern_number_check=1:size(t_scale,2);
+ebsd.prop.pattern_number_check=rot90(reshape(pattern_number_check,ebsd_header.Width,60),1);
+
+<span class="comment">%stack these back together for a single pixel wise pattern</span>
+imagestack_collapse=sum(imagestack,3);
+imagestack_weight_collapse=sum(imagestack_weight,3);
+superres_single_norm=imagestack_collapse./imagestack_weight_collapse;
+superres_single_norm_fft = abs(fftshift(fft2(superres_single_norm))).^2;
+SR_pattern_reference_fft = abs(fftshift(fft2(SR_pattern_reference))).^2;
+
+<span class="comment">%write the patterns to disk</span>
+imwrite(normalizeto16bit(flipud(superres_single_norm)), fullfile(ResultsDir,<span class="string">'SuperRes_SubPix.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(superres_single_norm_fft))), fullfile(ResultsDir,<span class="string">'SuperRes_SubPix_FFT.tif'</span>)); <span class="comment">%FFT</span>
+imwrite(normalizeto16bit(flipud(SR_pattern_reference)), fullfile(ResultsDir,<span class="string">'SuperRes_Ref.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(SR_pattern_reference_fft))), fullfile(ResultsDir,<span class="string">'SuperRes_Ref_FFT.tif'</span>)); <span class="comment">%FFT</span>
+
+<span class="comment">%plot these in matlab</span>
+figure;
+nexttile;
+imagesc(SR_pattern_reference);
+axis <span class="string">equal</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">tight</span>;
+title(<span class="string">'Reference Pattern'</span>);
+
+nexttile;
+imagesc(superres_single_norm);
+axis <span class="string">equal</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">tight</span>;
+title(<span class="string">'Super Resolution Pattern'</span>);
+
+nexttile;
+imagesc(log10(SR_pattern_reference_fft));
+axis <span class="string">equal</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">tight</span>;
+title(<span class="string">'Reference Pattern FFT'</span>);
+
+nexttile;
+imagesc(log10(superres_single_norm_fft));
+axis <span class="string">equal</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">tight</span>;
+title(<span class="string">'Super Resolution Pattern FFT'</span>);
+</pre>
+<h2 id="7">upsample</h2>
+<pre class="codeinput">disp(<span class="string">'Upsampling started - higher resolution'</span>)
+
+<span class="comment">%prepare the stack</span>
+OutPutSize = imref2d([256*SR_sfac 256*SR_sfac],1/SR_sfac,1/SR_sfac);
+imagestack_sfac_new=zeros([256*SR_sfac 256*SR_sfac]);
+imagestack_weight_sfac_new=imagestack_sfac_new;
+
+<span class="comment">%do the upsampling</span>
+<span class="keyword">parfor</span> pat=1:ebsd_header.TotalNumberOfPoints
+
+        tform_n_in=simtform2d(t_scale(:,pat),0,t_translation(:,pat)); <span class="comment">%force rotation to 0</span>
+        A_tform=tform_n_in.A;
+        tform_n=simtform2d(A_tform);
+
+    temp_image= imwarp(allProcessedPatterns(:,:,pat),tform(pat),<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,OutPutSize,FillValues=0);
+    temp_weight=imwarp(weight_single,tform(pat),<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,OutPutSize,FillValues=0);
+
+    imagestack_sfac_new=imagestack_sfac_new+temp_image;
+    imagestack_weight_sfac_new = imagestack_weight_sfac_new+temp_weight;
+<span class="keyword">end</span>
+
+<span class="comment">%deal with the weights, and FFT</span>
+superres_large_norm=imagestack_sfac_new./imagestack_weight_sfac_new;
+superres_large_norm_fft = abs(fftshift(fft2(superres_large_norm))).^2;
+
+<span class="comment">%extract the central FFT to check it is the same as the other method</span>
+fft_centre=(size(superres_large_norm_fft,1)/2);
+fft_centrepix_x=1:ebsd_header.PatternHeight;
+fft_centrepix_y=1:ebsd_header.PatternWidth;
+
+ycen=fft_centre+fft_centrepix_y-ebsd_header.PatternHeight/2;
+xcen=fft_centre+fft_centrepix_y-ebsd_header.PatternHeight/2;
+superres_large_norm_fft_centre = superres_large_norm_fft(ycen,xcen);
+
+imwrite(normalizeto16bit(flipud(superres_large_norm)), fullfile(ResultsDir,<span class="string">'SuperRes_Large.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(superres_large_norm_fft))), fullfile(ResultsDir,<span class="string">'SuperRes_Large_FFT.tif'</span>)); <span class="comment">%FFT</span>
+imwrite(normalizeto16bit(flipud(log10(superres_large_norm_fft_centre))), fullfile(ResultsDir,<span class="string">'SuperRes_Large_cFFT.tif'</span>)); <span class="comment">%FFT</span>
+
+disp(<span class="string">'Upsampling finished - higher resolution'</span>)
+
+figure;
+nexttile;
+imagesc(superres_large_norm); colormap(<span class="string">'gray'</span>); axis <span class="string">equal</span>; axis <span class="string">tight</span>; axis <span class="string">xy</span>;
+title(<span class="string">'Super resolution - up sampled'</span>)
+nexttile;
+imagesc(log10(superres_large_norm_fft)); colormap(<span class="string">'gray'</span>); axis <span class="string">equal</span>; axis <span class="string">tight</span>;  axis <span class="string">xy</span>;
+title(<span class="string">'Super resolution - up sampled FFT'</span>)
+nexttile;
+imagesc(log10(superres_large_norm_fft_centre)); colormap(<span class="string">'gray'</span>); axis <span class="string">equal</span>; axis <span class="string">tight</span>;  axis <span class="string">xy</span>;
+title(<span class="string">'Super resolution - up sampled FFT-centre'</span>)
+nexttile;
+imagesc(log10(superres_single_norm_fft));
+axis <span class="string">equal</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">tight</span>;
+title(<span class="string">'Super Resolution Pattern FFT'</span>);
+</pre>
+<h2 id="8">subsample a number from the original data to check how the dose/upsampling works</h2>
+<pre class="codeinput">disp(<span class="string">'Dose sampling started'</span>)
+
+num_log=10; <span class="comment">%how many patterns to sum</span>
+
+<span class="comment">%allocate some variables</span>
+numPatsToSample = round(logspace(0,log10(ebsd_header.TotalNumberOfPoints),num_log));
+imagestack_dose=zeros([size(imagestack,1) size(imagestack,2),num_log]);
+imagestack_doseii_fft=imagestack_dose;
+SNRValues_SubPixel=zeros(1,num_log);
+
+<span class="comment">%go through the stack and find patterns that you like</span>
+rng <span class="string">default</span>; <span class="comment">%fix the rng to be the same each time</span>
+<span class="keyword">for</span> n=1:num_log
+    <span class="keyword">if</span> n &lt; num_log
+
+        <span class="comment">%create a random list of patterns, and make sure they are unique</span>
+        selectedPatterns = randi([1,ebsd_header.TotalNumberOfPoints], numPatsToSample(n), 1);
+        selectedPatterns=unique(selectedPatterns);
+        <span class="keyword">while</span> numel(selectedPatterns) &lt; numPatsToSample(n)
+            disp([<span class="string">'For '</span> int2str(n) <span class="string">' iteration adding patterns to list'</span>]) <span class="comment">%notify if the search had to grow the the random additions</span>
+
+            selectedPatterns2 = randi([1,ebsd_header.TotalNumberOfPoints], numPatsToSample(n), 1);
+            selectedPatterns_list=unique([selectedPatterns;selectedPatterns2]);
+            <span class="keyword">if</span> numel(selectedPatterns_list) &gt;= numPatsToSample(n)
+                selectedPatterns_list = selectedPatterns_list(randperm(length(selectedPatterns_list)));
+                selectedPatterns =  selectedPatterns_list(1:numPatsToSample(n));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">else</span> <span class="comment">%because we want every pattern</span>
+        selectedPatterns = 1:ebsd_header.TotalNumberOfPoints;
+    <span class="keyword">end</span>
+
+    <span class="comment">%stack, normalize and FFT</span>
+
+    imagestack_doseii=sum(imagestack(:,:,selectedPatterns),3);
+    imagestack_doseii_weight=sum(imagestack_weight(:,:,selectedPatterns),3)+0.00001; <span class="comment">%add a small weight offset to deal with the divide by 0 issue</span>
+
+    imagestack_dose(:,:,n)=imagestack_doseii./imagestack_doseii_weight;
+
+    imagestack_doseii_fft(:,:,n) = abs(fftshift(fft2(imagestack_dose(:,:,n)))).^2;
+
+    <span class="comment">% do the radial profiles</span>
+
+    [r_vec, radial_prof] = radial_profile_ExcludeAngle(imagestack_doseii_fft(:,:,n), 2, angleToExclude);
+
+    stepVectors{n}    = r_vec;
+    radialProfiles{n} = radial_prof;
+    <span class="comment">% Compute SNR from profile</span>
+    sig_band = radial_prof(r_vec &gt;= signalRange(1) &amp; r_vec &lt;= signalRange(2));
+    noi_band = radial_prof(r_vec &gt;= noiseRange(1)  &amp; r_vec &lt;= noiseRange(2));
+
+    SNRValues_SubPixel(n) = mean(sig_band) / mean(noi_band);
+<span class="keyword">end</span>
+
+<span class="comment">%plot this data</span>
+figure;
+<span class="keyword">for</span> n=1:num_log
+    nexttile;
+    imagesc(imagestack_dose(:,:,n)); axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+    title(int2str(numPatsToSample(n)))
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> n=1:num_log
+    nexttile;
+    imagesc(log10(imagestack_doseii_fft(:,:,n))); axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+    title(int2str(numPatsToSample(n)))
+<span class="keyword">end</span>
+</pre>
+<h2 id="9">Sum the patterns associated with the high spatial magnification area - frame integration experiment</h2>
+<pre class="codeinput">disp(<span class="string">'Higher spatial magnification sampling started'</span>)
+<span class="comment">% load data</span>
+[ebsd_hm,ebsd_header_hm] = bIDX_to_EBSD(TFSProjectPath_Spatial);
+ebsd_hm.scanUnit=<span class="string">'um'</span>; <span class="comment">% update scan unit</span>
+ebsebsd_hmd.prop.pat_number=1:ebsd_header_hm.TotalNumberOfPoints;
+
+pattern_loc_hm=[ebsd_hm.x_in,ebsd_hm.y_in]; <span class="comment">%note this is in 0 based indexing, whole map loading</span>
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_Spatial,pattern_loc_hm,1); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+allProcessedPatterns_hm=loaded_TFS_patterns.pat_proc;
+clear <span class="string">loaded_TFS_patterns</span> <span class="comment">%just to tidy up memory</span>
+
+sumMagnifiedPatterns = mean(allProcessedPatterns_hm, 3);
+
+figure;
+imagesc(sumMagnifiedPatterns); axis <span class="string">image</span> <span class="string">off</span>; colormap(<span class="string">"gray"</span>); axis <span class="string">xy</span>; axis <span class="string">tight</span>;
+<span class="comment">% imwrite(normalizeto16bit(sumMagnifiedPatterns), "sumMagnifiedPatterns.png");</span>
+
+sumMagnifiedFFT = abs(fftshift(fft2(sumMagnifiedPatterns))).^2;
+<span class="comment">% imwrite(normalizeto16bit(log10(sumMagnifiedFFT)), "sumMagnifiedPatternsFFT.png");</span>
+
+numPatsToSample_hm=10;
+ranges_hm = round(logspace(0,log10(ebsd_header_hm.TotalNumberOfPoints),numPatsToSample_hm));
+
+SNRValues_Magnified=zeros(1,numPatsToSample_hm);
+
+<span class="keyword">for</span> n = 1:numPatsToSample_hm
+
+     <span class="keyword">if</span> n &lt; numPatsToSample_hm
+
+        <span class="comment">%create a random list of patterns, and make sure they are unique</span>
+        selectedPatterns_hm = randi([1,ebsd_header_hm.TotalNumberOfPoints], ranges_hm(n), 1);
+        selectedPatterns_hm= unique(selectedPatterns_hm);
+        <span class="keyword">while</span> numel(selectedPatterns_hm) &lt; ranges_hm(n)
+            disp([<span class="string">'For '</span> int2str(n) <span class="string">' iteration adding patterns to list'</span>]) <span class="comment">%notify if the search had to grow the the random additions</span>
+
+            selectedPatterns2 = randi([1,ebsd_header_hm.TotalNumberOfPoints], ranges_hm(n), 1);
+            selectedPatterns_list=unique([selectedPatterns_hm;selectedPatterns2]);
+            <span class="keyword">if</span> numel(selectedPatterns_list) &gt;= ranges_hm(n)
+                selectedPatterns_list = selectedPatterns_list(randperm(length(selectedPatterns_list)));
+                selectedPatterns_hm =  selectedPatterns_list(1:ranges_hm(n));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">else</span> <span class="comment">%because we want every pattern</span>
+        selectedPatterns_hm = 1:ebsd_header_hm.TotalNumberOfPoints;
+    <span class="keyword">end</span>
+
+    meanPattern = mean(allProcessedPatterns_hm(:,:,selectedPatterns_hm), 3);
+    sumMagnifiedFFT = abs(fftshift(fft2(meanPattern))).^2;
+
+    <span class="comment">% [r_vec, radial_prof] = radial_profile(sumMagnifiedFFT, 2);</span>
+    [r_vec, radial_prof] = radial_profile_ExcludeAngle(sumMagnifiedFFT, 2, angleToExclude);
+    stepVectors{numPatsToSample_hm+2}    = r_vec;
+    radialProfiles{numPatsToSample_hm+2} = radial_prof;
+    <span class="comment">% Compute SNR from profile</span>
+    sig_band = radial_prof(r_vec &gt;= signalRange(1) &amp; r_vec &lt;= signalRange(2));
+    noi_band = radial_prof(r_vec &gt;= noiseRange(1)  &amp; r_vec &lt;= noiseRange(2));
+
+    SNRValues_Magnified(n) = mean(sig_band) / mean(noi_band);
+<span class="keyword">end</span>
+</pre>
+<h2 id="10">plot the line graph of exposure and signal to noise</h2>
+<pre class="codeinput">fig_lineplot=figure;
+plot(numPatsToSample .* 300, SNRValues_SubPixel, <span class="string">'.-'</span>, <span class="string">'MarkerSize'</span>,30, <span class="string">'LineWidth'</span>, 2);
+
+xlabel(<span class="string">"Exposure Time (ms)"</span>);
+ylabel(<span class="string">"SNR (FFT radial average)"</span>);
+set(gca, <span class="string">'XScale'</span>, <span class="string">'log'</span>);
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+hold <span class="string">on</span>;
+plot(allExposure, SNRValues(1:num_sites_exp), <span class="string">'.-'</span>, <span class="string">'MarkerSize'</span>,30, <span class="string">'LineWidth'</span>,2);
+
+plot(300 .* ranges_hm, SNRValues_Magnified, <span class="string">'.-'</span>, <span class="string">'MarkerSize'</span>,30, <span class="string">'LineWidth'</span>, 2);
+
+set(gca, <span class="string">'FontSize'</span>, 20);
+legend([<span class="string">"Super Resolution"</span> <span class="string">"Single Pattern"</span> <span class="string">"Frame Integration"</span>], <span class="string">"Location"</span>,<span class="string">"northwest"</span>);
+grid <span class="string">on</span>;
+
+saveas(fig_lineplot,fullfile(ResultsDir,<span class="string">'SNR_Graph.tif'</span>))
+</pre>
+<h2 id="11">Plot the functions for the warping</h2>
+<pre class="codeinput">
+<span class="comment">%plot this data</span>
+figure;
+plot(ebsd,ebsd.x); title(<span class="string">'x'</span>)
+nextAxis
+plot(ebsd,ebsd.y); title(<span class="string">'y'</span>)
+nextAxis
+plot(ebsd,ebsd.prop.t_translation_x); title(<span class="string">'x translate'</span>)
+nextAxis
+plot(ebsd,ebsd.prop.t_translation_y); title(<span class="string">'y translate'</span>)
+nextAxis
+plot(ebsd,ebsd.prop.t_scale); title(<span class="string">'t scale'</span>)
+nextAxis
+plot(ebsd,ebsd.prop.t_rotation); title(<span class="string">'t rotation'</span>)
+nextAxis;
+plot(ebsd,ebsd.prop.pat_number); title(<span class="string">'Pattern Number - raw data'</span>);
+nextAxis
+plot(ebsd, ebsd.prop.pattern_number_check); title(<span class="string">'Pattern Num - model build'</span>);
+</pre>
+<h2 id="12">Load the zoomed in pattern</h2>
+<pre class="codeinput">disp(<span class="string">'Working on the camera retraction experiment'</span>)
+<span class="comment">% load map data</span>
+[ebsd_z,ebsd_header_z] = bIDX_to_EBSD(TFSProjectPath_Zoom);
+ebsd_hm.scanUnit=<span class="string">'um'</span>; <span class="comment">% update scan unit</span>
+ebsebsd_hmd.prop.pat_number=1:ebsd_header_z.TotalNumberOfPoints;
+
+<span class="comment">%load pattern data</span>
+pattern_loc_z=[ebsd_z.x_in,ebsd_z.y_in]; <span class="comment">%note this is in 0 based indexing, whole map loading</span>
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_Zoom,pattern_loc_z,1); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+allProcessedPatterns_z=loaded_TFS_patterns.pat_proc;
+clear <span class="string">loaded_TFS_patterns</span> <span class="comment">%just to tidy up memory</span>
+
+<span class="comment">%average these together</span>
+averageZoomedInPatterns = mean(allProcessedPatterns_z, 3);
+
+<span class="comment">% Use the high magnification pattern and fit the other patterns onto this - via the warping functions</span>
+
+<span class="comment">%warp the super res to the sub region</span>
+tfun_mag=imregcorr(superres_large_norm,averageZoomedInPatterns,Method=<span class="string">"phasecorr"</span>);
+<span class="comment">%fix the magnification</span>
+sameAsInput = affineOutputView(size(averageZoomedInPatterns),tfun_mag,<span class="string">"BoundsStyle"</span>,<span class="string">"SameAsInput"</span>);
+
+<span class="comment">%do the warp - super resolution large vs magnified</span>
+zoom_resize_factor=2.6340; <span class="comment">%estimate factor for the zoom function between the camera retract pattern and full pattern</span>
+mega_zoomed=imwarp(superres_large_norm,tfun_mag,<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,sameAsInput,FillValues=0);
+frame_integral_max = imresize((mean(allProcessedPatterns_hm, 3)),2.6340,Method=<span class="string">'lanczos3'</span>);
+
+tfun_fi=imregcorr(frame_integral_max,averageZoomedInPatterns,Method=<span class="string">"phasecorr"</span>);
+sameAsInput2 = affineOutputView(size(averageZoomedInPatterns),tfun_fi,<span class="string">"BoundsStyle"</span>,<span class="string">"SameAsInput"</span>);
+fi_zoomed=imwarp(frame_integral_max,tfun_fi,<span class="string">'bicubic'</span>,<span class="string">"OutputView"</span>,sameAsInput2,FillValues=0);
+
+<span class="comment">%do the FFTs</span>
+fft_zoom=abs(fftshift(fft2(averageZoomedInPatterns))).^2;
+fft_sr_zoom=abs(fftshift(fft2(mega_zoomed))).^2;
+fft_fr_zoom=abs(fftshift(fft2(fi_zoomed))).^2;
+
+<span class="comment">%save these</span>
+imwrite(normalizeto16bit(flipud(averageZoomedInPatterns)), fullfile(ResultsDir,<span class="string">'Zoomed.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(fft_zoom))), fullfile(ResultsDir,<span class="string">'Zoomed_FFT.tif'</span>)); <span class="comment">%FFT</span>
+imwrite(normalizeto16bit(flipud(mega_zoomed)), fullfile(ResultsDir,<span class="string">'Zoomed_SR_Up.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(fft_sr_zoom))), fullfile(ResultsDir,<span class="string">'Zoomed_SR_Up_FFT.tif'</span>)); <span class="comment">%FFT</span>
+imwrite(normalizeto16bit(flipud(fi_zoomed)), fullfile(ResultsDir,<span class="string">'Zoomed_Reg.tif'</span>)); <span class="comment">%bg corrected</span>
+imwrite(normalizeto16bit(flipud(log10(fft_fr_zoom))), fullfile(ResultsDir,<span class="string">'Zoomed_Reg_FFT.tif'</span>)); <span class="comment">%FFT</span>
+
+
+<span class="comment">% plot these comparisons</span>
+figure;
+nexttile;
+imagesc(averageZoomedInPatterns); title(<span class="string">'Zoomed in integral'</span>)
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+nexttile;
+imagesc(mega_zoomed); title(<span class="string">'Super Resolution - upsample'</span>)
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+nexttile;
+imagesc(fi_zoomed); title(<span class="string">'Max Frame Intensity - Auto Resize'</span>)
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+
+
+nexttile;
+imagesc(log10(fft_zoom)); axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+c_fft=clim;
+nexttile;
+imagesc(log10(fft_sr_zoom)); axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+clim(c_fft); <span class="comment">%fix the FFT colorscale</span>
+nexttile;
+imagesc(log10(fft_fr_zoom)); axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+clim(c_fft); <span class="comment">%fix the FFT colorscale</span>
+</pre>
+<h2 id="13">Radon index the pattern</h2>
+<pre class="codeinput">disp(<span class="string">'Radon indexing beginning'</span>)
+<span class="comment">%Radon based background correction settings</span>
+Settings_CorX.gfilt=1; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.radius=1; <span class="comment">%use a radius mask</span>
+Settings_CorX.radius_frac=0.85; <span class="comment">%fraction of the pattern width to use as the mask</span>
+Settings_CorX.hotpixel=0; <span class="comment">%hot pixel correction</span>
+Settings_CorX.hot_thresh=1000; <span class="comment">%hot pixel threshold</span>
+Settings_CorX.resize=0; <span class="comment">%resize correction</span>
+Settings_CorX.RealBG=0; <span class="comment">%use a real BG</span>
+Settings_CorX.EBSP_bgnum=30; <span class="comment">%number of real pattern to use for BG</span>
+Settings_CorX.SquareCrop = 0; <span class="comment">%make square the EBSP</span>
+Settings_CorX.SplitBG=0; <span class="comment">%deal with a split screen</span>
+
+<span class="comment">%Set up the radon transform peak finder</span>
+Settings_Rad.theta_range=[-10 180 1]; <span class="comment">%theta min, theta max, theta step - in degrees</span>
+Settings_Rad.max_peaks=8; <span class="comment">%max number of peaks to return</span>
+Settings_Rad.num_peak=20; <span class="comment">%number of peaks to search for - peaks will be rejected</span>
+Settings_Rad.theta_search_pix=6; <span class="comment">%search size in theta steps</span>
+Settings_Rad.rho_search_per=0.2; <span class="comment">%radon search in fractions</span>
+Settings_Rad.min_peak_width=0.002; <span class="comment">%min rseperation of the peak width, in pixels</span>
+
+<span class="comment">% set up the phase</span>
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder_RTM( InputUser.Phase_Input,RTM.Phase_Folder );
+
+<span class="comment">% Background correct - mostly this is to make the Radon work, as the very</span>
+<span class="comment">% sharp patterns causes some issues with the Radon</span>
+
+[EBSP_superres_Radon.PatternIn,Settings_Cor ] = EBSP_BGCor( superres_single_norm,Settings_CorX);
+EBSP_superres_Radon.PC=PC_In_Start;
+
+<span class="comment">%Uncomment to use the GUI to check the indexing</span>
+<span class="comment">% Astro_EBSPset(EBSP_One,Settings_CorX,Settings_Rad,Settings_PCin,InputUser);</span>
+
+<span class="comment">%Perform the Radon based indexing</span>
+<span class="comment">%Radon transform</span>
+[ EBSP_superres_Radon.Peak_Centre,EBSP_superres_Radon.Single.Peak_Set_All,EBSP_superres_Radon.Peak_Set_All,<span class="keyword">...</span>
+            EBSP_superres_Radon.R_EBSP,EBSP_superres_Radon.R_Edge,EBSP_superres_Radon.R_rho,EBSP_superres_Radon.R_theta ] <span class="keyword">...</span>
+            = EBSP_RadHunt( EBSP_superres_Radon.PatternIn,Settings_Rad);
+
+<span class="comment">% Convert the bands to normal space</span>
+[ EBSP_superres_Radon.nhat_gnom] = EBSP_NormConv( EBSP_superres_Radon.Peak_Centre,size(EBSP_superres_Radon.PatternIn),EBSP_superres_Radon.PC);
+
+<span class="comment">% Index</span>
+[EBSP_superres_Radon.rotdata,EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
+
+<span class="comment">%generate the geometry for analysis</span>
+[ EBSP_superres_Radon.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_superres_Radon.PC );
+
+<span class="comment">%plot the result</span>
+EBSP_OneFigure=Plot_SinglePattern(EBSP_superres_Radon,Crystal_UCell,Crystal_LUT,1);
+
+saveas(EBSP_OneFigure.figure,fullfile(ResultsDir,<span class="string">'Super_Res_RadonIndexed.tif'</span>))
+</pre>
+<h2 id="14">Now start some pattern matching</h2>
+<p>create a reference pattern from the Dynamics bin file</p>
+<pre class="codeinput">[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder); <span class="comment">%#ok&lt;CCAT1&gt;</span>
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex); <span class="comment">%use the full pattern for rendering</span>
+</pre>
+<pre class="codeinput">disp(<span class="string">'Pattern matching - started'</span>)
+<span class="comment">%setttings for RTM</span>
+RTM.screensize = 256; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq=8; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.iterations = 12;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 256; <span class="comment">%LPT size used in pixels</span>
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+
+
+[ SettingsXCF] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+SettingsXCF.filters=[2 1 64 32]; <span class="comment">%From fiddling these seem to be the best filter settings, but there may be better ones</span>
+SettingsXCF.single=1;
+[SettingsXCF.FFTfilter,SettingsXCF.hfilter] = fFilters(SettingsXCF.roisize,SettingsXCF.filters);
+
+<span class="comment">%resize the experiment to make it easier to work with</span>
+Settings_Cor_RTM=Settings_Cor;
+Settings_Cor_RTM.radius=0;
+Settings_Cor_RTM.gfilt=1; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_Cor_RTM.gfilt_s=3; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+
+<span class="comment">%generate the geometry for analysis</span>
+[ EBSP_superres_RTM1.PatternGeometry ] = EBSP_Gnom( Settings_Cor_RTM,EBSP_superres_Radon.PC );
+
+<span class="comment">%Take the experiment and adjust etc.</span>
+[EBSP_superres_RTM1.PatternIn] = EBSP_BGCor( superres_single_norm,Settings_Cor_RTM);
+
+RTM.WindowOff=1;
+<span class="comment">%Get ready for RTM</span>
+[Pat_Ref_r] = refine_prep(EBSP_superres_RTM1.PatternIn,SettingsXCF,RTM);
+
+<span class="comment">%refine - using the Radon index to start</span>
+[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+</pre>
+<h2 id="16">Use pattern matching to refine the PC</h2>
+<pre class="codeinput">disp(<span class="string">'Pattern matching - PC refinement started'</span>)
+Refine.ss=0.2; <span class="comment">%initial probe volume in terms of the +/- PC values to search</span>
+Refine.p=2; <span class="comment">%order of polynomial to fit to tetrahedron</span>
+Refine.n_its=100; <span class="comment">%number of iterations</span>
+Refine.reindex=1; <span class="comment">%index each time</span>
+Refine.print=1; <span class="comment">%give an output of how the search is running</span>
+Refine.PHTol=1E-7; <span class="comment">%refinement threshold to stop, if the PH doesn't change by more than this</span>
+
+<span class="comment">%fPCRefine2(PatternIn,rotmat,PatternInfo,PCRefine_Settings,SettingsXCF,screen_int,RTM_setup)</span>
+[RTM_PC_Found] = fPCRefine2(Pat_Ref_r,G_Refined1,EBSP_superres_RTM1.PatternGeometry,Refine,SettingsXCF,screen_int,RTM);
+<span class="comment">%refine</span>
+<span class="comment">%generate the geometry for analysis</span>
+[ EBSP_superres_RTM2.PatternGeometry ] = EBSP_Gnom( Settings_Cor_RTM,RTM_PC_Found );
+[G_Refined2,regout_R2] = refine5(Pat_Ref_r,EBSP_superres_RTM2.PatternGeometry,EBSP_superres_RTM2.PatternGeometry.PC,G_Refined1,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+</pre>
+<h2 id="17">Simulate patterns</h2>
+<pre class="codeinput">
+<span class="comment">%simulate the pattern</span>
+[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata.detector,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+
+[ EBSP_sim_R1 ] = EBSP_gen( EBSP_superres_RTM1.PatternGeometry,G_Refined1,screen_int ); <span class="comment">%generate the EBSP for this iteration</span>
+[ EBSP_sim_R2 ] = EBSP_gen( EBSP_superres_RTM2.PatternGeometry,G_Refined2,screen_int ); <span class="comment">%generate the EBSP for this iteration</span>
+
+figure;
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn,EBSP_superres_RTM1.PatternGeometry); title(<span class="string">'Experiment'</span>)
+nexttile;
+pPattern(EBSP_sim_H,EBSP_superres_RTM1.PatternGeometry); title(<span class="string">'Radon'</span>)
+nexttile;
+pPattern(EBSP_sim_R1,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'RTM1'</span>);
+nexttile;
+pPattern(EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'RTM2'</span>);
+nexttile;
+pPattern(EBSP_sim_R2-EBSP_sim_H,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'Radon-RTM2'</span>);
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_H,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'Exp-Radon'</span>);
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'Exp-RTM1'</span>);
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title(<span class="string">'Exp-RTM2'</span>);
+</pre>
+<pre class="codeinput">fig_comp=figure;
+s1=subplot(1,3,1);
+Plot_EBSPAnnotated( superres_single_norm,EBSP_superres_RTM2.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s1);
+title(<span class="string">'Exp, indexed'</span>)
+s2=subplot(1,3,2);
+Plot_EBSPAnnotated( EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s2);
+title(<span class="string">'RTM2, indexed'</span>)
+
+s2=subplot(1,3,3);
+Plot_EBSPAnnotated( EBSP_sim_R2-EBSP_superres_RTM1.PatternIn,EBSP_superres_RTM1.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s2);
+title(<span class="string">'RTM2-Exp, indexed'</span>)
+
+saveas(fig_comp,fullfile(ResultsDir,<span class="string">'Compared_Patterns.tif'</span>))
+
+disp(<span class="string">'Code finished'</span>)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Analyze single patterns captured at different settings, with each stored in a different submap folder.
+% Suitable for TFS TruePix system
+home; clear; close all;
+
+%%
+InputUser.Astro_loc='C:\Users\bbritt01\Documents\GitHub\AstroEBSD_v2';
+InputUser.mtex_location='D:\MTEX\mtex-5.11.2';
+
+%
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(InputUser.mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(InputUser.Astro_loc,"start_AstroEBSD.m"));
+end
+
+%% file locations
+TFSProjectLocation_ExpTime = "D:\Ben\2025-08-14T13_03_51_Tianbi_Res_Map_ExpTime";  %Exposure series Data
+TFSProjectPath_SR = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_28_18"; %Super Resolution Data
+TFSProjectPath_Spatial = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T13_02_16"; %Higher spatial magnification pattern data
+TFSProjectPath_Zoom = "D:\Ben\2025-08-14T11_23_07_Tianbi_Res_Map_2\2025-08-14T11_46_24"; %zoomed in data (detector retracted)
+
+InputUser.Phase_Input  = {'Si_20kv_HR2'}; %the phase for Radon and pattern matching etc.
+
+ResultsDir=['C:\Users\bbritt01\Documents\MATLAB\Superresolution\SinglePatchEBSP_Plus_SNR\results'];
+
+%pattern file data info - exposure series
+rawPatFileName = "f_00000.pak";
+procPatFileName = "row_00000.bin";
+
+if isfolder(ResultsDir) == 0
+    mkdir(ResultsDir)
+end
+
+% Low level setting up for phase indexing etc. stuff - you shouldn't need to change this
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+% initial pattern centre, big patterns
+PC_In_Start=[0.4948186 0.3136417 0.4913804]; %this is for the TFSProjectPath_SR data
+%% Choose some settings
+% Define signal and noise radial bands (in pixels) - use for the SNR
+% calculations
+% these are selected assumping that a 256 pixel pattern is being used
+% so half of the range is 128
+signalRange = [2, 96];
+noiseRange  = [96, 128];
+angleToExclude = pi/12;
+
+%Super resolution - choose the point to match the data to
+% ideally this should help with projection issues at the edge of the pattern
+SR_ref_ebsd_xy=[25,30]; %select a point as the reference
+
+SR_sfac=10; %this is the scale of upsampling for the higher magnification EBSP
+
+%% Experiment 1 - exposure series
+disp("Working on Exposure Series");
+
+%load the project info
+projectJson_exp = fullfile(TFSProjectLocation_ExpTime, "project.json");
+projectInfo_exp = ReadTFSJson(TFSProjectLocation_ExpTime, "project.json");
+
+%sort out the site list
+num_sites_exp=size(projectInfo_exp.Sites,1);
+site_ok=true(num_sites_exp,1);
+site_dir=cell(num_sites_exp,1);
+for n=1:num_sites_exp
+    if strcmpi(projectInfo_exp.Sites(n).Name,'LivePoint')
+        site_ok(n)=0;
+    else
+        site_dir{n}=projectInfo_exp.Sites(n).Name;
+    end
+end
+
+site_dir=site_dir(site_ok);
+num_sites_exp=size(site_dir,1);
+
+%create the containers to count the data
+allExposure = zeros(num_sites_exp,1);
+peakHeights    = zeros(num_sites_exp, 1);
+SNRValues      = zeros(num_sites_exp, 1);
+radialProfiles = cell(num_sites_exp, 1);
+stepVectors    = cell(num_sites_exp, 1);
+
+
+% load information from one map to help build things
+TFS_DataLoc=TFSProjectLocation_ExpTime + "\" + site_dir(1);
+[ebsdtemp,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+allProcPatternsExposure = zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,num_sites_exp);
+allPatternsFFTExposure = allProcPatternsExposure;
+
+%read the patterns
+for n = 1:num_sites_exp
+    TFS_DataLoc=TFSProjectLocation_ExpTime + "\" + site_dir(n);
+    [ebsdtemp,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+    [loaded_TFS_patterns] = loadPat_TFS(TFS_DataLoc,[ebsdtemp.x ebsdtemp.y],1); 
+    %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+    allProcPatternsExposure(:,:,n)=loaded_TFS_patterns.pat_proc;
+
+    allExposure(n) = (ebsd_header.ExposureTime - 0.0003) * 1e3; % ms, removing the read out time
+end
+
+%calcuate the FFTs and PS profiles
+for n=1:num_sites_exp
+    thisProcPattern = allProcPatternsExposure(:,:,n);
+    
+    % FFT power spectrum
+    thisPatternFFT = abs(fftshift(fft2(thisProcPattern))).^2;
+    allPatternsFFTExposure(:,:,n) = thisPatternFFT;
+
+    %PH
+    peakHeights(n) = max(thisPatternFFT(:));
+
+    %Radial profile
+    % [r_vec, radial_prof] = radial_profile(thisPatternFFT, 2);
+    [stepVectors{n}, radial_prof] = radial_profile_ExcludeAngle(thisPatternFFT, 2, angleToExclude);
+    radialProfiles{n}=radial_prof;
+    % Compute SNR from profile
+    sig_band = radial_prof(stepVectors{n} >= signalRange(1) & stepVectors{n} <= signalRange(2));
+    noi_band = radial_prof(stepVectors{n} >= noiseRange(1)  & stepVectors{n} <= noiseRange(2));
+    SNRValues(n) = mean(sig_band) / mean(noi_band);
+
+end
+
+% save the patterns
+for n=1:num_sites_exp
+    exposure_dur_str=sprintf('%04d',round(allExposure(n)));
+    imwrite(normalizeto16bit(flipud(allProcPatternsExposure(:,:,n))), fullfile(ResultsDir,['ExpSeries_Pat_',exposure_dur_str,'ms.tif'])); %bg corrected
+    imwrite(normalizeto16bit(flipud(log10(allPatternsFFTExposure(:,:,n)))), fullfile(ResultsDir,['ExpSeries_FFT_', exposure_dur_str,'ms.tif'])); %FFT
+end
+
+disp("Exposure series done");
+
+%% Super resolution work
+
+disp("Working on Super Resolution");
+
+setMTEXpref('xAxisDirection','east');      %TFS
+setMTEXpref('zAxisDirection','outofplane'); %TFS
+
+% load data
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFSProjectPath_SR);
+ebsd.scanUnit='um'; % update scan unit
+ebsd.prop.pat_number=1:ebsd_header.TotalNumberOfPoints;
+
+pattern_loc=[ebsd.x_in,ebsd.y_in]; %note this is in 0 based indexing, whole map
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_SR,pattern_loc,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+allProcessedPatterns=loaded_TFS_patterns.pat_proc;
+clear loaded_TFS_patterns %just to tidy up memory
+ebsd=gridify(ebsd);
+
+%select the reference point for the superresolution experiment
+ref_ebsd_pt=ebsd(SR_ref_ebsd_xy(2),SR_ref_ebsd_xy(1));
+
+% Loop the patterns and workout scale etc
+t_scale=zeros(1,ebsd_header.TotalNumberOfPoints);
+t_translation = zeros(2, ebsd_header.TotalNumberOfPoints);
+t_rotation = zeros(1, ebsd_header.TotalNumberOfPoints);
+t_peak = zeros(1, ebsd_header.TotalNumberOfPoints);
+
+disp('Measuring the warping function and regular pattern averaging')
+
+%measure the distortions and dewarp
+
+imagestack=zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,ebsd_header.TotalNumberOfPoints);
+imagestack_weight=zeros(ebsd_header.PatternHeight,ebsd_header.PatternWidth,ebsd_header.TotalNumberOfPoints)+1;
+
+OutPutSize = imref2d([ebsd_header.PatternHeight,ebsd_header.PatternWidth],1,1);
+weight_single=allProcessedPatterns(:,:,1)*0+1;
+
+SR_pattern_reference=allProcessedPatterns(:,:,ref_ebsd_pt.pat_number);
+
+parfor pat=1:ebsd_header.TotalNumberOfPoints
+    [tform(pat),t_peak(pat)] = imregcorr(allProcessedPatterns(:,:,pat),SR_pattern_reference,Method="phasecorr");
+    t_scale(:,pat)=tform(pat).Scale;
+    t_translation(:,pat)=tform(pat).Translation;
+    t_rotation(:,pat)=tform(pat).RotationAngle;
+
+    temp_image= imwarp(allProcessedPatterns(:,:,pat),tform(pat),'bicubic',"OutputView",OutPutSize,FillValues=0);
+    temp_weight=imwarp(weight_single,tform(pat),'bicubic',"OutputView",OutPutSize,FillValues=0);
+
+    imagestack(:,:,pat) = temp_image;
+    imagestack_weight(:,:,pat) = temp_weight;
+end
+disp('Warping function measured and dewarping (pixel) done')
+
+
+%put the warp function in the EBSD container
+ebsd.prop.t_rotation=rot90(reshape(t_rotation(1,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_translation_x=rot90(reshape(t_translation(1,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_translation_y=rot90(reshape(t_translation(2,:),ebsd_header.Width,ebsd_header.Height),1);
+ebsd.prop.t_scale=rot90(reshape(t_scale(1,:),ebsd_header.Width,60),1);
+pattern_number_check=1:size(t_scale,2);
+ebsd.prop.pattern_number_check=rot90(reshape(pattern_number_check,ebsd_header.Width,60),1);
+
+%stack these back together for a single pixel wise pattern
+imagestack_collapse=sum(imagestack,3);
+imagestack_weight_collapse=sum(imagestack_weight,3);
+superres_single_norm=imagestack_collapse./imagestack_weight_collapse;
+superres_single_norm_fft = abs(fftshift(fft2(superres_single_norm))).^2;
+SR_pattern_reference_fft = abs(fftshift(fft2(SR_pattern_reference))).^2;
+
+%write the patterns to disk
+imwrite(normalizeto16bit(flipud(superres_single_norm)), fullfile(ResultsDir,'SuperRes_SubPix.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(superres_single_norm_fft))), fullfile(ResultsDir,'SuperRes_SubPix_FFT.tif')); %FFT
+imwrite(normalizeto16bit(flipud(SR_pattern_reference)), fullfile(ResultsDir,'SuperRes_Ref.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(SR_pattern_reference_fft))), fullfile(ResultsDir,'SuperRes_Ref_FFT.tif')); %FFT
+
+%plot these in matlab
+figure;
+nexttile;
+imagesc(SR_pattern_reference);
+axis equal; axis xy; colormap('gray'); axis tight;
+title('Reference Pattern');
+
+nexttile;
+imagesc(superres_single_norm);
+axis equal; axis xy; colormap('gray'); axis tight;
+title('Super Resolution Pattern');
+
+nexttile;
+imagesc(log10(SR_pattern_reference_fft));
+axis equal; axis xy; colormap('gray'); axis tight;
+title('Reference Pattern FFT');
+
+nexttile;
+imagesc(log10(superres_single_norm_fft));
+axis equal; axis xy; colormap('gray'); axis tight;
+title('Super Resolution Pattern FFT');
+
+%% upsample
+disp('Upsampling started - higher resolution')
+
+%prepare the stack
+OutPutSize = imref2d([256*SR_sfac 256*SR_sfac],1/SR_sfac,1/SR_sfac);
+imagestack_sfac_new=zeros([256*SR_sfac 256*SR_sfac]);
+imagestack_weight_sfac_new=imagestack_sfac_new;
+
+%do the upsampling
+parfor pat=1:ebsd_header.TotalNumberOfPoints
+
+        tform_n_in=simtform2d(t_scale(:,pat),0,t_translation(:,pat)); %force rotation to 0
+        A_tform=tform_n_in.A;
+        tform_n=simtform2d(A_tform);
+
+    temp_image= imwarp(allProcessedPatterns(:,:,pat),tform(pat),'bicubic',"OutputView",OutPutSize,FillValues=0);
+    temp_weight=imwarp(weight_single,tform(pat),'bicubic',"OutputView",OutPutSize,FillValues=0);
+
+    imagestack_sfac_new=imagestack_sfac_new+temp_image;
+    imagestack_weight_sfac_new = imagestack_weight_sfac_new+temp_weight;
+end
+
+%deal with the weights, and FFT
+superres_large_norm=imagestack_sfac_new./imagestack_weight_sfac_new;
+superres_large_norm_fft = abs(fftshift(fft2(superres_large_norm))).^2;
+
+%extract the central FFT to check it is the same as the other method
+fft_centre=(size(superres_large_norm_fft,1)/2);
+fft_centrepix_x=1:ebsd_header.PatternHeight;
+fft_centrepix_y=1:ebsd_header.PatternWidth;
+
+ycen=fft_centre+fft_centrepix_y-ebsd_header.PatternHeight/2;
+xcen=fft_centre+fft_centrepix_y-ebsd_header.PatternHeight/2;
+superres_large_norm_fft_centre = superres_large_norm_fft(ycen,xcen);
+
+imwrite(normalizeto16bit(flipud(superres_large_norm)), fullfile(ResultsDir,'SuperRes_Large.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(superres_large_norm_fft))), fullfile(ResultsDir,'SuperRes_Large_FFT.tif')); %FFT
+imwrite(normalizeto16bit(flipud(log10(superres_large_norm_fft_centre))), fullfile(ResultsDir,'SuperRes_Large_cFFT.tif')); %FFT
+
+disp('Upsampling finished - higher resolution')
+
+figure;
+nexttile;
+imagesc(superres_large_norm); colormap('gray'); axis equal; axis tight; axis xy;
+title('Super resolution - up sampled')
+nexttile;
+imagesc(log10(superres_large_norm_fft)); colormap('gray'); axis equal; axis tight;  axis xy;
+title('Super resolution - up sampled FFT')
+nexttile;
+imagesc(log10(superres_large_norm_fft_centre)); colormap('gray'); axis equal; axis tight;  axis xy;
+title('Super resolution - up sampled FFT-centre')
+nexttile;
+imagesc(log10(superres_single_norm_fft));
+axis equal; axis xy; colormap('gray'); axis tight;
+title('Super Resolution Pattern FFT');
+
+%% subsample a number from the original data to check how the dose/upsampling works
+
+disp('Dose sampling started')
+
+num_log=10; %how many patterns to sum
+
+%allocate some variables
+numPatsToSample = round(logspace(0,log10(ebsd_header.TotalNumberOfPoints),num_log));
+imagestack_dose=zeros([size(imagestack,1) size(imagestack,2),num_log]);
+imagestack_doseii_fft=imagestack_dose;
+SNRValues_SubPixel=zeros(1,num_log);
+
+%go through the stack and find patterns that you like
+rng default; %fix the rng to be the same each time
+for n=1:num_log
+    if n < num_log
+
+        %create a random list of patterns, and make sure they are unique
+        selectedPatterns = randi([1,ebsd_header.TotalNumberOfPoints], numPatsToSample(n), 1);
+        selectedPatterns=unique(selectedPatterns);
+        while numel(selectedPatterns) < numPatsToSample(n)
+            disp(['For ' int2str(n) ' iteration adding patterns to list']) %notify if the search had to grow the the random additions
+
+            selectedPatterns2 = randi([1,ebsd_header.TotalNumberOfPoints], numPatsToSample(n), 1);
+            selectedPatterns_list=unique([selectedPatterns;selectedPatterns2]);
+            if numel(selectedPatterns_list) >= numPatsToSample(n)
+                selectedPatterns_list = selectedPatterns_list(randperm(length(selectedPatterns_list)));
+                selectedPatterns =  selectedPatterns_list(1:numPatsToSample(n));
+            end
+        end
+    else %because we want every pattern
+        selectedPatterns = 1:ebsd_header.TotalNumberOfPoints;
+    end
+
+    %stack, normalize and FFT
+
+    imagestack_doseii=sum(imagestack(:,:,selectedPatterns),3);
+    imagestack_doseii_weight=sum(imagestack_weight(:,:,selectedPatterns),3)+0.00001; %add a small weight offset to deal with the divide by 0 issue
+
+    imagestack_dose(:,:,n)=imagestack_doseii./imagestack_doseii_weight;
+
+    imagestack_doseii_fft(:,:,n) = abs(fftshift(fft2(imagestack_dose(:,:,n)))).^2;
+
+    % do the radial profiles
+
+    [r_vec, radial_prof] = radial_profile_ExcludeAngle(imagestack_doseii_fft(:,:,n), 2, angleToExclude);
+
+    stepVectors{n}    = r_vec;
+    radialProfiles{n} = radial_prof;
+    % Compute SNR from profile
+    sig_band = radial_prof(r_vec >= signalRange(1) & r_vec <= signalRange(2));
+    noi_band = radial_prof(r_vec >= noiseRange(1)  & r_vec <= noiseRange(2));
+
+    SNRValues_SubPixel(n) = mean(sig_band) / mean(noi_band);
+end
+
+%plot this data
+figure;
+for n=1:num_log
+    nexttile;
+    imagesc(imagestack_dose(:,:,n)); axis image; axis xy; colormap('gray');
+    title(int2str(numPatsToSample(n)))
+end
+
+for n=1:num_log
+    nexttile;
+    imagesc(log10(imagestack_doseii_fft(:,:,n))); axis image; axis xy; colormap('gray');
+    title(int2str(numPatsToSample(n)))
+end
+
+%% Sum the patterns associated with the high spatial magnification area - frame integration experiment
+
+disp('Higher spatial magnification sampling started')
+% load data
+[ebsd_hm,ebsd_header_hm] = bIDX_to_EBSD(TFSProjectPath_Spatial);
+ebsd_hm.scanUnit='um'; % update scan unit
+ebsebsd_hmd.prop.pat_number=1:ebsd_header_hm.TotalNumberOfPoints;
+
+pattern_loc_hm=[ebsd_hm.x_in,ebsd_hm.y_in]; %note this is in 0 based indexing, whole map loading
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_Spatial,pattern_loc_hm,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+allProcessedPatterns_hm=loaded_TFS_patterns.pat_proc;
+clear loaded_TFS_patterns %just to tidy up memory
+
+sumMagnifiedPatterns = mean(allProcessedPatterns_hm, 3);
+
+figure;
+imagesc(sumMagnifiedPatterns); axis image off; colormap("gray"); axis xy; axis tight;
+% imwrite(normalizeto16bit(sumMagnifiedPatterns), "sumMagnifiedPatterns.png");
+
+sumMagnifiedFFT = abs(fftshift(fft2(sumMagnifiedPatterns))).^2;
+% imwrite(normalizeto16bit(log10(sumMagnifiedFFT)), "sumMagnifiedPatternsFFT.png");
+
+numPatsToSample_hm=10;
+ranges_hm = round(logspace(0,log10(ebsd_header_hm.TotalNumberOfPoints),numPatsToSample_hm));
+
+SNRValues_Magnified=zeros(1,numPatsToSample_hm);
+
+for n = 1:numPatsToSample_hm
+
+     if n < numPatsToSample_hm
+
+        %create a random list of patterns, and make sure they are unique
+        selectedPatterns_hm = randi([1,ebsd_header_hm.TotalNumberOfPoints], ranges_hm(n), 1);
+        selectedPatterns_hm= unique(selectedPatterns_hm);
+        while numel(selectedPatterns_hm) < ranges_hm(n)
+            disp(['For ' int2str(n) ' iteration adding patterns to list']) %notify if the search had to grow the the random additions
+
+            selectedPatterns2 = randi([1,ebsd_header_hm.TotalNumberOfPoints], ranges_hm(n), 1);
+            selectedPatterns_list=unique([selectedPatterns_hm;selectedPatterns2]);
+            if numel(selectedPatterns_list) >= ranges_hm(n)
+                selectedPatterns_list = selectedPatterns_list(randperm(length(selectedPatterns_list)));
+                selectedPatterns_hm =  selectedPatterns_list(1:ranges_hm(n));
+            end
+        end
+    else %because we want every pattern
+        selectedPatterns_hm = 1:ebsd_header_hm.TotalNumberOfPoints;
+    end
+
+    meanPattern = mean(allProcessedPatterns_hm(:,:,selectedPatterns_hm), 3);
+    sumMagnifiedFFT = abs(fftshift(fft2(meanPattern))).^2;
+
+    % [r_vec, radial_prof] = radial_profile(sumMagnifiedFFT, 2);
+    [r_vec, radial_prof] = radial_profile_ExcludeAngle(sumMagnifiedFFT, 2, angleToExclude);
+    stepVectors{numPatsToSample_hm+2}    = r_vec;
+    radialProfiles{numPatsToSample_hm+2} = radial_prof;
+    % Compute SNR from profile
+    sig_band = radial_prof(r_vec >= signalRange(1) & r_vec <= signalRange(2));
+    noi_band = radial_prof(r_vec >= noiseRange(1)  & r_vec <= noiseRange(2));
+
+    SNRValues_Magnified(n) = mean(sig_band) / mean(noi_band);
+end
+
+%% plot the line graph of exposure and signal to noise
+fig_lineplot=figure;
+plot(numPatsToSample .* 300, SNRValues_SubPixel, '.-', 'MarkerSize',30, 'LineWidth', 2);
+
+xlabel("Exposure Time (ms)");
+ylabel("SNR (FFT radial average)");
+set(gca, 'XScale', 'log');
+set(gca, 'YScale', 'log');
+hold on;
+plot(allExposure, SNRValues(1:num_sites_exp), '.-', 'MarkerSize',30, 'LineWidth',2);
+
+plot(300 .* ranges_hm, SNRValues_Magnified, '.-', 'MarkerSize',30, 'LineWidth', 2);
+
+set(gca, 'FontSize', 20);
+legend(["Super Resolution" "Single Pattern" "Frame Integration"], "Location","northwest");
+grid on;
+
+saveas(fig_lineplot,fullfile(ResultsDir,'SNR_Graph.tif'))
+%% Plot the functions for the warping
+
+%plot this data
+figure;
+plot(ebsd,ebsd.x); title('x')
+nextAxis
+plot(ebsd,ebsd.y); title('y')
+nextAxis
+plot(ebsd,ebsd.prop.t_translation_x); title('x translate')
+nextAxis
+plot(ebsd,ebsd.prop.t_translation_y); title('y translate')
+nextAxis
+plot(ebsd,ebsd.prop.t_scale); title('t scale')
+nextAxis
+plot(ebsd,ebsd.prop.t_rotation); title('t rotation')
+nextAxis;
+plot(ebsd,ebsd.prop.pat_number); title('Pattern Number - raw data');
+nextAxis
+plot(ebsd, ebsd.prop.pattern_number_check); title('Pattern Num - model build');
+
+
+%% Load the zoomed in pattern
+disp('Working on the camera retraction experiment')
+% load map data
+[ebsd_z,ebsd_header_z] = bIDX_to_EBSD(TFSProjectPath_Zoom);
+ebsd_hm.scanUnit='um'; % update scan unit
+ebsebsd_hmd.prop.pat_number=1:ebsd_header_z.TotalNumberOfPoints;
+
+%load pattern data
+pattern_loc_z=[ebsd_z.x_in,ebsd_z.y_in]; %note this is in 0 based indexing, whole map loading
+[loaded_TFS_patterns] = loadPat_TFS(TFSProjectPath_Zoom,pattern_loc_z,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+allProcessedPatterns_z=loaded_TFS_patterns.pat_proc;
+clear loaded_TFS_patterns %just to tidy up memory
+
+%average these together
+averageZoomedInPatterns = mean(allProcessedPatterns_z, 3);
+
+% Use the high magnification pattern and fit the other patterns onto this - via the warping functions
+
+%warp the super res to the sub region
+tfun_mag=imregcorr(superres_large_norm,averageZoomedInPatterns,Method="phasecorr");
+%fix the magnification
+sameAsInput = affineOutputView(size(averageZoomedInPatterns),tfun_mag,"BoundsStyle","SameAsInput");
+
+%do the warp - super resolution large vs magnified
+zoom_resize_factor=2.6340; %estimate factor for the zoom function between the camera retract pattern and full pattern
+mega_zoomed=imwarp(superres_large_norm,tfun_mag,'bicubic',"OutputView",sameAsInput,FillValues=0);
+frame_integral_max = imresize((mean(allProcessedPatterns_hm, 3)),2.6340,Method='lanczos3');
+
+tfun_fi=imregcorr(frame_integral_max,averageZoomedInPatterns,Method="phasecorr");
+sameAsInput2 = affineOutputView(size(averageZoomedInPatterns),tfun_fi,"BoundsStyle","SameAsInput");
+fi_zoomed=imwarp(frame_integral_max,tfun_fi,'bicubic',"OutputView",sameAsInput2,FillValues=0);
+
+%do the FFTs
+fft_zoom=abs(fftshift(fft2(averageZoomedInPatterns))).^2;
+fft_sr_zoom=abs(fftshift(fft2(mega_zoomed))).^2;
+fft_fr_zoom=abs(fftshift(fft2(fi_zoomed))).^2;
+
+%save these
+imwrite(normalizeto16bit(flipud(averageZoomedInPatterns)), fullfile(ResultsDir,'Zoomed.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(fft_zoom))), fullfile(ResultsDir,'Zoomed_FFT.tif')); %FFT
+imwrite(normalizeto16bit(flipud(mega_zoomed)), fullfile(ResultsDir,'Zoomed_SR_Up.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(fft_sr_zoom))), fullfile(ResultsDir,'Zoomed_SR_Up_FFT.tif')); %FFT
+imwrite(normalizeto16bit(flipud(fi_zoomed)), fullfile(ResultsDir,'Zoomed_Reg.tif')); %bg corrected
+imwrite(normalizeto16bit(flipud(log10(fft_fr_zoom))), fullfile(ResultsDir,'Zoomed_Reg_FFT.tif')); %FFT
+
+
+% plot these comparisons
+figure;
+nexttile;
+imagesc(averageZoomedInPatterns); title('Zoomed in integral')
+axis image; axis xy; colormap('gray');
+nexttile;
+imagesc(mega_zoomed); title('Super Resolution - upsample')
+axis image; axis xy; colormap('gray');
+nexttile;
+imagesc(fi_zoomed); title('Max Frame Intensity - Auto Resize')
+axis image; axis xy; colormap('gray');
+
+
+nexttile;
+imagesc(log10(fft_zoom)); axis image; axis xy; colormap('gray');
+c_fft=clim;
+nexttile;
+imagesc(log10(fft_sr_zoom)); axis image; axis xy; colormap('gray');
+clim(c_fft); %fix the FFT colorscale
+nexttile;
+imagesc(log10(fft_fr_zoom)); axis image; axis xy; colormap('gray');
+clim(c_fft); %fix the FFT colorscale
+
+%% Radon index the pattern
+disp('Radon indexing beginning')
+%Radon based background correction settings
+Settings_CorX.gfilt=1; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.radius=1; %use a radius mask
+Settings_CorX.radius_frac=0.85; %fraction of the pattern width to use as the mask
+Settings_CorX.hotpixel=0; %hot pixel correction
+Settings_CorX.hot_thresh=1000; %hot pixel threshold
+Settings_CorX.resize=0; %resize correction
+Settings_CorX.RealBG=0; %use a real BG
+Settings_CorX.EBSP_bgnum=30; %number of real pattern to use for BG
+Settings_CorX.SquareCrop = 0; %make square the EBSP
+Settings_CorX.SplitBG=0; %deal with a split screen
+
+%Set up the radon transform peak finder
+Settings_Rad.theta_range=[-10 180 1]; %theta min, theta max, theta step - in degrees
+Settings_Rad.max_peaks=8; %max number of peaks to return
+Settings_Rad.num_peak=20; %number of peaks to search for - peaks will be rejected
+Settings_Rad.theta_search_pix=6; %search size in theta steps
+Settings_Rad.rho_search_per=0.2; %radon search in fractions
+Settings_Rad.min_peak_width=0.002; %min rseperation of the peak width, in pixels
+
+% set up the phase
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num ] = Phase_Builder_RTM( InputUser.Phase_Input,RTM.Phase_Folder );
+ 
+% Background correct - mostly this is to make the Radon work, as the very
+% sharp patterns causes some issues with the Radon
+
+[EBSP_superres_Radon.PatternIn,Settings_Cor ] = EBSP_BGCor( superres_single_norm,Settings_CorX);
+EBSP_superres_Radon.PC=PC_In_Start;
+
+%Uncomment to use the GUI to check the indexing
+% Astro_EBSPset(EBSP_One,Settings_CorX,Settings_Rad,Settings_PCin,InputUser);
+
+%Perform the Radon based indexing
+%Radon transform
+[ EBSP_superres_Radon.Peak_Centre,EBSP_superres_Radon.Single.Peak_Set_All,EBSP_superres_Radon.Peak_Set_All,...
+            EBSP_superres_Radon.R_EBSP,EBSP_superres_Radon.R_Edge,EBSP_superres_Radon.R_rho,EBSP_superres_Radon.R_theta ] ...
+            = EBSP_RadHunt( EBSP_superres_Radon.PatternIn,Settings_Rad);
+
+% Convert the bands to normal space
+[ EBSP_superres_Radon.nhat_gnom] = EBSP_NormConv( EBSP_superres_Radon.Peak_Centre,size(EBSP_superres_Radon.PatternIn),EBSP_superres_Radon.PC);
+   
+% Index
+[EBSP_superres_Radon.rotdata,EBSP_superres_Radon.banddata]=EBSP_Index(EBSP_superres_Radon.nhat_gnom,Crystal_LUT{1},Settings_LUT{1}.thresh_trig,Crystal_UCell{1},eye(3));
+
+%generate the geometry for analysis
+[ EBSP_superres_Radon.PatternGeometry ] = EBSP_Gnom( Settings_Cor,EBSP_superres_Radon.PC );
+
+%plot the result
+EBSP_OneFigure=Plot_SinglePattern(EBSP_superres_Radon,Crystal_UCell,Crystal_LUT,1);
+
+saveas(EBSP_OneFigure.figure,fullfile(ResultsDir,'Super_Res_RadonIndexed.tif'))
+
+%% Now start some pattern matching
+% create a reference pattern from the Dynamics bin file
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder); %#ok<CCAT1>
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex); %use the full pattern for rendering
+
+
+%%
+disp('Pattern matching - started')
+%setttings for RTM
+RTM.screensize = 256; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq=8; %Set the SO(3) sampling freq in degrees
+RTM.iterations = 12;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 256; %LPT size used in pixels
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+
+[ SettingsXCF] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+SettingsXCF.filters=[2 1 64 32]; %From fiddling these seem to be the best filter settings, but there may be better ones
+SettingsXCF.single=1;
+[SettingsXCF.FFTfilter,SettingsXCF.hfilter] = fFilters(SettingsXCF.roisize,SettingsXCF.filters);
+
+%resize the experiment to make it easier to work with
+Settings_Cor_RTM=Settings_Cor;
+Settings_Cor_RTM.radius=0;
+Settings_Cor_RTM.gfilt=1; %use a high pass filter (do you mean high pass?)
+Settings_Cor_RTM.gfilt_s=3; %use a high pass filter (do you mean high pass?)
+
+%generate the geometry for analysis
+[ EBSP_superres_RTM1.PatternGeometry ] = EBSP_Gnom( Settings_Cor_RTM,EBSP_superres_Radon.PC );
+
+%Take the experiment and adjust etc.
+[EBSP_superres_RTM1.PatternIn] = EBSP_BGCor( superres_single_norm,Settings_Cor_RTM);
+
+RTM.WindowOff=1;
+%Get ready for RTM
+[Pat_Ref_r] = refine_prep(EBSP_superres_RTM1.PatternIn,SettingsXCF,RTM);
+
+%refine - using the Radon index to start
+[G_Refined1,regout_R1] = refine5(Pat_Ref_r,EBSP_superres_RTM1.PatternGeometry,EBSP_superres_RTM1.PatternGeometry.PC,EBSP_superres_Radon.rotdata.detector,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+
+%% Use pattern matching to refine the PC
+
+disp('Pattern matching - PC refinement started')
+Refine.ss=0.2; %initial probe volume in terms of the +/- PC values to search
+Refine.p=2; %order of polynomial to fit to tetrahedron
+Refine.n_its=100; %number of iterations
+Refine.reindex=1; %index each time
+Refine.print=1; %give an output of how the search is running
+Refine.PHTol=1E-7; %refinement threshold to stop, if the PH doesn't change by more than this
+
+%fPCRefine2(PatternIn,rotmat,PatternInfo,PCRefine_Settings,SettingsXCF,screen_int,RTM_setup)
+[RTM_PC_Found] = fPCRefine2(Pat_Ref_r,G_Refined1,EBSP_superres_RTM1.PatternGeometry,Refine,SettingsXCF,screen_int,RTM);
+%refine
+%generate the geometry for analysis
+[ EBSP_superres_RTM2.PatternGeometry ] = EBSP_Gnom( Settings_Cor_RTM,RTM_PC_Found );
+[G_Refined2,regout_R2] = refine5(Pat_Ref_r,EBSP_superres_RTM2.PatternGeometry,EBSP_superres_RTM2.PatternGeometry.PC,G_Refined1,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+
+%% Simulate patterns
+%simulate the pattern
+[ EBSP_sim_H ] = EBSP_gen( EBSP_superres_Radon.PatternGeometry,EBSP_superres_Radon.rotdata.detector,screen_int); %generate the EBSP for this iteration 
+
+[ EBSP_sim_R1 ] = EBSP_gen( EBSP_superres_RTM1.PatternGeometry,G_Refined1,screen_int ); %generate the EBSP for this iteration 
+[ EBSP_sim_R2 ] = EBSP_gen( EBSP_superres_RTM2.PatternGeometry,G_Refined2,screen_int ); %generate the EBSP for this iteration 
+
+figure;
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn,EBSP_superres_RTM1.PatternGeometry); title('Experiment')
+nexttile;
+pPattern(EBSP_sim_H,EBSP_superres_RTM1.PatternGeometry); title('Radon')
+nexttile;
+pPattern(EBSP_sim_R1,EBSP_superres_RTM2.PatternGeometry); title('RTM1');
+nexttile;
+pPattern(EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title('RTM2');
+nexttile;
+pPattern(EBSP_sim_R2-EBSP_sim_H,EBSP_superres_RTM2.PatternGeometry); title('Radon-RTM2');
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_H,EBSP_superres_RTM2.PatternGeometry); title('Exp-Radon');
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title('Exp-RTM1');
+nexttile;
+pPattern(EBSP_superres_RTM1.PatternIn-EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry); title('Exp-RTM2');
+
+%%
+fig_comp=figure;
+s1=subplot(1,3,1);
+Plot_EBSPAnnotated( superres_single_norm,EBSP_superres_RTM2.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s1);
+title('Exp, indexed')
+s2=subplot(1,3,2);
+Plot_EBSPAnnotated( EBSP_sim_R2,EBSP_superres_RTM2.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s2);
+title('RTM2, indexed')
+
+s2=subplot(1,3,3);
+Plot_EBSPAnnotated( EBSP_sim_R2-EBSP_superres_RTM1.PatternIn,EBSP_superres_RTM1.PatternGeometry,[],G_Refined2,Crystal_UCell{1},Crystal_LUT{1}.family_norm_list,s2);
+title('RTM2-Exp, indexed')
+
+saveas(fig_comp,fullfile(ResultsDir,'Compared_Patterns.tif'))
+
+disp('Code finished')
+
+##### SOURCE END #####
+-->
+</body>
+</html>

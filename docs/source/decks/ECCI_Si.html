@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>ECCI_Si</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="ECCI_Si.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Toolbox locations for AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#5">Low level setting up stuff - you shouldn't need to change this</a>
+</li>
+<li>
+<a href="#6">Generate the reference sphere data</a>
+</li>
+<li>
+<a href="#7">Make a pattern</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear
+home
+close <span class="string">all</span>
+
+<span class="comment">% This script was created to kick off discussions at the 2019 EBSD meeting</span>
+<span class="comment">% Deck to show how pattern matching can work with MTEX</span>
+</pre>
+<h2 id="2">Toolbox locations for AstroEBSD and MTEX</h2>
+<pre class="codeinput">
+<span class="comment">% InputUser.Astro_loc='C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location</span>
+ InputUser.Astro_loc=<span class="string">'C:\Users\bbrit\Documents\GitHub\AstroEBSD_v2'</span>; <span class="comment">%Change this to your AstroEBSD location</span>
+location_mtex=<span class="string">'C:\Users\bbrit\Documents\mtex-5.4.0'</span>; <span class="comment">%Change this to where you keep your MTEX folder</span>
+
+run(fullfile(InputUser.Astro_loc,<span class="string">'start_AstroEBSD.m'</span>));
+run(fullfile(location_mtex,<span class="string">'startup_mtex.m'</span>));
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\bbrit\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD.m not found.
+
+Error in ECCI_Si (line 14)
+run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m'));
+</pre>
+<pre class="codeinput">InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases\phasefiles'</span>); <span class="comment">%location of the pha files</span>
+</pre>
+<pre class="codeinput">
+<span class="comment">%setttings for RTM</span>
+RTM.screensize = 1024; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq=4; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.iterations = 4;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 128; <span class="comment">%LPT size used in pixels</span>
+
+<span class="comment">%From AstroEBSD</span>
+<span class="comment">%background correction</span>
+Settings_CorX.gfilt=1; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.radius=0; <span class="comment">%use a radius mask</span>
+Settings_CorX.radius_frac=0.85; <span class="comment">%fraction of the pattern width to use as the mask</span>
+Settings_CorX.hotpixel=0; <span class="comment">%hot pixel correction</span>
+Settings_CorX.hot_thresh=1000; <span class="comment">%hot pixel threshold</span>
+Settings_CorX.resize=1; <span class="comment">%resize correction</span>
+Settings_CorX.size=RTM.screensize; <span class="comment">%image height</span>
+Settings_CorX.RealBG=0; <span class="comment">%use a real BG</span>
+Settings_CorX.EBSP_bgnum=30; <span class="comment">%number of real pattern to use for BG</span>
+Settings_CorX.SquareCrop = 1; <span class="comment">%make square the EBSP</span>
+Settings_CorX.SplitBG=1; <span class="comment">%deal with a split screen</span>
+</pre>
+<h2 id="5">Low level setting up stuff - you shouldn't need to change this</h2>
+<pre class="codeinput">RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'masterpatterns'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<h2 id="6">Generate the reference sphere data</h2>
+<pre class="codeinput">iPut.Phase_Input{1}=<span class="string">'Si_30kv_HR'</span>;
+<span class="comment">% iPut.Phase_Folder=[iPut.Folder 'Phase_Data'];</span>
+
+[ Crystal_UCell,Crystal_Family,~,~,~, RTM_info ] = Phase_Builder_RTM(  {iPut.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+</pre>
+<h2 id="7">Make a pattern</h2>
+<pre class="codeinput">PC_simulation=[0.5,0.5,7]; <span class="comment">%[PCx, PCy, DD]</span>
+g_start=RTM.Rz(194*pi/180)*RTM.Rx(70*pi/180)*RTM.Rz(112*pi/180);
+g_start=RTM.Rz(45*pi/180);
+<span class="comment">% EBSD_pat_in=flipud(double(imread('Ta High-Res Patterns_09815.tiff')));</span>
+
+<span class="comment">% RTM2=RTM;</span>
+<span class="comment">% RTM2=rmfield(RTM2,'screensize');</span>
+<span class="comment">% RTM2.size=size(EBSD_pat_in);</span>
+[EBSD_geom_sim ] = EBSP_Gnom( RTM,PC_simulation); <span class="comment">%you can change PC_in if you want</span>
+<span class="comment">%initial orientation of the pattern</span>
+
+[ Pat_sim_ref ] = EBSP_gen( EBSD_geom_sim,g_start,screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+</pre>
+<pre class="codeinput">figure;
+s1=subplot(1,1,1);
+<span class="comment">% pPattern(EBSD_pat_in,EBSD_geom_sim)</span>
+<span class="comment">% subplot(1,2,2);</span>
+pPattern(Pat_sim_ref,EBSD_geom_sim)
+
+Plot_EBSPAnnotated( Pat_sim_ref,EBSD_geom_sim,[],g_start,Crystal_UCell{1},Crystal_Family{1},s1);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+home 
+close all
+
+% This script was created to kick off discussions at the 2019 EBSD meeting
+% Deck to show how pattern matching can work with MTEX
+
+%% Toolbox locations for AstroEBSD and MTEX
+
+% InputUser.Astro_loc='C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location
+ InputUser.Astro_loc='C:\Users\bbrit\Documents\GitHub\AstroEBSD_v2'; %Change this to your AstroEBSD location
+location_mtex='C:\Users\bbrit\Documents\mtex-5.4.0'; %Change this to where you keep your MTEX folder
+
+run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m'));
+run(fullfile(location_mtex,'startup_mtex.m'));
+
+%%
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,'phases\phasefiles'); %location of the pha files
+
+%%
+
+%setttings for RTM
+RTM.screensize = 1024; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq=4; %Set the SO(3) sampling freq in degrees
+RTM.iterations = 4;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 128; %LPT size used in pixels
+
+%From AstroEBSD
+%background correction
+Settings_CorX.gfilt=1; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.radius=0; %use a radius mask
+Settings_CorX.radius_frac=0.85; %fraction of the pattern width to use as the mask
+Settings_CorX.hotpixel=0; %hot pixel correction
+Settings_CorX.hot_thresh=1000; %hot pixel threshold
+Settings_CorX.resize=1; %resize correction
+Settings_CorX.size=RTM.screensize; %image height
+Settings_CorX.RealBG=0; %use a real BG
+Settings_CorX.EBSP_bgnum=30; %number of real pattern to use for BG
+Settings_CorX.SquareCrop = 1; %make square the EBSP
+Settings_CorX.SplitBG=1; %deal with a split screen
+
+%% Low level setting up stuff - you shouldn't need to change this
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% Generate the reference sphere data
+iPut.Phase_Input{1}='Si_30kv_HR';
+% iPut.Phase_Folder=[iPut.Folder 'Phase_Data'];
+
+[ Crystal_UCell,Crystal_Family,~,~,~, RTM_info ] = Phase_Builder_RTM(  {iPut.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%% Make a pattern
+
+PC_simulation=[0.5,0.5,7]; %[PCx, PCy, DD]
+g_start=RTM.Rz(194*pi/180)*RTM.Rx(70*pi/180)*RTM.Rz(112*pi/180);
+g_start=RTM.Rz(45*pi/180);
+% EBSD_pat_in=flipud(double(imread('Ta High-Res Patterns_09815.tiff')));
+
+% RTM2=RTM;
+% RTM2=rmfield(RTM2,'screensize');
+% RTM2.size=size(EBSD_pat_in);
+[EBSD_geom_sim ] = EBSP_Gnom( RTM,PC_simulation); %you can change PC_in if you want
+%initial orientation of the pattern
+
+[ Pat_sim_ref ] = EBSP_gen( EBSD_geom_sim,g_start,screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+
+%%
+figure;
+s1=subplot(1,1,1);
+% pPattern(EBSD_pat_in,EBSD_geom_sim)
+% subplot(1,2,2);
+pPattern(Pat_sim_ref,EBSD_geom_sim)
+
+Plot_EBSPAnnotated( Pat_sim_ref,EBSD_geom_sim,[],g_start,Crystal_UCell{1},Crystal_Family{1},s1);
+
+##### SOURCE END #####
+-->
+</body>
+</html>

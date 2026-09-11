@@ -1,0 +1,828 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Input_PatternMatch</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="Input_PatternMatch.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Toolbox locations for AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#3">Load the experimental data we want to work with</a>
+</li>
+<li>
+<a href="#4">Set up the RTM</a>
+</li>
+<li>
+<a href="#5">Low level setting up stuff - you shouldn't need to change this</a>
+</li>
+<li>
+<a href="#6">Read data</a>
+</li>
+<li>
+<a href="#7">create a reference pattern from the Dynamics bin file</a>
+</li>
+<li>
+<a href="#8">Plot the sphere (because we can)</a>
+</li>
+<li>
+<a href="#9">Generate a simulated pattern</a>
+</li>
+<li>
+<a href="#10">Now generate a pattern from the Bruker orientation data</a>
+</li>
+<li>
+<a href="#11">Refine the Bruker solution</a>
+</li>
+<li>
+<a href="#12">Now do SO(3) searching</a>
+</li>
+<li>
+<a href="#13">Run a map</a>
+</li>
+<li>
+<a href="#14">Map based matching</a>
+</li>
+<li>
+<a href="#15">Image one pattern and check solutions</a>
+</li>
+<li>
+<a href="#16">Convert to MTEX orientation data</a>
+</li>
+<li>
+<a href="#17">Plot some data</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear
+home
+close <span class="string">all</span>
+
+<span class="comment">% This script was created to kick off discussions at the 2019 EBSD meeting</span>
+<span class="comment">% Deck to show how pattern matching can work with MTEX</span>
+</pre>
+<h2 id="2">Toolbox locations for AstroEBSD and MTEX</h2>
+<pre class="codeinput">InputUser.Astro_loc=<span class="string">'C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'</span>; <span class="comment">%Change this to your AstroEBSD location</span>
+location_mtex=<span class="string">'C:\Communal_MatlabPlugins\mtex-5.2.beta2'</span>; <span class="comment">%Change this to where you keep your MTEX folder</span>
+
+run(fullfile(InputUser.Astro_loc,<span class="string">'start_AstroEBSD.m'</span>));
+run(fullfile(location_mtex,<span class="string">'startup_mtex.m'</span>));
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD.m not found.
+
+Error in Input_PatternMatch (line 13)
+run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m'));
+</pre>
+<h2 id="3">Load the experimental data we want to work with</h2>
+<pre class="codeinput">InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases\phasefiles'</span>); <span class="comment">%location of the pha files</span>
+InputUser.HDF5_folder=<span class="string">'E:\Ben\'</span>; <span class="comment">%Change this to the file location in whch you have saved the example data</span>
+InputUser.HDF5_file=<span class="string">'Demo_Ben.h5'</span>;
+InputUser.Phase_Input  = {<span class="string">'Ferrite'</span>};
+</pre>
+<h2 id="4">Set up the RTM</h2>
+<pre class="codeinput">
+<span class="comment">%setttings for RTM</span>
+RTM.screensize = 128; <span class="comment">%size of the library patterns and the resize of the raw EBSPs</span>
+RTM.Sampling_Freq=8; <span class="comment">%Set the SO(3) sampling freq in degrees</span>
+RTM.iterations = 4;<span class="comment">%Set the number of iterations to do in the refinement step</span>
+RTM.LPTsize = 500; <span class="comment">%LPT size used in pixels</span>
+
+<span class="comment">%From AstroEBSD</span>
+<span class="comment">%background correction</span>
+Settings_CorX.gfilt=1; <span class="comment">%use a high pass filter (do you mean high pass?)</span>
+Settings_CorX.gfilt_s=5; <span class="comment">%low pass filter sigma</span>
+Settings_CorX.radius=0; <span class="comment">%use a radius mask</span>
+Settings_CorX.radius_frac=0.85; <span class="comment">%fraction of the pattern width to use as the mask</span>
+Settings_CorX.hotpixel=0; <span class="comment">%hot pixel correction</span>
+Settings_CorX.hot_thresh=1000; <span class="comment">%hot pixel threshold</span>
+Settings_CorX.resize=1; <span class="comment">%resize correction</span>
+Settings_CorX.size=RTM.screensize; <span class="comment">%image height</span>
+Settings_CorX.RealBG=0; <span class="comment">%use a real BG</span>
+Settings_CorX.EBSP_bgnum=30; <span class="comment">%number of real pattern to use for BG</span>
+Settings_CorX.SquareCrop = 1; <span class="comment">%make square the EBSP</span>
+Settings_CorX.SplitBG=1; <span class="comment">%deal with a split screen</span>
+</pre>
+<h2 id="5">Low level setting up stuff - you shouldn't need to change this</h2>
+<pre class="codeinput">RTM.Phase_Folder = fullfile(InputUser.Astro_loc,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'masterpatterns'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<h2 id="6">Read data</h2>
+<pre class="codeinput">[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+<span class="comment">%load the data from h5</span>
+[MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );
+[MapInfo.Data_InputMap] = EBSD_Map(MapInfo.MapData,MicroscopeData);
+
+<span class="comment">%adjust the pattern centre for the square cropping - this corrects PCx</span>
+[ MapInfo.Data_InputMap ] = PC_square( MapInfo.EBSPData, MapInfo.Data_InputMap,Settings_CorX );
+
+<span class="comment">%get stuff ready for XCF</span>
+Detector_tilt = RTM.Rx(MicroscopeData.TotalTilt);
+</pre>
+<h2 id="7">create a reference pattern from the Dynamics bin file</h2>
+<pre class="codeinput">[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+</pre>
+<h2 id="8">Plot the sphere (because we can)</h2>
+<pre class="codeinput">
+<span class="comment">%create a spherical pattern</span>
+[rx,ry,rz]=sphere(1000);
+<span class="comment">%if you rotate rx, ry and rz you can rotate the pattern</span>
+[i_data] = Cube_Sample(rx(:),ry(:),rz(:),screen_int,RTM_info.isHex);
+
+figure;
+surf(rx,ry,rz,reshape(i_data,size(rx,1),size(rx,2)),<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+colormap(<span class="string">'gray'</span>);
+axis <span class="string">off</span>; axis <span class="string">equal</span>;
+axis <span class="string">vis3d</span>;
+</pre>
+<h2 id="9">Generate a simulated pattern</h2>
+<p>create a geometry</p>
+<pre class="codeinput">PC_simulation=[0.5,0.5,0.5]; <span class="comment">%try varying this</span>
+[EBSD_simulation ] = EBSP_Gnom( RTM,PC_simulation); <span class="comment">%you can change PC_in if you want</span>
+
+<span class="comment">%create an orientation</span>
+eangs=[30 20 0]*pi/180; <span class="comment">%phi1, PHI, phi2</span>
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+[ Pat_sim_eang ] = EBSP_gen( EBSD_simulation,gmatrix*Detector_tilt,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+
+figure;
+subplot(1,1,1);
+I1=pPattern(Pat_sim_eang,EBSD_simulation);
+title(<span class="string">'Simulated pattern'</span>);
+</pre>
+<h2 id="10">Now generate a pattern from the Bruker orientation data</h2>
+<pre class="codeinput">P_test=10; <span class="comment">%the 10th pattern captured</span>
+[P_r,P_c]=fPointFind(P_test,Data_InputMap.PMap);
+
+<span class="comment">%read the experimental pattern</span>
+[ Pat_exp ] = bReadEBSP(EBSPData,P_test);
+[ Pat_exp_cor ] = EBSP_BGCor( Pat_exp,Settings_CorX);
+
+<span class="comment">%Read the PC from Bruker data</span>
+PC_in=[MapInfo.Data_InputMap.PCX(P_r,P_c),MapInfo.Data_InputMap.PCY(P_r,P_c),MapInfo.Data_InputMap.DD(P_r,P_c)];
+[EBSD_geom ] = EBSP_Gnom( RTM,PC_in); <span class="comment">%you can change PC_in if you want</span>
+
+<span class="comment">%read the Euler angles</span>
+eangs=[MapInfo.Data_InputMap.phi1(P_r,P_c),MapInfo.Data_InputMap.PHI(P_r,P_c),MapInfo.Data_InputMap.phi2(P_r,P_c)]*pi/180;
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+
+<span class="comment">%simulate</span>
+[ Pat_sim_B] = EBSP_gen( EBSD_geom,gmatrix*Detector_tilt,screen_int);
+
+figure;
+subplot(1,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title(<span class="string">'Experimental pattern'</span>);
+
+subplot(1,2,2);
+I1=pPattern(Pat_sim_B,EBSD_geom);
+title(<span class="string">'Simulated pattern'</span>);
+</pre>
+<h2 id="11">Refine the Bruker solution</h2>
+<pre class="codeinput">
+<span class="comment">%prepare the experimental pattern for refinement</span>
+[Pat_Ref_r,XCF_data_fill] = refine_prep(Pat_Ref_BG,SettingsXCF,RTM);
+
+<span class="comment">%refine</span>
+[G_Refined,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,gmatrix*Detector_tilt,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+<span class="comment">%[orientation,XCF values]=refine5(Pattern,mean-geometry,updatedPC,orientation,SettingsXCF,screen_int,isHex,RTM)</span>
+<span class="comment">%XCF values = [x shift, y shift, ~ , normalised chi]</span>
+
+<span class="comment">%update simulation</span>
+[ Pat_sim_B_ref ] = EBSP_gen( EBSD_geom,G_Refined,screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+
+figure;
+subplot(2,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title(<span class="string">'Experimental pattern'</span>);
+
+subplot(2,2,2);
+I1=pPattern(Pat_sim_B-Pat_sim_B_ref,EBSD_geom);
+title(<span class="string">'Difference'</span>);
+
+subplot(2,2,3);
+I1=pPattern(Pat_sim_B,EBSD_geom);
+title(<span class="string">'Refined Simulation pattern'</span>);
+
+subplot(2,2,4);
+I1=pPattern(Pat_sim_B_ref,EBSD_geom);
+title(<span class="string">'Bruker Simulation pattern'</span>);
+</pre>
+<h2 id="12">Now do SO(3) searching</h2>
+<pre class="codeinput">
+<span class="comment">%populate fundamental zone of SO(3)</span>
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+
+<span class="comment">%generate the library</span>
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+<span class="comment">%compare with the library</span>
+[G_SO3,Library_PH]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,1);
+
+<span class="comment">%refine</span>
+[G_Refined_SO3,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+
+<span class="comment">%update simulation</span>
+[ Pat_sim_SO3 ] = EBSP_gen( EBSD_geom,G_SO3,screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+<span class="comment">%update simulation</span>
+[ Pat_sim_SO3r ] = EBSP_gen( EBSD_geom,G_Refined_SO3,screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+
+figure;
+subplot(2,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title(<span class="string">'Experimental pattern'</span>);
+
+subplot(2,2,2);
+I1=pPattern(Pat_sim_SO3-Pat_sim_SO3r,EBSD_geom);
+title(<span class="string">'Difference'</span>);
+
+subplot(2,2,3);
+I1=pPattern(Pat_sim_SO3,EBSD_geom);
+title(<span class="string">'SO(3) Template Found'</span>);
+
+subplot(2,2,4);
+I1=pPattern(Pat_sim_SO3r,EBSD_geom);
+title(<span class="string">'SO(3) Refined'</span>);
+</pre>
+<h2 id="13">Run a map</h2>
+<pre class="codeinput">
+<span class="comment">%get the mean PC for the map</span>
+Mean_PC=[mean(MapInfo.Data_InputMap.PCX(:)),mean(MapInfo.Data_InputMap.PCY(:)),mean(MapInfo.Data_InputMap.DD(:))];
+<span class="comment">%generate the library for this PC</span>
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+pat_list=1:MicroscopeData.NPoints;
+<span class="comment">%read the the patterns and prepare them for XCF</span>
+
+<span class="comment">%prepare the data fill for the faster FFT</span>
+[~,XCF_data_fill] = refine_prep(zeros(RTM.screensize),SettingsXCF,RTM);
+
+<span class="comment">%create empty arrays in the structure</span>
+Pat_Ref_r = struct(<span class="string">'FFT'</span>, zeros(numel(XCF_data_fill), numel(XCF_data_fill)), <span class="string">'logp'</span>, zeros(RTM.LPTsize,RTM.LPTsize),<span class="string">'pat_in'</span>,zeros(RTM.screensize));
+
+<span class="comment">%build the structure with the input data</span>
+<span class="keyword">parfor</span> p=1:numel(pat_list)
+    [ Pat_exp ] = bReadEBSP(EBSPData,p);
+    [ Pat_exp_cor ] = EBSP_BGCor( Pat_exp,Settings_CorX);
+    [Pat_Ref_r(p)] = refine_prep(Pat_exp_cor,SettingsXCF,RTM); <span class="comment">%note this stores every pattern, the FFT and the log-polar</span>
+<span class="keyword">end</span>
+</pre>
+<h2 id="14">Map based matching</h2>
+<pre class="codeinput">G_SO3_map=zeros(3,3,numel(pat_list));
+G_Refined_SO3_map=zeros(3,3,numel(pat_list));
+Library_PH=zeros(numel(pat_list),1);
+regout_R=zeros(4,numel(pat_list));
+
+map_pcx=MapInfo.MapData.PCX;
+map_pcy=MapInfo.MapData.PCY;
+map_pcz=MapInfo.MapData.DD;
+
+<span class="keyword">for</span> p=1:numel(pat_list)
+[P_r,P_c]=fPointFind(p,Data_InputMap.PMap);
+
+map_pcx(p)=MapInfo.Data_InputMap.PCX(P_r,P_c);
+map_pcy(p)=MapInfo.Data_InputMap.PCY(P_r,P_c);
+map_pcz(p)=MapInfo.Data_InputMap.DD(P_r,P_c);
+
+<span class="keyword">end</span>
+
+
+<span class="keyword">parfor</span> p=1:numel(pat_list)
+    <span class="comment">%compare with the library</span>
+    [G_SO3_map(:,:,p),Library_PH(p)]=fLibraryTest(template_library,library_G,Pat_Ref_r(p).FFT,SettingsXCF,XCF_data_fill,1);
+
+    PC_in=[map_pcx(p),map_pcy(p),map_pcz(p)];
+
+    <span class="comment">%refine</span>
+    [G_Refined_SO3_map(:,:,p),regout_R(:,p)] = refine5(Pat_Ref_r(p),EBSD_geom,PC_in,G_SO3_map(:,:,p),SettingsXCF,screen_int,RTM_info.isHex,RTM);
+<span class="keyword">end</span>
+</pre>
+<h2 id="15">Image one pattern and check solutions</h2>
+<pre class="codeinput">p=4000;
+
+PC_in=[map_pcx(p),map_pcy(p),map_pcz(p)];
+[EBSD_geom ] = EBSP_Gnom( RTM,PC_in); <span class="comment">%you can change PC_in if you want</span>
+
+Pat_EXPp=Pat_Ref_r(p).pat_in;
+
+
+<span class="comment">%update simulation</span>
+[ Pat_simp_SO3 ] = EBSP_gen( EBSD_geom,G_SO3_map(:,:,p),screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+<span class="comment">%update simulation</span>
+[ Pat_simp_SO3r ] = EBSP_gen( EBSD_geom,G_Refined_SO3_map(:,:,p),screen_int,screen_int.isHex ); <span class="comment">%generate the EBSP for this iteration</span>
+
+
+f1=figure;
+subplot(2,2,3);
+I1=pPattern(Pat_EXPp,EBSD_geom);
+title(<span class="string">'Experimental pattern'</span>);
+
+subplot(2,2,2);
+I1=pPattern(Pat_simp_SO3-Pat_simp_SO3r,EBSD_geom);
+title(<span class="string">'Difference'</span>);
+
+subplot(2,2,1);
+I1=pPattern(Pat_simp_SO3,EBSD_geom);
+title(<span class="string">'SO(3) Template Found'</span>);
+
+subplot(2,2,4);
+I1=pPattern(Pat_simp_SO3r,EBSD_geom);
+title(<span class="string">'SO(3) Refined'</span>);
+f1.Position=[100 100 800 400];
+</pre>
+<h2 id="16">Convert to MTEX orientation data</h2>
+<pre class="codeinput">G_Samp_ref=zeros(3,3,numel(pat_list));
+G_Samp_SO3=zeros(3,3,numel(pat_list));
+
+<span class="comment">%convert to the sample frame</span>
+<span class="keyword">for</span> p=1:numel(pat_list)
+    G_Samp_ref(:,:,p)=inv(G_Refined_SO3_map(:,:,p)*inv(Detector_tilt));
+    G_Samp_SO3(:,:,p)=inv(G_SO3_map(:,:,p)*inv(Detector_tilt));
+<span class="keyword">end</span>
+
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'west'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+
+<span class="comment">% build the coordinate maps</span>
+prop.x = double(MapInfo.MapData.XSample); <span class="comment">%have to transpose - not sure why...</span>
+prop.y = double(MapInfo.MapData.YSample);
+prop.quality=regout_R(4,:); <span class="comment">%PH from refinement</span>
+prop.quality_so3=Library_PH; <span class="comment">%PH from SO3</span>
+
+ori_ref = <span class="keyword">...</span>
+  rotation(<span class="string">'Matrix'</span>,G_Samp_ref(:,:,:));
+ori_so3 = <span class="keyword">...</span>
+  rotation(<span class="string">'Matrix'</span>,G_Samp_SO3(:,:,:));
+
+ebsd_ref = EBSD(ori_ref, ones(size(ori_ref)),{<span class="string">'notIndexed'</span>,cs_phase},<span class="string">'Options'</span>,prop);
+ebsd_so3 = EBSD(ori_so3, ones(size(ori_ref)),{<span class="string">'notIndexed'</span>,cs_phase},<span class="string">'Options'</span>,prop);
+</pre>
+<h2 id="17">Plot some data</h2>
+<pre class="codeinput">figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = xvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = yvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = zvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+plot(ebsd_so3,ebsd_so3.prop.quality_so3);
+nextAxis;
+plot(ebsd_ref,ebsd_so3.prop.quality);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+home 
+close all
+
+% This script was created to kick off discussions at the 2019 EBSD meeting
+% Deck to show how pattern matching can work with MTEX
+
+%% Toolbox locations for AstroEBSD and MTEX
+
+InputUser.Astro_loc='C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location
+location_mtex='C:\Communal_MatlabPlugins\mtex-5.2.beta2'; %Change this to where you keep your MTEX folder
+
+run(fullfile(InputUser.Astro_loc,'start_AstroEBSD.m'));
+run(fullfile(location_mtex,'startup_mtex.m'));
+
+
+%% Load the experimental data we want to work with
+InputUser.Phase_Folder = fullfile(InputUser.Astro_loc,'phases\phasefiles'); %location of the pha files
+InputUser.HDF5_folder='E:\Ben\'; %Change this to the file location in whch you have saved the example data
+InputUser.HDF5_file='Demo_Ben.h5';
+InputUser.Phase_Input  = {'Ferrite'};
+
+
+%% Set up the RTM
+
+%setttings for RTM
+RTM.screensize = 128; %size of the library patterns and the resize of the raw EBSPs
+RTM.Sampling_Freq=8; %Set the SO(3) sampling freq in degrees
+RTM.iterations = 4;%Set the number of iterations to do in the refinement step
+RTM.LPTsize = 500; %LPT size used in pixels
+
+%From AstroEBSD
+%background correction
+Settings_CorX.gfilt=1; %use a high pass filter (do you mean high pass?)
+Settings_CorX.gfilt_s=5; %low pass filter sigma
+Settings_CorX.radius=0; %use a radius mask
+Settings_CorX.radius_frac=0.85; %fraction of the pattern width to use as the mask
+Settings_CorX.hotpixel=0; %hot pixel correction
+Settings_CorX.hot_thresh=1000; %hot pixel threshold
+Settings_CorX.resize=1; %resize correction
+Settings_CorX.size=RTM.screensize; %image height
+Settings_CorX.RealBG=0; %use a real BG
+Settings_CorX.EBSP_bgnum=30; %number of real pattern to use for BG
+Settings_CorX.SquareCrop = 1; %make square the EBSP
+Settings_CorX.SplitBG=1; %deal with a split screen
+
+%% Low level setting up stuff - you shouldn't need to change this
+RTM.Phase_Folder = fullfile(InputUser.Astro_loc,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'masterpatterns'); %location of the binary files used for RTM
+
+[ SettingsXCF, correction, SettingsXCF2 ] = FFT_Filter_settings( RTM.screensize, RTM.LPTsize );
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+
+%% Read data
+[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+%load the data from h5
+[MapInfo.MapData,MicroscopeData,PhaseData,MapInfo.EBSPData ]=bReadHDF5( InputUser );
+[MapInfo.Data_InputMap] = EBSD_Map(MapInfo.MapData,MicroscopeData);
+
+%adjust the pattern centre for the square cropping - this corrects PCx
+[ MapInfo.Data_InputMap ] = PC_square( MapInfo.EBSPData, MapInfo.Data_InputMap,Settings_CorX );
+
+%get stuff ready for XCF
+Detector_tilt = RTM.Rx(MicroscopeData.TotalTilt);
+
+%% create a reference pattern from the Dynamics bin file
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%% Plot the sphere (because we can)
+%create a spherical pattern
+[rx,ry,rz]=sphere(1000);
+%if you rotate rx, ry and rz you can rotate the pattern
+[i_data] = Cube_Sample(rx(:),ry(:),rz(:),screen_int,RTM_info.isHex);
+
+figure;
+surf(rx,ry,rz,reshape(i_data,size(rx,1),size(rx,2)),'EdgeColor','none'); 
+colormap('gray');
+axis off; axis equal;
+axis vis3d;
+
+%% Generate a simulated pattern
+% create a geometry
+PC_simulation=[0.5,0.5,0.5]; %try varying this
+[EBSD_simulation ] = EBSP_Gnom( RTM,PC_simulation); %you can change PC_in if you want
+
+%create an orientation
+eangs=[30 20 0]*pi/180; %phi1, PHI, phi2
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+[ Pat_sim_eang ] = EBSP_gen( EBSD_simulation,gmatrix*Detector_tilt,screen_int); %generate the EBSP for this iteration 
+
+figure;
+subplot(1,1,1);
+I1=pPattern(Pat_sim_eang,EBSD_simulation);
+title('Simulated pattern');
+
+%% Now generate a pattern from the Bruker orientation data
+
+P_test=10; %the 10th pattern captured
+[P_r,P_c]=fPointFind(P_test,Data_InputMap.PMap);
+
+%read the experimental pattern
+[ Pat_exp ] = bReadEBSP(EBSPData,P_test);
+[ Pat_exp_cor ] = EBSP_BGCor( Pat_exp,Settings_CorX);
+
+%Read the PC from Bruker data
+PC_in=[MapInfo.Data_InputMap.PCX(P_r,P_c),MapInfo.Data_InputMap.PCY(P_r,P_c),MapInfo.Data_InputMap.DD(P_r,P_c)];
+[EBSD_geom ] = EBSP_Gnom( RTM,PC_in); %you can change PC_in if you want
+
+%read the Euler angles
+eangs=[MapInfo.Data_InputMap.phi1(P_r,P_c),MapInfo.Data_InputMap.PHI(P_r,P_c),MapInfo.Data_InputMap.phi2(P_r,P_c)]*pi/180;
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+
+%simulate
+[ Pat_sim_B] = EBSP_gen( EBSD_geom,gmatrix*Detector_tilt,screen_int); 
+
+figure;
+subplot(1,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title('Experimental pattern');
+
+subplot(1,2,2);
+I1=pPattern(Pat_sim_B,EBSD_geom);
+title('Simulated pattern');
+
+%% Refine the Bruker solution
+
+%prepare the experimental pattern for refinement
+[Pat_Ref_r,XCF_data_fill] = refine_prep(Pat_Ref_BG,SettingsXCF,RTM);
+
+%refine
+[G_Refined,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,gmatrix*Detector_tilt,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+%[orientation,XCF values]=refine5(Pattern,mean-geometry,updatedPC,orientation,SettingsXCF,screen_int,isHex,RTM)
+%XCF values = [x shift, y shift, ~ , normalised chi]
+
+%update simulation
+[ Pat_sim_B_ref ] = EBSP_gen( EBSD_geom,G_Refined,screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+
+figure;
+subplot(2,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title('Experimental pattern');
+
+subplot(2,2,2);
+I1=pPattern(Pat_sim_B-Pat_sim_B_ref,EBSD_geom);
+title('Difference');
+
+subplot(2,2,3);
+I1=pPattern(Pat_sim_B,EBSD_geom);
+title('Refined Simulation pattern');
+
+subplot(2,2,4);
+I1=pPattern(Pat_sim_B_ref,EBSD_geom);
+title('Bruker Simulation pattern');
+
+%% Now do SO(3) searching
+%populate fundamental zone of SO(3)
+cs_phase=loadCIF(RTM_info.cif_file);
+[ library_G ] = SO3_rotmat_gen( cs_phase,RTM.Sampling_Freq);
+
+%generate the library
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+%compare with the library
+[G_SO3,Library_PH]=fLibraryTest(template_library,library_G,Pat_Ref_r.FFT,SettingsXCF,XCF_data_fill,1);
+
+%refine
+[G_Refined_SO3,regout_R] = refine5(Pat_Ref_r,EBSD_geom,EBSD_geom.PC,G_SO3,SettingsXCF,screen_int,RTM_info.isHex,RTM);
+
+%update simulation
+[ Pat_sim_SO3 ] = EBSP_gen( EBSD_geom,G_SO3,screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+%update simulation
+[ Pat_sim_SO3r ] = EBSP_gen( EBSD_geom,G_Refined_SO3,screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+
+figure;
+subplot(2,2,1);
+I1=pPattern(Pat_exp_cor,EBSD_geom);
+title('Experimental pattern');
+
+subplot(2,2,2);
+I1=pPattern(Pat_sim_SO3-Pat_sim_SO3r,EBSD_geom);
+title('Difference');
+
+subplot(2,2,3);
+I1=pPattern(Pat_sim_SO3,EBSD_geom);
+title('SO(3) Template Found');
+
+subplot(2,2,4);
+I1=pPattern(Pat_sim_SO3r,EBSD_geom);
+title('SO(3) Refined');
+
+%% Run a map
+
+%get the mean PC for the map
+Mean_PC=[mean(MapInfo.Data_InputMap.PCX(:)),mean(MapInfo.Data_InputMap.PCY(:)),mean(MapInfo.Data_InputMap.DD(:))];
+%generate the library for this PC
+[ template_library ] = Library_Gen(EBSD_geom,screen_int,RTM_info.isHex,library_G,2,SettingsXCF);
+
+pat_list=1:MicroscopeData.NPoints;
+%read the the patterns and prepare them for XCF
+
+%prepare the data fill for the faster FFT
+[~,XCF_data_fill] = refine_prep(zeros(RTM.screensize),SettingsXCF,RTM);
+
+%create empty arrays in the structure
+Pat_Ref_r = struct('FFT', zeros(numel(XCF_data_fill), numel(XCF_data_fill)), 'logp', zeros(RTM.LPTsize,RTM.LPTsize),'pat_in',zeros(RTM.screensize));
+
+%build the structure with the input data
+parfor p=1:numel(pat_list)
+    [ Pat_exp ] = bReadEBSP(EBSPData,p);
+    [ Pat_exp_cor ] = EBSP_BGCor( Pat_exp,Settings_CorX);
+    [Pat_Ref_r(p)] = refine_prep(Pat_exp_cor,SettingsXCF,RTM); %note this stores every pattern, the FFT and the log-polar 
+end
+
+%% Map based matching
+G_SO3_map=zeros(3,3,numel(pat_list));
+G_Refined_SO3_map=zeros(3,3,numel(pat_list));
+Library_PH=zeros(numel(pat_list),1);
+regout_R=zeros(4,numel(pat_list));
+
+map_pcx=MapInfo.MapData.PCX;
+map_pcy=MapInfo.MapData.PCY;
+map_pcz=MapInfo.MapData.DD;
+
+for p=1:numel(pat_list)
+[P_r,P_c]=fPointFind(p,Data_InputMap.PMap);
+
+map_pcx(p)=MapInfo.Data_InputMap.PCX(P_r,P_c);
+map_pcy(p)=MapInfo.Data_InputMap.PCY(P_r,P_c);
+map_pcz(p)=MapInfo.Data_InputMap.DD(P_r,P_c);
+
+end
+
+
+parfor p=1:numel(pat_list)
+    %compare with the library
+    [G_SO3_map(:,:,p),Library_PH(p)]=fLibraryTest(template_library,library_G,Pat_Ref_r(p).FFT,SettingsXCF,XCF_data_fill,1);
+   
+    PC_in=[map_pcx(p),map_pcy(p),map_pcz(p)];
+
+    %refine
+    [G_Refined_SO3_map(:,:,p),regout_R(:,p)] = refine5(Pat_Ref_r(p),EBSD_geom,PC_in,G_SO3_map(:,:,p),SettingsXCF,screen_int,RTM_info.isHex,RTM);    
+end
+
+%% Image one pattern and check solutions
+
+p=4000;
+
+PC_in=[map_pcx(p),map_pcy(p),map_pcz(p)];
+[EBSD_geom ] = EBSP_Gnom( RTM,PC_in); %you can change PC_in if you want
+
+Pat_EXPp=Pat_Ref_r(p).pat_in;
+
+
+%update simulation
+[ Pat_simp_SO3 ] = EBSP_gen( EBSD_geom,G_SO3_map(:,:,p),screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+%update simulation
+[ Pat_simp_SO3r ] = EBSP_gen( EBSD_geom,G_Refined_SO3_map(:,:,p),screen_int,screen_int.isHex ); %generate the EBSP for this iteration 
+
+
+f1=figure;
+subplot(2,2,3);
+I1=pPattern(Pat_EXPp,EBSD_geom);
+title('Experimental pattern');
+
+subplot(2,2,2);
+I1=pPattern(Pat_simp_SO3-Pat_simp_SO3r,EBSD_geom);
+title('Difference');
+
+subplot(2,2,1);
+I1=pPattern(Pat_simp_SO3,EBSD_geom);
+title('SO(3) Template Found');
+
+subplot(2,2,4);
+I1=pPattern(Pat_simp_SO3r,EBSD_geom);
+title('SO(3) Refined');
+f1.Position=[100 100 800 400];
+
+%% Convert to MTEX orientation data
+G_Samp_ref=zeros(3,3,numel(pat_list));
+G_Samp_SO3=zeros(3,3,numel(pat_list));
+
+%convert to the sample frame
+for p=1:numel(pat_list)
+    G_Samp_ref(:,:,p)=inv(G_Refined_SO3_map(:,:,p)*inv(Detector_tilt));
+    G_Samp_SO3(:,:,p)=inv(G_SO3_map(:,:,p)*inv(Detector_tilt));
+end
+
+setMTEXpref('xAxisDirection','west');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+% build the coordinate maps
+prop.x = double(MapInfo.MapData.XSample); %have to transpose - not sure why...
+prop.y = double(MapInfo.MapData.YSample);
+prop.quality=regout_R(4,:); %PH from refinement
+prop.quality_so3=Library_PH; %PH from SO3
+
+ori_ref = ...
+  rotation('Matrix',G_Samp_ref(:,:,:));
+ori_so3 = ...
+  rotation('Matrix',G_Samp_SO3(:,:,:));
+
+ebsd_ref = EBSD(ori_ref, ones(size(ori_ref)),{'notIndexed',cs_phase},'Options',prop);
+ebsd_so3 = EBSD(ori_so3, ones(size(ori_ref)),{'notIndexed',cs_phase},'Options',prop);
+
+%% Plot some data
+figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = xvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = yvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+colorKey = ipfHSVKey(cs_phase);
+colorKey.inversePoleFigureDirection = zvector;
+
+plot(ebsd_so3,colorKey.orientation2color(ebsd_so3.orientations))
+nextAxis
+plot(ebsd_ref,colorKey.orientation2color(ebsd_ref.orientations))
+
+figure;
+plot(ebsd_so3,ebsd_so3.prop.quality_so3);
+nextAxis;
+plot(ebsd_ref,ebsd_so3.prop.quality);
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

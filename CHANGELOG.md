@@ -4,6 +4,20 @@ Here we list major updates to the repository since 25/09/2019. Small fixes are l
 
 Prof. Britton (TBB) is involved in most of these updates, and additional contributers are also listed. 
 
+## 11/09/2025 - Investigation of interlayer spacings (V1.7.0)
+
+See `decks/ILSstudy` for details
+- Added many decks that were used in https://arxiv.org/abs/2608.01210. Essentially here is the pipeline that connects pca with Pattern Centre calibration from a large EBSD map over mutliple grains with the subsequent pattern matching of mutliple dynamical templates with the PCA extracted patterns
+
+- Added a small python script to batch process EMSoft simulations `decks/ILS_Study/EMSoftPythonWrapper` 
+
+- Added a BuildNewPhases tool, that auto-generates .phase files and copies .cif files based on the outputs from the python skript
+
+- Added real-space based refinement with multiple optimisation algorithms and routines under `modules/rtm/direct_space`
+
+Principal contributions from L. Berners
+
+
 ## 10/07/2025 - AstroECP
 
 See `modules/AstroECP` for details.

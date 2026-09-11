@@ -1,0 +1,579 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>analysis_RKD2</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="analysis_RKD2.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Input Variables</a>
+</li>
+<li>
+<a href="#3">Load MTEX</a>
+</li>
+<li>
+<a href="#4">Load the EBSD data</a>
+</li>
+<li>
+<a href="#5">Check X and Y</a>
+</li>
+<li>
+<a href="#6">IPF-Z with unit cells</a>
+</li>
+<li>
+<a href="#7">Plot the ODF</a>
+</li>
+<li>
+<a href="#8">create a reference pattern from the Dynamics bin file</a>
+</li>
+<li>
+<a href="#9">Load a pattern from the data stack</a>
+</li>
+<li>
+<a href="#10">Load the raw pattern data</a>
+</li>
+<li>
+<a href="#11">Plot this data</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% close all;</span>
+clear;
+home;
+close <span class="string">all</span>;
+</pre>
+<h2 id="2">Input Variables</h2>
+<pre class="codeinput">
+<span class="comment">%Toolboxes</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+xebsd_location=<span class="string">'C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks'</span>;
+
+
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-30T14_39_59_Co_Map\2024-09-30T15_20_59';</span>
+<span class="comment">% InputUser.Phase_Input  = {'Co_8kV'};</span>
+scaling = 12; <span class="comment">% scale the crystal shape to have a nice size</span>
+
+TFS_DataLoc=<span class="string">'C:\Users\benja\Documents\EBSD\2024-10-14T12_37_45_ben_Al_alloy2\2024-10-14T12_40_51'</span>;
+InputUser.Phase_Input={<span class="string">'Aluminum'</span>};
+scaling = 6; <span class="comment">% scale the crystal shape to have a nice size</span>
+</pre>
+<h2 id="3">Load MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then this will be used to start MTEX up</span>
+
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+
+RTM.Phase_Folder = fullfile(astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Load the EBSD data</h2>
+<pre class="codeinput">
+<span class="comment">% crystal symmetry</span>
+<span class="comment">% CS = {...</span>
+<span class="comment">%   'notIndexed',...</span>
+<span class="comment">%   crystalSymmetry('432', [3.5 3.5 3.5], 'mineral', 'Nickel', 'color', [0.53 0.81 0.98])};</span>
+
+
+<span class="comment">% multiphase_full=fullfile(multiphase_location,'\results','multiphases.idx');</span>
+
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+<span class="comment">% plotting convention - TFS</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+</pre>
+<pre class="codeoutput error">Error using matlab.io.ImportOptions/readtable
+Unable to find or open
+'C:\Users\benja\Documents\EBSD\2024-10-14T12_37_45_ben_Al_alloy2\2024-10-14T12_40_51\site.json'.
+Check the path and filename or file permissions.
+
+Error in bIDX_to_EBSD (line 35)
+tbl = readtable(sitedata_full, opts);
+
+Error in analysis_RKD2 (line 57)
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+</pre>
+<h2 id="5">Check X and Y</h2>
+<pre class="codeinput">figure;
+plot(ebsd,ebsd.x,<span class="string">'coordinates'</span>,<span class="string">'on'</span>); title(<span class="string">'x'</span>); axis <span class="string">on</span>;
+nextAxis;
+plot(ebsd,ebsd.y,<span class="string">'coordinates'</span>,<span class="string">'on'</span>); title(<span class="string">'y'</span>); axis <span class="string">on</span>;
+</pre>
+<h2 id="6">IPF-Z with unit cells</h2>
+<pre class="codeinput">mineral=ebsd(1).CS.mineral;
+
+figure;
+colorKey = ipfTSLKey(ebsd.CS);
+<span class="comment">% colorKey = ipfHSVKey(ebsd.CS);</span>
+colorKey.inversePoleFigureDirection = zvector;
+color = colorKey.orientation2color(ebsd(<span class="string">'indexed'</span>).orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),<span class="string">'coordinates'</span>,<span class="string">'on'</span>)
+
+hold <span class="string">on</span>;
+
+<span class="comment">% grain segementation</span>
+[grains,ebsd.grainId] = calcGrains(ebsd,<span class="string">'angle'</span>,10*degree);
+
+<span class="comment">% smooth grain boundaries</span>
+grains = smooth(grains,5);
+
+grains=grains(grains.area &gt; 20); <span class="comment">%remove grains which are less than 20 um^2</span>
+
+<span class="comment">% plot the unit cells</span>
+<span class="comment">%plot the crystal shape for this point</span>
+
+<span class="comment">%here we use a hexagon, but you could use a cube for cubic</span>
+<span class="comment">%crystalShape.cube</span>
+cS = crystalShape.hex(grains(mineral).CS);
+grain_centroids=grains.centroid;
+plot(grain_centroids(:,1),grain_centroids(:,2),5*scaling, grains.meanOrientation * cS * scaling,<span class="string">'FaceAlpha'</span>,0.2); <span class="comment">%make the hexagons also transparent so you can see the grains behind</span>
+xposn=ebsd.prop.x;
+yposn=ebsd.prop.y;
+xlim([min(xposn(:)) max(xposn(:))]);
+ylim([min(yposn(:)) max(yposn(:))]);
+
+nextAxis
+colorKey.inversePoleFigureDirection = xvector;
+color = colorKey.orientation2color(ebsd(<span class="string">'indexed'</span>).orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),<span class="string">'coordinates'</span>,<span class="string">'on'</span>)
+
+nextAxis
+colorKey.inversePoleFigureDirection = yvector;
+color = colorKey.orientation2color(ebsd(<span class="string">'indexed'</span>).orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),<span class="string">'coordinates'</span>,<span class="string">'on'</span>)
+</pre>
+<h2 id="7">Plot the ODF</h2>
+<pre class="codeinput">odf = calcDensity(ebsd(mineral).orientations,<span class="string">'halfwidth'</span>,10*degree);
+
+<span class="comment">%</span>
+figure;
+<span class="comment">% plot the pole figure representation of the ODF</span>
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral).CS) Miller(0,1,0,ebsd(mineral).CS)],<span class="string">'projection'</span>,<span class="string">'eangle'</span>);
+
+mtexColorbar(<span class="string">'location'</span>,<span class="string">'southoutside'</span>)
+mtexColorMap <span class="string">blue2red</span>
+
+<span class="comment">%</span>
+<span class="comment">%add contours</span>
+levels=[0:33];
+hold <span class="string">on</span>;
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral).CS) Miller(0,1,0,ebsd(mineral).CS)],<span class="string">'contour'</span>,levels,<span class="string">'linecolor'</span>,<span class="string">'k'</span>,<span class="string">'projection'</span>,<span class="string">'eangle'</span>);
+mtexColorbar(<span class="string">'location'</span>,<span class="string">'southoutside'</span>)
+</pre>
+<h2 id="8">create a reference pattern from the Dynamics bin file</h2>
+<pre class="codeinput">[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+</pre>
+<h2 id="9">Load a pattern from the data stack</h2>
+<pre class="codeinput">x_val=2;
+y_val=2;
+
+[single_pattern,row_patterns] = rEBSD_TFS_Cor(y_val,x_val,TFS_DataLoc); <span class="comment">%note this is in matlab indexing</span>
+RTM.size=[479 479];
+[EBSD_geom ] = EBSP_Gnom( RTM,ebsd_header); <span class="comment">%you can change PC_in if you want</span>
+
+<span class="comment">%find the value in the original EBSD container for this</span>
+ebsd_val=find(ebsd.prop.y_in == y_val &amp; ebsd.prop.x_in == x_val );
+G_MTEX=ebsd(ebsd_val).orientations.matrix;
+
+[ Pat_sim_A] = EBSP_gen( EBSD_geom,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+
+figure;
+subplot(2,2,1);
+pPattern(single_pattern,EBSD_geom); title(<span class="string">'Experiment'</span>)
+subplot(2,2,2);
+pPattern(Pat_sim_A,EBSD_geom); title(<span class="string">'simulation'</span>)
+
+Settings_CorX.rkd=1; <span class="comment">%RKD geometry - fill gaps for flatfielded RKD quad chip</span>
+[ Pat_exp_cor ] = EBSP_BGCor(single_pattern,Settings_CorX); <span class="comment">%note the flipud, this is because TFS uses Y pointing down for the pattern</span>
+Pat_exp_cor2.size=size(Pat_exp_cor);
+[EBSD_geom2 ] = EBSP_Gnom( Pat_exp_cor2,ebsd_header); <span class="comment">%you can change PC_in if you want</span>
+
+subplot(2,2,3);
+pPattern(Pat_exp_cor,EBSD_geom2); title(<span class="string">'Corrected Experiment'</span>)
+[ Pat_sim_B] = EBSP_gen( EBSD_geom2,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+subplot(2,2,4);
+pPattern(Pat_sim_B,EBSD_geom2); title(<span class="string">'Corrected Simulation'</span>)
+</pre>
+<h2 id="10">Load the raw pattern data</h2>
+<pre class="codeinput">raw_loc=fullfile(TFS_DataLoc,<span class="string">'\raw'</span>);
+raw_folders=dir(raw_loc);
+raw_folder=fullfile(raw_loc,raw_folders(3).name);
+raw_pats=fullfile(raw_folder,<span class="string">'f_00000.pak'</span>);
+
+<span class="comment">% Read the raw stack</span>
+[pat_raw_stack] = rEBSD_TFS_Raw(raw_pats);
+av_bg=sum(pat_raw_stack,3)/400;
+</pre>
+<h2 id="11">Plot this data</h2>
+<pre class="codeinput">
+<span class="comment">%find the number of grid points in X and Y</span>
+x_max=max(ebsd.prop.x_in(:))+1;
+y_max=max(ebsd.prop.y_in(:))+1;
+
+pat_num=(x_val+1)+y_val*x_max;
+
+pat_single=pat_raw_stack(:,:,pat_num)./av_bg;
+Pat_exp_cor3.size=size(pat_single);
+[EBSD_geom3 ] = EBSP_Gnom( Pat_exp_cor3,ebsd_header); <span class="comment">%you can change PC_in if you want</span>
+
+single_std=nanstd(pat_single(:));
+single_mean=nanmean(pat_single(:));
+
+EBSP2=randn(size(pat_single))*single_std+single_mean;
+pat_single_cor=pat_single;
+pat_single_cor(isnan(pat_single))=EBSP2(isnan(pat_single));
+
+
+figure;
+subplot(2,3,1);
+pPattern(pat_raw_stack(:,:,pat_num),EBSD_geom3); title(<span class="string">'Raw Exp'</span>)
+
+subplot(2,3,2);
+Pat_exp_cor3.size=size(pat_single);
+pPattern(pat_single_cor,EBSD_geom3); title(<span class="string">'Raw-Ish Exp'</span>)
+
+subplot(2,3,3);
+Pat_exp_cor3.size=size(pat_single);
+[EBSD_geom3 ] = EBSP_Gnom( Pat_exp_cor3,ebsd_header); <span class="comment">%you can change PC_in if you want</span>
+
+[ Pat_sim_C] = EBSP_gen( EBSD_geom3,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+pPattern(Pat_sim_C,EBSD_geom2); title(<span class="string">'Raw Sim'</span>)
+
+subplot(2,3,5);
+pPattern(Pat_exp_cor,EBSD_geom2); title(<span class="string">'Corrected Experiment'</span>)
+[ Pat_sim_B] = EBSP_gen( EBSD_geom2,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+subplot(2,3,6);
+pPattern(Pat_sim_B,EBSD_geom2); title(<span class="string">'Corrected Simulation'</span>)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% close all;
+clear;
+home;
+close all;
+
+%% Input Variables
+
+%Toolboxes
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+xebsd_location='C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks';
+
+
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-30T14_39_59_Co_Map\2024-09-30T15_20_59';
+% InputUser.Phase_Input  = {'Co_8kV'};
+scaling = 12; % scale the crystal shape to have a nice size
+
+TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-10-14T12_37_45_ben_Al_alloy2\2024-10-14T12_40_51';
+InputUser.Phase_Input={'Aluminum'};
+scaling = 6; % scale the crystal shape to have a nice size
+
+%% Load MTEX
+
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then this will be used to start MTEX up
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+RTM.Phase_Folder = fullfile(astro_location,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% Load the EBSD data
+
+% crystal symmetry
+% CS = {... 
+%   'notIndexed',...
+%   crystalSymmetry('432', [3.5 3.5 3.5], 'mineral', 'Nickel', 'color', [0.53 0.81 0.98])};
+
+
+% multiphase_full=fullfile(multiphase_location,'\results','multiphases.idx');
+
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+% plotting convention - TFS
+setMTEXpref('xAxisDirection','east');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+%% Check X and Y
+
+figure;
+plot(ebsd,ebsd.x,'coordinates','on'); title('x'); axis on;
+nextAxis;
+plot(ebsd,ebsd.y,'coordinates','on'); title('y'); axis on;
+
+%% IPF-Z with unit cells
+mineral=ebsd(1).CS.mineral;
+
+figure;
+colorKey = ipfTSLKey(ebsd.CS);
+% colorKey = ipfHSVKey(ebsd.CS);
+colorKey.inversePoleFigureDirection = zvector;
+color = colorKey.orientation2color(ebsd('indexed').orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),'coordinates','on')
+
+hold on;
+
+% grain segementation
+[grains,ebsd.grainId] = calcGrains(ebsd,'angle',10*degree);
+
+% smooth grain boundaries
+grains = smooth(grains,5);
+
+grains=grains(grains.area > 20); %remove grains which are less than 20 um^2
+
+% plot the unit cells
+%plot the crystal shape for this point
+
+%here we use a hexagon, but you could use a cube for cubic
+%crystalShape.cube
+cS = crystalShape.hex(grains(mineral).CS);
+grain_centroids=grains.centroid;
+plot(grain_centroids(:,1),grain_centroids(:,2),5*scaling, grains.meanOrientation * cS * scaling,'FaceAlpha',0.2); %make the hexagons also transparent so you can see the grains behind
+xposn=ebsd.prop.x;
+yposn=ebsd.prop.y;
+xlim([min(xposn(:)) max(xposn(:))]);
+ylim([min(yposn(:)) max(yposn(:))]);
+
+nextAxis
+colorKey.inversePoleFigureDirection = xvector;
+color = colorKey.orientation2color(ebsd('indexed').orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),'coordinates','on')
+
+nextAxis
+colorKey.inversePoleFigureDirection = yvector;
+color = colorKey.orientation2color(ebsd('indexed').orientations);
+
+plot(ebsd,colorKey.orientation2color(ebsd.orientations),'coordinates','on')
+
+%% Plot the ODF
+odf = calcDensity(ebsd(mineral).orientations,'halfwidth',10*degree);
+
+%
+figure;
+% plot the pole figure representation of the ODF
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral).CS) Miller(0,1,0,ebsd(mineral).CS)],'projection','eangle');
+
+mtexColorbar('location','southoutside')
+mtexColorMap blue2red
+
+%
+%add contours
+levels=[0:33];
+hold on;
+plotPDF(odf,[Miller(0,0,1,ebsd(mineral).CS) Miller(0,1,0,ebsd(mineral).CS)],'contour',levels,'linecolor','k','projection','eangle');
+mtexColorbar('location','southoutside')
+
+%% create a reference pattern from the Dynamics bin file
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},RTM.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+
+%% Load a pattern from the data stack
+
+x_val=2;
+y_val=2;
+
+[single_pattern,row_patterns] = rEBSD_TFS_Cor(y_val,x_val,TFS_DataLoc); %note this is in matlab indexing
+RTM.size=[479 479];
+[EBSD_geom ] = EBSP_Gnom( RTM,ebsd_header); %you can change PC_in if you want    
+
+%find the value in the original EBSD container for this
+ebsd_val=find(ebsd.prop.y_in == y_val & ebsd.prop.x_in == x_val );
+G_MTEX=ebsd(ebsd_val).orientations.matrix;    
+  
+[ Pat_sim_A] = EBSP_gen( EBSD_geom,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+
+figure; 
+subplot(2,2,1);
+pPattern(single_pattern,EBSD_geom); title('Experiment')
+subplot(2,2,2);
+pPattern(Pat_sim_A,EBSD_geom); title('simulation')
+
+Settings_CorX.rkd=1; %RKD geometry - fill gaps for flatfielded RKD quad chip
+[ Pat_exp_cor ] = EBSP_BGCor(single_pattern,Settings_CorX); %note the flipud, this is because TFS uses Y pointing down for the pattern
+Pat_exp_cor2.size=size(Pat_exp_cor);
+[EBSD_geom2 ] = EBSP_Gnom( Pat_exp_cor2,ebsd_header); %you can change PC_in if you want    
+
+subplot(2,2,3);
+pPattern(Pat_exp_cor,EBSD_geom2); title('Corrected Experiment')
+[ Pat_sim_B] = EBSP_gen( EBSD_geom2,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+subplot(2,2,4);
+pPattern(Pat_sim_B,EBSD_geom2); title('Corrected Simulation')
+
+%% Load the raw pattern data
+
+raw_loc=fullfile(TFS_DataLoc,'\raw');
+raw_folders=dir(raw_loc);
+raw_folder=fullfile(raw_loc,raw_folders(3).name);
+raw_pats=fullfile(raw_folder,'f_00000.pak');
+
+% Read the raw stack
+[pat_raw_stack] = rEBSD_TFS_Raw(raw_pats);
+av_bg=sum(pat_raw_stack,3)/400;
+
+
+%% Plot this data
+
+%find the number of grid points in X and Y
+x_max=max(ebsd.prop.x_in(:))+1;
+y_max=max(ebsd.prop.y_in(:))+1;
+
+pat_num=(x_val+1)+y_val*x_max;
+
+pat_single=pat_raw_stack(:,:,pat_num)./av_bg;
+Pat_exp_cor3.size=size(pat_single);
+[EBSD_geom3 ] = EBSP_Gnom( Pat_exp_cor3,ebsd_header); %you can change PC_in if you want  
+
+single_std=nanstd(pat_single(:));
+single_mean=nanmean(pat_single(:));
+
+EBSP2=randn(size(pat_single))*single_std+single_mean;
+pat_single_cor=pat_single;
+pat_single_cor(isnan(pat_single))=EBSP2(isnan(pat_single));
+
+
+figure;
+subplot(2,3,1);
+pPattern(pat_raw_stack(:,:,pat_num),EBSD_geom3); title('Raw Exp')
+
+subplot(2,3,2);
+Pat_exp_cor3.size=size(pat_single);
+pPattern(pat_single_cor,EBSD_geom3); title('Raw-Ish Exp')
+
+subplot(2,3,3);
+Pat_exp_cor3.size=size(pat_single);
+[EBSD_geom3 ] = EBSP_Gnom( Pat_exp_cor3,ebsd_header); %you can change PC_in if you want 
+
+[ Pat_sim_C] = EBSP_gen( EBSD_geom3,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+pPattern(Pat_sim_C,EBSD_geom2); title('Raw Sim')
+
+subplot(2,3,5);
+pPattern(Pat_exp_cor,EBSD_geom2); title('Corrected Experiment')
+[ Pat_sim_B] = EBSP_gen( EBSD_geom2,G_MTEX'*RTM.Rz(-15*pi/180),screen_int);
+subplot(2,3,6);
+pPattern(Pat_sim_B,EBSD_geom2); title('Corrected Simulation')
+
+##### SOURCE END #####
+-->
+</body>
+</html>

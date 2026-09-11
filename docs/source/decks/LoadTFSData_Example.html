@@ -1,0 +1,569 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>LoadTFSData_Example</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="LoadTFSData_Example.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Input Variables</a>
+</li>
+<li>
+<a href="#3">Load MTEX</a>
+</li>
+<li>
+<a href="#4">Load the EBSD data</a>
+</li>
+<li>
+<a href="#5">Check X and Y</a>
+</li>
+<li>
+<a href="#6">Check a plot</a>
+</li>
+<li>
+<a href="#7">Plot the IPF</a>
+</li>
+<li>
+<a href="#8">Load patterns</a>
+</li>
+<li>
+<a href="#9">load all the patterns, and count the MEC</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">% close all;</span>
+clear;
+home;
+close <span class="string">all</span>;
+</pre>
+<h2 id="2">Input Variables</h2>
+<pre class="codeinput">
+<span class="comment">%Toolboxes</span>
+mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1'</span>;
+astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2'</span>;
+xebsd_location=<span class="string">'C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks'</span>;
+
+
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-30T14_39_59_Co_Map\2024-09-30T15_20_59';</span>
+<span class="comment">% InputUser.Phase_Input  = {'Co_8kV'};</span>
+<span class="comment">% scaling = 12; % scale the crystal shape to have a nice size</span>
+
+TFS_DataLoc=<span class="string">'C:\Users\benja\Documents\EBSD\EK_Indents\2025-07-17T14_36_45_SiliconIndents_EK\2025-07-17T15_10_50'</span>;
+<span class="comment">% % TFS_DataLoc='C:\Users\benja\Documents\EBSD\2025-04-01T14_25_03_20250401-TiMo_RB\2025-04-01T15_08_15';</span>
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\RuthHF\2025-04-25T11_03_59'</span>
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2025-07-21T16_58_08';</span>
+
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\Ni_Small_Demo\2025-07-23T11_12_31'; %Ni data</span>
+<span class="comment">% InputUser.Phase_Input={'Silicon'};</span>
+scaling = 6; <span class="comment">% scale the crystal shape to have a nice size</span>
+
+<span class="comment">% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-19T15_22_56_Ben_Si_map\2024-09-19T15_34_01';</span>
+<span class="comment">% InputUser.Phase_Input={'Si_bwkd_10kv'};</span>
+</pre>
+<h2 id="3">Load MTEX</h2>
+<pre class="codeinput">
+<span class="comment">%if MTEX loaded this doesn't matter</span>
+<span class="comment">%if MTEX is not loaded, then this will be used to start MTEX up</span>
+
+<span class="comment">%start mtex if needed</span>
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start AstroEBSD if needed</span>
+<span class="keyword">try</span> astro_loadcheck;
+<span class="keyword">catch</span>
+    run(fullfile(astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+
+RTM.Phase_Folder = fullfile(astro_location,<span class="string">'phases'</span>); <span class="comment">%location of the AstroEBSD phases super-folder</span>
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,<span class="string">'dynamic_templates'</span>); <span class="comment">%location of the binary files used for RTM</span>
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">Load the EBSD data</h2>
+<pre class="codeinput">
+<span class="comment">% crystal symmetry</span>
+<span class="comment">% CS = {...</span>
+<span class="comment">%   'notIndexed',...</span>
+<span class="comment">%   crystalSymmetry('432', [3.5 3.5 3.5], 'mineral', 'Nickel', 'color', [0.53 0.81 0.98])};</span>
+
+
+<span class="comment">% multiphase_full=fullfile(multiphase_location,'\results','multiphases.idx');</span>
+
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+<span class="comment">% plotting convention - TFS</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+</pre>
+<pre class="codeoutput error">Error using matlab.io.ImportOptions/readtable
+Unable to find or open
+'C:\Users\benja\Documents\EBSD\EK_Indents\2025-07-17T14_36_45_SiliconIndents_EK\2025-07-17T15_10_50\site.json'.
+Check the path and filename or file permissions.
+
+Error in bIDX_to_EBSD (line 35)
+tbl = readtable(sitedata_full, opts);
+
+Error in LoadTFSData_Example (line 64)
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+</pre>
+<h2 id="5">Check X and Y</h2>
+<pre class="codeinput">figure;
+plot(ebsd,ebsd.x,<span class="string">'coordinates'</span>,<span class="string">'on'</span>); title(<span class="string">'x'</span>); axis <span class="string">on</span>;
+nextAxis;
+plot(ebsd,ebsd.y,<span class="string">'coordinates'</span>,<span class="string">'on'</span>); title(<span class="string">'y'</span>); axis <span class="string">on</span>;
+</pre>
+<h2 id="6">Check a plot</h2>
+<pre class="codeinput">figure;
+plot(ebsd,ebsd.MisFit,<span class="string">'coordinates'</span>,<span class="string">'on'</span>); title(<span class="string">'MisFit'</span>); axis <span class="string">on</span>;
+</pre>
+<h2 id="7">Plot the IPF</h2>
+<pre class="codeinput">mineral_name=ebsd(1).mineral;
+
+<span class="comment">% IPF-x, y and z</span>
+<span class="comment">% compute the colors</span>
+ipfKey = ipfHSVKey(ebsd(mineral_name));
+<span class="comment">% ipfKey = ipfTSLKey(ebsd(mineral_name)); %use the TSL</span>
+
+<span class="comment">%plot the key</span>
+f1=figure;
+plot(ipfKey)
+
+<span class="comment">% now generate the IPF colour maps</span>
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+<span class="comment">%now plot the three IPF coloured maps</span>
+f2=figure;
+plot(ebsd(mineral_name),colors_X,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Y,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis
+plot(ebsd(mineral_name),colors_Z,<span class="string">'micronbar'</span>,<span class="string">'on'</span>);
+
+<span class="keyword">if</span> exist(<span class="string">'mb_length'</span>,<span class="string">'var'</span>); mp = MTEX_mb_fix(mb_length); <span class="keyword">end</span> <span class="comment">%change the micronbar length to make it prettier/easier to read</span>
+</pre>
+<h2 id="8">Load patterns</h2>
+<pre class="codeinput">
+<span class="comment">%define the coordinates of the points, this is in a [xpos(:),ypos(:)] list</span>
+<span class="comment">%with 0 based indexing</span>
+
+<span class="comment">% pattern_loc=[ebsd.x_in,ebsd.y_in]; %note this is in 0 based indexing, whole map</span>
+<span class="comment">% pattern_loc=[75,59]; %single pattern</span>
+pattern_loc=[0,0]; <span class="comment">%single pattern</span>
+
+<span class="comment">%Load processed patterns</span>
+<span class="comment">% [patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+
+<span class="comment">% Load raw patterns</span>
+<span class="comment">% [patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,2); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+
+<span class="comment">% Load raw and processed</span>
+[patterns_one] = loadPat_TFS(TFS_DataLoc,pattern_loc,3); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+
+<span class="comment">% plot a single pattern</span>
+figure;
+
+subplot(2,2,1);
+imagesc(double(patterns_one.pat_raw(:,:,1)));
+axis <span class="string">image</span>; axis <span class="string">xy</span>; axis <span class="string">tight</span>;
+title(<span class="string">'Raw'</span>)
+
+subplot(2,2,2);
+imagesc(patterns_one.pat_proc(:,:,1))
+axis <span class="string">image</span>; axis <span class="string">xy</span>; axis <span class="string">tight</span>;
+title(<span class="string">'Processed'</span>)
+
+subplot(2,2,3);
+<span class="comment">% imagesc(double(patterns_full.pat_raw(:,:,1))./patterns_full.pat_proc(:,:,1));</span>
+matlab_correct=double(patterns_one.pat_raw(:,:,1))./double(patterns_one.pat_ff);
+<span class="comment">% matlab_correct_eq = histeq(matlab_correct);</span>
+imagesc(matlab_correct);
+mean_correct=trimmean(matlab_correct(:),0.9);
+iqr_correct=iqr(matlab_correct(:));
+
+axis <span class="string">image</span>; axis <span class="string">xy</span>; axis <span class="string">tight</span>;
+clim(mean_correct+3*[-iqr_correct iqr_correct]);
+title(<span class="string">'Raw/Flat Field, range stretched'</span>)
+
+subplot(2,2,4);
+imagesc(patterns_one.pat_ff)
+axis <span class="string">image</span>; axis <span class="string">xy</span>; axis <span class="string">tight</span>;
+title(<span class="string">'Flat Field'</span>)
+colormap(<span class="string">'gray'</span>)
+</pre>
+<h2 id="9">load all the patterns, and count the MEC</h2>
+<pre class="codeinput">pattern_loc=[ebsd.x_in,ebsd.y_in]; <span class="comment">%note this is in 0 based indexing, whole map</span>
+<span class="comment">% [patterns_full] = loadPat_TFS(TFS_DataLoc,[1,1;1,2],2); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+tic
+[patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,3); <span class="comment">%loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])</span>
+toc
+npats=size(patterns_full.pat_raw,3);
+</pre>
+<pre class="codeinput">
+<span class="comment">%calculate the MEC from this data</span>
+ebsd_mec=zeros(npats,1);
+ebsd_mec_proc=zeros(npats,1);
+
+fsd_r=zeros(npats,1); fsd_g=fsd_r;fsd_b=fsd_r;
+fsd_rgb=zeros(npats,3);
+<span class="keyword">for</span> n=1:npats
+    pattern_n=patterns_full.pat_raw(:,:,n);
+    ebsd_mec(n)=median(pattern_n(:));
+
+    pattern_p=patterns_full.pat_proc(:,:,n);
+    ebsd_mec_proc(n)=median(pattern_p(:));
+
+    <span class="comment">%FSD coloring - this probably needs some work</span>
+    fsd_r(n)=sum(sum(pattern_n(1:85,1:26)));
+    fsd_g(n)=sum(sum(pattern_n(86:170,1:26)));
+    fsd_b(n)=sum(sum(pattern_n(171:256,1:26)));
+    fsd_rgb(n,:)=[fsd_r(n),fsd_r(n),fsd_r(n)];
+<span class="keyword">end</span>
+
+<span class="comment">%add the MEC to the EBSD container</span>
+ebsd.prop.MEC=double(ebsd_mec);
+ebsd.prop.MEC2=double(ebsd_mec_proc);
+ebsd.prop.fsd_rgb=double(fsd_rgb);
+
+
+<span class="comment">%normalize rgb - this is very quick and dirty</span>
+fsd_r=0.5+(fsd_r-nanmean(fsd_r(:)))./nanstd(fsd_r(:));
+fsd_g=0.5+(fsd_g-nanmean(fsd_g(:)))./nanstd(fsd_g(:));
+fsd_b=0.5+(fsd_b-nanmean(fsd_b(:)))./nanstd(fsd_b(:));
+
+<span class="comment">%put int the container</span>
+fsd=[fsd_r,fsd_g,fsd_b];
+
+ebsd.prop.fsd_r=double(fsd_r);
+ebsd.prop.fsd_g=double(fsd_g);
+ebsd.prop.fsd_b=double(fsd_b);
+
+ebsd.prop.fsd=fsd;
+
+<span class="comment">%plot the MEC data</span>
+figure;
+plot(ebsd,ebsd.prop.MEC,<span class="string">'micronbar'</span>,<span class="string">'on'</span>);
+nextAxis;
+plot(ebsd,ebsd.prop.MEC2,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+nextAxis;
+plot(ebsd,ebsd.prop.fsd,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+% close all;
+clear;
+home;
+close all;
+
+%% Input Variables
+
+%Toolboxes
+mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.11.1';
+astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2';
+xebsd_location='C:\Users\bbritt01\Documents\GitHub\xEBSDv4\decks';
+
+
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-30T14_39_59_Co_Map\2024-09-30T15_20_59';
+% InputUser.Phase_Input  = {'Co_8kV'};
+% scaling = 12; % scale the crystal shape to have a nice size
+
+TFS_DataLoc='C:\Users\benja\Documents\EBSD\EK_Indents\2025-07-17T14_36_45_SiliconIndents_EK\2025-07-17T15_10_50';
+% % TFS_DataLoc='C:\Users\benja\Documents\EBSD\2025-04-01T14_25_03_20250401-TiMo_RB\2025-04-01T15_08_15';
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\RuthHF\2025-04-25T11_03_59'
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2025-07-21T16_58_08';
+
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\Ni_Small_Demo\2025-07-23T11_12_31'; %Ni data
+% InputUser.Phase_Input={'Silicon'};
+scaling = 6; % scale the crystal shape to have a nice size
+
+% TFS_DataLoc='C:\Users\benja\Documents\EBSD\2024-09-19T15_22_56_Ben_Si_map\2024-09-19T15_34_01';
+% InputUser.Phase_Input={'Si_bwkd_10kv'};
+%% Load MTEX
+
+%if MTEX loaded this doesn't matter
+%if MTEX is not loaded, then this will be used to start MTEX up
+
+%start mtex if needed
+try EBSD;
+catch
+    run(fullfile(mtex_location,"startup.m"));
+end
+
+%start AstroEBSD if needed
+try astro_loadcheck;
+catch
+    run(fullfile(astro_location,"start_AstroEBSD.m"));
+end
+
+RTM.Phase_Folder = fullfile(astro_location,'phases'); %location of the AstroEBSD phases super-folder
+RTM.Bin_loc = fullfile(RTM.Phase_Folder,'dynamic_templates'); %location of the binary files used for RTM
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% Load the EBSD data
+
+% crystal symmetry
+% CS = {... 
+%   'notIndexed',...
+%   crystalSymmetry('432', [3.5 3.5 3.5], 'mineral', 'Nickel', 'color', [0.53 0.81 0.98])};
+
+
+% multiphase_full=fullfile(multiphase_location,'\results','multiphases.idx');
+
+[ebsd,ebsd_header] = bIDX_to_EBSD(TFS_DataLoc);
+
+% plotting convention - TFS
+setMTEXpref('xAxisDirection','east');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+%% Check X and Y
+
+figure;
+plot(ebsd,ebsd.x,'coordinates','on'); title('x'); axis on;
+nextAxis;
+plot(ebsd,ebsd.y,'coordinates','on'); title('y'); axis on;
+
+%% Check a plot
+figure;
+plot(ebsd,ebsd.MisFit,'coordinates','on'); title('MisFit'); axis on;
+
+%% Plot the IPF
+mineral_name=ebsd(1).mineral;
+
+% IPF-x, y and z
+% compute the colors
+ipfKey = ipfHSVKey(ebsd(mineral_name));
+% ipfKey = ipfTSLKey(ebsd(mineral_name)); %use the TSL
+
+%plot the key
+f1=figure;
+plot(ipfKey)
+
+% now generate the IPF colour maps
+ipfKey.inversePoleFigureDirection = vector3d.X;
+colors_X = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Y;
+colors_Y = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+ipfKey.inversePoleFigureDirection = vector3d.Z;
+colors_Z = ipfKey.orientation2color(ebsd(mineral_name).orientations);
+
+%now plot the three IPF coloured maps
+f2=figure;
+plot(ebsd(mineral_name),colors_X,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Y,'micronbar','off');
+nextAxis
+plot(ebsd(mineral_name),colors_Z,'micronbar','on');
+
+if exist('mb_length','var'); mp = MTEX_mb_fix(mb_length); end %change the micronbar length to make it prettier/easier to read
+
+
+%% Load patterns
+
+%define the coordinates of the points, this is in a [xpos(:),ypos(:)] list
+%with 0 based indexing
+
+% pattern_loc=[ebsd.x_in,ebsd.y_in]; %note this is in 0 based indexing, whole map
+% pattern_loc=[75,59]; %single pattern
+pattern_loc=[0,0]; %single pattern
+
+%Load processed patterns
+% [patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,1); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+
+% Load raw patterns
+% [patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,2); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+
+% Load raw and processed
+[patterns_one] = loadPat_TFS(TFS_DataLoc,pattern_loc,3); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+
+% plot a single pattern
+figure;
+
+subplot(2,2,1);
+imagesc(double(patterns_one.pat_raw(:,:,1)));
+axis image; axis xy; axis tight;
+title('Raw')
+
+subplot(2,2,2);
+imagesc(patterns_one.pat_proc(:,:,1))
+axis image; axis xy; axis tight;
+title('Processed')
+
+subplot(2,2,3);
+% imagesc(double(patterns_full.pat_raw(:,:,1))./patterns_full.pat_proc(:,:,1));
+matlab_correct=double(patterns_one.pat_raw(:,:,1))./double(patterns_one.pat_ff);
+% matlab_correct_eq = histeq(matlab_correct);
+imagesc(matlab_correct);
+mean_correct=trimmean(matlab_correct(:),0.9);
+iqr_correct=iqr(matlab_correct(:));
+
+axis image; axis xy; axis tight;
+clim(mean_correct+3*[-iqr_correct iqr_correct]);
+title('Raw/Flat Field, range stretched')
+
+subplot(2,2,4);
+imagesc(patterns_one.pat_ff)
+axis image; axis xy; axis tight;
+title('Flat Field')
+colormap('gray')
+
+%% load all the patterns, and count the MEC
+
+pattern_loc=[ebsd.x_in,ebsd.y_in]; %note this is in 0 based indexing, whole map
+% [patterns_full] = loadPat_TFS(TFS_DataLoc,[1,1;1,2],2); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+tic
+[patterns_full] = loadPat_TFS(TFS_DataLoc,pattern_loc,3); %loadPat_TFS([file location],[list of patterns, 0 indexed, two colums x,y], [1 = procssed, 2 = raw, 3 = both])
+toc
+npats=size(patterns_full.pat_raw,3);
+
+%%
+%calculate the MEC from this data
+ebsd_mec=zeros(npats,1);
+ebsd_mec_proc=zeros(npats,1);
+
+fsd_r=zeros(npats,1); fsd_g=fsd_r;fsd_b=fsd_r;
+fsd_rgb=zeros(npats,3);
+for n=1:npats
+    pattern_n=patterns_full.pat_raw(:,:,n);
+    ebsd_mec(n)=median(pattern_n(:));
+
+    pattern_p=patterns_full.pat_proc(:,:,n);
+    ebsd_mec_proc(n)=median(pattern_p(:));
+
+    %FSD coloring - this probably needs some work
+    fsd_r(n)=sum(sum(pattern_n(1:85,1:26)));
+    fsd_g(n)=sum(sum(pattern_n(86:170,1:26)));
+    fsd_b(n)=sum(sum(pattern_n(171:256,1:26)));
+    fsd_rgb(n,:)=[fsd_r(n),fsd_r(n),fsd_r(n)];
+end
+
+%add the MEC to the EBSD container
+ebsd.prop.MEC=double(ebsd_mec);
+ebsd.prop.MEC2=double(ebsd_mec_proc);
+ebsd.prop.fsd_rgb=double(fsd_rgb);
+
+
+%normalize rgb - this is very quick and dirty
+fsd_r=0.5+(fsd_r-nanmean(fsd_r(:)))./nanstd(fsd_r(:));
+fsd_g=0.5+(fsd_g-nanmean(fsd_g(:)))./nanstd(fsd_g(:));
+fsd_b=0.5+(fsd_b-nanmean(fsd_b(:)))./nanstd(fsd_b(:));
+
+%put int the container
+fsd=[fsd_r,fsd_g,fsd_b];
+
+ebsd.prop.fsd_r=double(fsd_r);
+ebsd.prop.fsd_g=double(fsd_g);
+ebsd.prop.fsd_b=double(fsd_b);
+
+ebsd.prop.fsd=fsd;
+
+%plot the MEC data
+figure;
+plot(ebsd,ebsd.prop.MEC,'micronbar','on');
+nextAxis;
+plot(ebsd,ebsd.prop.MEC2,'micronbar','off');
+nextAxis;
+plot(ebsd,ebsd.prop.fsd,'micronbar','off');
+
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

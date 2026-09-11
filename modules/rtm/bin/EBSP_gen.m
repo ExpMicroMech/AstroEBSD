@@ -24,14 +24,27 @@ function [ EBSP_out,r2] = EBSP_gen( EBSP_av,rotmat,screen_int,isHex )
 %ixHex = screen info from the bin file reader
 %EBSP_out = pattern out
 
+
 if nargin ~= 4 && isfield(screen_int,'isHex')
     isHex=screen_int.isHex;
 end
 
+lattice_scaling=[1 1 1];
+for i=1:size(varargin,2)
+    if strcmp(varargin{i},'lattice_scaling')
+       lattice_scaling=varargin{i+1};
+    end
+end
+
 if isfield(EBSP_av,'r')
-    r2 = EBSP_av.r*rotmat';
+    r=EBSP_av.r;
+    r = [r(:,1)*lattice_scaling(1), r(:,2)*lattice_scaling(2), r(:,3)*lattice_scaling(3)];
+    r= r./vecnorm(r,2,2);
+    r2 =r*rotmat';
 else
     r = [EBSP_av.xpts_screen(:), EBSP_av.ypts_screen(:), EBSP_av.ypts_screen(:)*0+1].*1./sqrt((EBSP_av.xpts_screen(:).^2+EBSP_av.ypts_screen(:).^2+1));
+    r = [r(:,1)*lattice_scaling(1), r(:,2)*lattice_scaling(2), r(:,3)*lattice_scaling(3)];
+    r= r./vecnorm(r,2,2);
     r2 = r*rotmat';
 end
 

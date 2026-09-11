@@ -70,6 +70,17 @@ while p < iterations
     %cross correlate this pattern in X and Y to get shifts
     %generate a new pattern
     [ EBSP_iter ] = EBSP_gen( EBSP_geometry,rotmat_best,screen_int,isHex ); %generate the EBSP for this iteration
+
+    if isfield(RTM_setup,'apply_gauss')
+        if RTM_setup.apply_gauss==1
+            %
+            EBSP_iter=imgaussfilt(EBSP_iter,5);
+        end
+    end
+    
+    if isfield(RTM_setup,'Settings_Cor')
+        EBSP_iter = EBSP_BGCor(EBSP_iter, RTM_setup.Settings_Cor);
+    end
     if RTM_setup.debug == 1
     pPattern(EBSP_iter,EBSP_geometry);
     t_string=['iteration ' num2str(p) ' xcf=' sprintf('%1.03f',RegOut1(4))];
@@ -106,6 +117,9 @@ while p < iterations
     
     %generate the template again and match
     [ EBSP_halfcorr ] = EBSP_gen(EBSP_geometry,rotmat_best,screen_int,isHex );
+    if isfield(RTM_setup,'Settings_Cor')
+        EBSP_halfcorr = EBSP_BGCor(EBSP_halfcorr, RTM_setup.Settings_Cor);
+    end
     EBSP_loghalfcorr = logsample(EBSP_halfcorr, rmin, rmax/sqrt(2), screensize/2, screensize/2, LPTsize, LPTsize); %Transform the x/y corrected image into LPT space
     %measure the Z rotation
     
@@ -155,7 +169,9 @@ end
 
 %generate a new pattern
 [ EBSP_final ] = EBSP_gen( EBSP_geometry,rotmat_best,screen_int,isHex ); %generate the EBSP for this iteration
-
+if isfield(RTM_setup,'Settings_Cor')
+    EBSP_final = EBSP_BGCor(EBSP_final, RTM_setup.Settings_Cor);
+end
 %FFT it
 % [FFTData_final,datafill_final]  =fROIEx(EBSP_final,SettingsXCF.hfilter,SettingsXCF.FFTfilter,SettingsXCF.roiloc,SettingsXCF.filters,SettingsXCF.numroi,SettingsXCF.roisize);
 

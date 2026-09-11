@@ -1,0 +1,1334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>reprojection_PtSn4</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-07-10">
+<meta name="DC.source" content="reprojection_PtSn4.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">stereo_reproject.m</a>
+</li>
+<li>
+<a href="#2">Start of the script</a>
+</li>
+<li>
+<a href="#3">start astro &amp; mtex - please edit the paths</a>
+</li>
+<li>
+<a href="#4">load the pattern</a>
+</li>
+<li>
+<a href="#5">Enter pattern information and set up indexing</a>
+</li>
+<li>
+<a href="#6">Simulate the pattern</a>
+</li>
+<li>
+<a href="#7">refine + Figure 2</a>
+</li>
+<li>
+<a href="#8">Now try to plot a sterogram of the dynamically simulated pattern + Figure 4</a>
+</li>
+<li>
+<a href="#9">Now take the experimental pattern and generate a look up, so we can do the spherical sampling...</a>
+</li>
+<li>
+<a href="#10">lets inflate this up to the full pattern, if we can remember how</a>
+</li>
+</ul>
+</div>
+<h2 id="1">stereo_reproject.m</h2>
+<p>Created by T. Ben Britton in June 2023 Edited and annotated by Tianbi Zhang</p>
+<pre class="codeinput">
+<span class="comment">% This script takes a Kikuchi pattern, index it, reproject it onto the</span>
+<span class="comment">% diffraction sphere and create a stereogram.</span>
+
+<span class="comment">% This script accompanies the following article:</span>
+<span class="comment">% "Multi-exposure diffraction pattern fusion applied to enable wider-angle</span>
+<span class="comment">% transmission Kikuchi diffraction with direct electron detectors"</span>
+<span class="comment">% Tianbi Zhang, T. Ben Britton</span>
+
+<span class="comment">% Requirements:</span>
+<span class="comment">% (1) MATLAB toolboxes: image processsing, statistics and machine learning,</span>
+<span class="comment">% parallel computing</span>
+<span class="comment">% (2) AstroEBSD package - this script is available as a part of the latest</span>
+<span class="comment">% AstroEBSSD distribution.</span>
+<span class="comment">% (3) MTEX toolbox (https://mtex-toolbox.github.io/)</span>
+
+<span class="comment">% changelog:</span>
+<span class="comment">% Dec 21 2023: (i) extended parfor loops to more sections to speed up</span>
+<span class="comment">% (2) reading symmetry operations directly from cif files to expand crystal</span>
+<span class="comment">% systems applicable</span>
+<span class="comment">% (3) tidied up indexing - now pattern info only from manual input</span>
+<span class="comment">% (the original code did not use indexed results anyway!)</span>
+</pre>
+<h2 id="2">Start of the script</h2>
+<pre class="codeinput">close <span class="string">all</span>;
+clear;
+home;
+</pre>
+<h2 id="3">start astro &amp; mtex - please edit the paths</h2>
+<p>location_astro='C:\Users\billy\Documents\GitHub\AstroEBSD_v2\'; location_mtex='E:\MATLAB\mtex-5.8.0\'; location_astro='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';</p>
+<pre class="codeinput">InputUser.astro_location=<span class="string">'C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\'</span>;
+InputUser.mtex_location=<span class="string">'C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.8.1'</span>; <span class="comment">%working with 5.8.1</span>
+
+<span class="keyword">try</span> EBSD;
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.mtex_location,<span class="string">"startup.m"</span>));
+<span class="keyword">end</span>
+
+<span class="comment">%start astro if needed</span>
+<span class="keyword">try</span> astro_loadcheck
+<span class="keyword">catch</span>
+    run(fullfile(InputUser.astro_location,<span class="string">"start_AstroEBSD.m"</span>));
+<span class="keyword">end</span>
+
+
+<span class="comment">% run(fullfile(location_astro,'start_AstroEBSD.m'));</span>
+<span class="comment">% run(fullfile(location_mtex,'startup.m'));</span>
+</pre>
+<pre class="codeoutput">AstroEBSD v1 is already added to the path
+</pre>
+<h2 id="4">load the pattern</h2>
+<pre class="codeinput">path1= <span class="string">'C:\Users\billy\OneDrive - UBC\PhD\TKD\20240110_PtSn4\'</span>;
+path1= <span class="string">'C:\Users\benja\OneDrive - UBC\GroupWork\Zhang_Tianbi\PtSn4\20240110_PtSn4\'</span>;
+pat = <span class="string">'ebsd_s8_500f_001s_dd1_bgcor.tif'</span>;
+patname = fullfile(path1, pat);
+pat1=double(flipud(imread(patname))); <span class="comment">% this is the demo TKP</span>
+
+InputUser.Phase_Folder = fullfile(InputUser.astro_location,<span class="string">'phases'</span>);
+InputUser.Phase_Input  = {<span class="string">'PtSn4_Ccca'</span>};
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+cs_al=loadCIF(RTM_info.cif_file);
+</pre>
+<pre class="codeoutput error">Error using imread&gt;get_full_filename
+File "C:\Users\benja\OneDrive -
+UBC\GroupWork\Zhang_Tianbi\PtSn4\20240110_PtSn4\ebsd_s8_500f_001s_dd1_bgcor.tif"
+does not exist.
+
+Error in imread (line 372)
+        fullname = get_full_filename(filename);
+
+Error in reprojection_PtSn4 (line 60)
+pat1=double(flipud(imread(patname))); % this is the demo TKP
+</pre>
+<h2 id="5">Enter pattern information and set up indexing</h2>
+<p>Euler angles (Bunge) and PC - they must be very accurate for the reprojection. eangs_pat1=[175.0106 12.7684 134.0371]; % Aba2 fit pc_pat1=[0.5776150 0.5668607 0.4824142]; % Aba2 fit</p>
+<pre class="codeinput">eangs_pat1=[39.6903 81.0360 351.0890]; <span class="comment">% Ccca fit</span>
+pc_pat1=[0.5776150 0.5668607 0.4824142]; <span class="comment">% Ccca fit</span>
+
+MicroscopeData.TotalTilt=0;
+
+<span class="comment">% Normalise intensities</span>
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( pat1,[]);
+
+<span class="comment">%Define all rotation matrices needed in the code</span>
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; <span class="comment">%z rotation</span>
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; <span class="comment">%x rotation</span>
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; <span class="comment">%y rotation</span>
+</pre>
+<h2 id="6">Simulate the pattern</h2>
+<pre class="codeinput">eangs=eangs_pat1*pi/180;
+PC_simulation=pc_pat1;
+pattern_info=struct;
+pattern_info.size=size(pat1);
+Detector_tilt = RTM.Rx(MicroscopeData.TotalTilt);
+
+<span class="comment">% % InputUser.Phase_Folder</span>
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},InputUser.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+<span class="comment">%</span>
+[EBSD_simulation ] = EBSP_Gnom( pattern_info,PC_simulation); <span class="comment">%you can change PC_in if you want</span>
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+<span class="comment">% [ Pat_sim_eang ] = EBSP_gen( EBSD_simulation,gmatrix*Detector_tilt,screen_int); %generate the EBSP for this iteration</span>
+<span class="comment">%</span>
+<span class="comment">% [Pat_sim_astroind]= EBSP_gen( EBSD_simulation,EBSP_Fe_One.rotdata{1}.detector,screen_int); %generate the EBSP for this iteration</span>
+R_x=RTM.Rx(pi/2);
+G_Stereo=R_x; <span class="comment">%apply a rotation to the projection space</span>
+<span class="comment">% G_Stereo=eye(3); %apply no rotation</span>
+</pre>
+<h2 id="7">refine + Figure 2</h2>
+<pre class="codeinput">[ Pat_sim_ref ] = EBSP_gen( EBSD_simulation,gmatrix,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+
+<span class="comment">%</span>
+<span class="comment">% pat1=Pat_sim_ref; %over ride the experimental pattern to check this is working</span>
+<span class="comment">%</span>
+
+<span class="comment">%normalize the input pattern</span>
+pat1_plot=pat1;
+pat1_plot=pat1_plot/std(pat1(:));
+pat1_plot=pat1_plot-mean(pat1_plot(:));
+
+figure;
+subplot(1,2,1);
+pPattern(Pat_sim_ref,EBSD_simulation);
+subplot(1,2,2);
+pPattern(pat1,EBSD_simulation);
+</pre>
+<h2 id="8">Now try to plot a sterogram of the dynamically simulated pattern + Figure 4</h2>
+<pre class="codeinput">num_stereo=2001;
+
+stereo_range=1;
+stereo_xl=linspace(-stereo_range,stereo_range,num_stereo);
+stereo_yl=linspace(-stereo_range,stereo_range,num_stereo);
+
+[stereo_x,stereo_y]=meshgrid(stereo_xl,stereo_yl);
+
+stereo_r=stereo_x.^2+stereo_y.^2;
+
+stereo_nu=2./(stereo_r+1);
+
+stereo_vx=stereo_nu.*stereo_x;
+stereo_vy=stereo_nu.*stereo_y;
+stereo_vz=-1+stereo_nu;
+
+stereo_vl=sqrt(stereo_vx(:).^2+stereo_vy(:).^2+stereo_vz(:).^2);
+stereo_vx=stereo_vx(:)./stereo_vl(:);
+stereo_vy=stereo_vy(:)./stereo_vl(:);
+stereo_vz=stereo_vz(:)./stereo_vl(:);
+
+stereo_rs=[stereo_vx stereo_vy stereo_vz];
+[stereo_pat] = Cube_Sample(stereo_rs(:,1),stereo_rs(:,2),stereo_rs(:,3),screen_int,0); <span class="comment">%sample from the sphere</span>
+stereo_pat_plot=stereo_pat/std(stereo_pat(:)); <span class="comment">%normalize intensity</span>
+stereo_pat_plot=stereo_pat_plot-mean(stereo_pat_plot(:)); <span class="comment">%zero mean</span>
+
+<span class="comment">%update the stereo grid to rotate it - e.g. if you want to look at the</span>
+<span class="comment">%stereogram along a different axis</span>
+stereo_rsG=stereo_rs*G_Stereo; <span class="comment">%rotate the frame</span>
+
+[stereo_patG] = Cube_Sample(stereo_rsG(:,1),stereo_rsG(:,2),stereo_rsG(:,3),screen_int,0); <span class="comment">%sample from the sphere</span>
+stereo_pat_plotG=stereo_patG/std(stereo_patG(:));<span class="comment">%normalize intensity</span>
+stereo_pat_plotG=stereo_pat_plotG-mean(stereo_pat_plotG(:)); <span class="comment">%zero mean</span>
+
+figure;
+subplot(1,2,1);
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>; hold <span class="string">on</span>;
+
+subplot(1,2,2);
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>; hold <span class="string">on</span>;
+</pre>
+<h2 id="9">Now take the experimental pattern and generate a look up, so we can do the spherical sampling...</h2>
+<p>Figure 5 rotmat=EBSP_Fe_One.rotdata{1}.detector;</p>
+<pre class="codeinput">
+<span class="comment">%We want the grid for the reprojection based upon the EBSD pattern location</span>
+rotmat=gmatrix*Detector_tilt;
+[~,r_exp]= EBSP_gen( EBSD_simulation,rotmat,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+
+<span class="comment">%rotate r_exp to the new frame</span>
+r_exp=r_exp*G_Stereo;
+
+<span class="comment">%convert from r_exp to the stereogram</span>
+r_lambda=1./(r_exp(:,3)+1);
+P_rx=r_exp(:,1).*r_lambda;
+P_ry=r_exp(:,2).*r_lambda;
+
+<span class="comment">% use the interpolant to generate the pattern</span>
+<span class="comment">% create the interpolant</span>
+stero_interp_exp=scatteredInterpolant(P_rx(:),P_ry(:),pat1_plot(:),<span class="string">'natural'</span>,<span class="string">'none'</span>);
+
+<span class="comment">%read the intepolant onto the stereogram</span>
+stereo_remap=stero_interp_exp(stereo_x(:),stereo_y(:));
+
+stereo_remap_2d=reshape(stereo_remap,num_stereo,num_stereo);
+stereo_mask_2d=isnan(stereo_remap_2d);
+
+figure;
+<span class="comment">%plot the full simulated stereogram</span>
+s1=subplot(1,2,1);
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>; hold <span class="string">on</span>;
+hold <span class="string">on</span>;
+<span class="comment">%plot the experimental pattern</span>
+s2=subplot(1,2,2);
+i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2d);
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">off</span>;
+i1.AlphaData=1-stereo_mask_2d;
+
+hold <span class="string">on</span>;
+<span class="comment">%</span>
+<span class="comment">% plot the outline of the detector (experimental pattern)</span>
+line_top=[EBSD_simulation.xpts_screen(:,1),EBSD_simulation.ypts_screen(:,1)];
+line_bottom=flipud([EBSD_simulation.xpts_screen(:,end),EBSD_simulation.ypts_screen(:,end)]);
+line_right=[EBSD_simulation.xpts_screen(end,:);EBSD_simulation.ypts_screen(end,:)]';
+line_left=flipud([EBSD_simulation.xpts_screen(1,:);EBSD_simulation.ypts_screen(1,:)]');
+
+line_allx=[line_top(:,1);line_right(:,1);line_bottom(:,1);line_left(:,1)];
+line_ally=[line_top(:,2);line_right(:,2);line_bottom(:,2);line_left(:,2)];
+line_allz=line_ally*0+1;
+
+<span class="comment">%rotate these points around the sphere</span>
+line_r = [line_allx(:), line_ally(:), line_allz(:)].*1./sqrt((line_allx(:).^2+line_ally(:).^2+1));
+line_r2 = line_r*rotmat'*G_Stereo;
+
+<span class="comment">%convert these points to the stereogram</span>
+line_r_lambda=1./(line_r2(:,3)+1);
+
+<span class="comment">%convert from r_exp to the stereogram</span>
+line_P_rx=line_r2(:,1).*line_r_lambda;
+line_P_ry=line_r2(:,2).*line_r_lambda;
+
+<span class="comment">%plot the blue box</span>
+plot(line_P_rx,line_P_ry,<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'parent'</span>,s1);
+plot(line_P_rx,line_P_ry,<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'parent'</span>,s2);
+
+<span class="comment">%{
+</span><span class="comment">
+</span><span class="comment">%do the fundamental zone
+</span><span class="comment">%write three axes, and construct the lines that go between one and the next
+</span><span class="comment">ax1=[0 0 1];
+</span><span class="comment">ax2=[1 1 1];
+</span><span class="comment">ax3=[1 0 1];
+</span><span class="comment">
+</span><span class="comment">%normalize length
+</span><span class="comment">ax1=ax1./norm(ax1);
+</span><span class="comment">ax2=ax2./norm(ax2);
+</span><span class="comment">ax3=ax3./norm(ax3);
+</span><span class="comment">nl=100;
+</span><span class="comment">
+</span><span class="comment">%inscribe along the great circles and equispace
+</span><span class="comment">ang_12=acos(dot(ax1,ax2));
+</span><span class="comment">ax_12=cross(ax1,ax2);
+</span><span class="comment">ax_12=ax_12/norm(ax_12);
+</span><span class="comment">ax_2p=cross(ax_12,ax1);
+</span><span class="comment">ax_2p=ax_2p/norm(ax_2p);
+</span><span class="comment">sample_spacing12=linspace(0,ang_12,nl);
+</span><span class="comment">line_12=ax1'*cos(sample_spacing12)+ax_2p'*sin(sample_spacing12);
+</span><span class="comment">
+</span><span class="comment">ang_23=acos(dot(ax2,ax3));
+</span><span class="comment">ax_23=cross(ax2,ax3);
+</span><span class="comment">ax_23=ax_23/norm(ax_23);
+</span><span class="comment">ax_3p=cross(ax_23,ax2);
+</span><span class="comment">ax_3p=ax_3p/norm(ax_3p);
+</span><span class="comment">sample_spacing23=linspace(0,ang_23,nl);
+</span><span class="comment">line_23=ax2'*cos(sample_spacing23)+ax_3p'*sin(sample_spacing23);
+</span><span class="comment">
+</span><span class="comment">ang_31=acos(dot(ax3,ax1));
+</span><span class="comment">ax_31=cross(ax3,ax1);
+</span><span class="comment">ax_31=ax_31/norm(ax_31);
+</span><span class="comment">ax_1p=cross(ax_31,ax3);
+</span><span class="comment">ax_1p=ax_1p/norm(ax_1p);
+</span><span class="comment">sample_spacing31=linspace(0,ang_31,nl);
+</span><span class="comment">line_31=ax3'*cos(sample_spacing31)+ax_1p'*sin(sample_spacing31);
+</span><span class="comment">
+</span><span class="comment">%projected on stereogram
+</span><span class="comment">line_set=[line_12';line_23';line_31'];
+</span><span class="comment">line_set_lambda=1./(line_set(:,3)+1);
+</span><span class="comment">line_set_rx=line_set(:,1).*line_set_lambda;
+</span><span class="comment">line_set_ry=line_set(:,2).*line_set_lambda;
+</span><span class="comment">
+</span><span class="comment">% plot(line_set_rx(1:end),line_set_ry(1:end),'y', 'LineWidth',2);
+</span><span class="comment">
+</span><span class="comment">%}</span>
+</pre>
+<h2 id="10">lets inflate this up to the full pattern, if we can remember how</h2>
+<pre class="codeinput">
+<span class="comment">% this is actually redundant now that astro also reads directly from cif, can consolidate...</span>
+
+EBSP_av=EBSD_simulation;
+[Pat_sim_astroind,r_exp]= EBSP_gen( EBSD_simulation,rotmat,screen_int); <span class="comment">%generate the EBSP for this iteration</span>
+r_exp=r_exp;
+r_n=zeros(size(r_exp,1),size(r_exp,2),24);
+
+[n_sym,~] =size(cs_al.rot);
+<span class="keyword">for</span> n=1:n_sym
+    sym_matrix=cs_al.rot(n).matrix;
+    r_n(:,:,n) = r_exp*sym_matrix*G_Stereo;
+<span class="keyword">end</span>
+
+nline=20;
+line_P_rxn=zeros(4*nline,n_sym);
+line_P_ryn=zeros(4*nline,n_sym);
+stereo_remap_maskp=zeros(num_stereo,num_stereo,n_sym);
+stereo_remap_2dnp=stereo_remap_maskp;
+
+stereo_x_ok=stereo_x(:);
+stereo_y_ok=stereo_y(:);
+
+<span class="comment">% calculate and plot each symmetrically equivalent pattern in the</span>
+<span class="comment">% stereogram</span>
+<span class="keyword">parfor</span> p=1:n_sym
+
+    x_lookup=EBSP_av.xpts_screen;
+    y_lookup=EBSP_av.ypts_screen;
+
+    x_lookup=x_lookup(:,2:end-1);
+    y_lookup=y_lookup(:,2:end-1);
+    pat1_plot_n=pat1_plot(:,2:end-1);
+
+    x_lookup=x_lookup(2:end-1,1);
+    y_lookup=y_lookup(2:end-1,1);
+    pat1_plot_n=pat1_plot_n(2:end-1,:);
+
+    r = [x_lookup(:), y_lookup(:), y_lookup(:)*0+1].*1./sqrt((x_lookup(:).^2+y_lookup(:).^2+1));
+    r_exp2 = r*rotmat';
+
+    r_3=r_n(:,3,p);
+    r_3(r_3&lt;0)=-r_3(r_3&lt;0);
+    r_lambda=1./(r_3+1);
+
+    <span class="comment">%convert from r_exp to the stereogram</span>
+    P_rxn=r_n(:,1,p).*r_lambda;
+    P_ryn=r_n(:,2,p).*r_lambda;
+
+    <span class="comment">% interpolate</span>
+    stero_interp_exp_n=scatteredInterpolant(P_rxn(:),P_ryn(:),pat1_plot(:),<span class="string">'natural'</span>,<span class="string">'none'</span>);
+
+    <span class="comment">%plot the outline of the detector</span>
+    line_top=[EBSD_simulation.xpts_screen(:,1),EBSD_simulation.ypts_screen(:,1)];
+    line_bottom=flipud([EBSD_simulation.xpts_screen(:,end),EBSD_simulation.ypts_screen(:,end)]);
+    line_right=[EBSD_simulation.xpts_screen(end,:);EBSD_simulation.ypts_screen(end,:)]';
+    line_left=flipud([EBSD_simulation.xpts_screen(1,:);EBSD_simulation.ypts_screen(1,:)]');
+
+    s2=linspace(1,EBSD_simulation.size(1),nline);
+    s2(2:end-1)=round(s2(2:end-1));
+
+    line_allx=[line_top(s2,1);line_right(s2,1);line_bottom(s2,1);line_left(s2,1)];
+    line_ally=[line_top(s2,2);line_right(s2,2);line_bottom(s2,2);line_left(s2,2)];
+    line_allz=line_ally*0+1;
+
+    <span class="comment">%rotate these points around the sphere</span>
+    line_r = [line_allx(:), line_ally(:), line_allz(:)].*1./sqrt((line_allx(:).^2+line_ally(:).^2+1));
+    line_r2 = line_r*rotmat'*cs_al.rot(p).matrix*G_Stereo;
+    line_r2_3=line_r2(:,3);
+    line_r2_3(line_r2_3&lt;0)=-line_r2_3(line_r2_3&lt;0);
+    <span class="comment">%convert these points to the stereogram</span>
+    line_r_lambda=1./(line_r2_3+1);
+
+    <span class="comment">%convert from r_exp to the stereogram</span>
+    line_P_rx=line_r2(:,1).*line_r_lambda;
+    line_P_ry=line_r2(:,2).*line_r_lambda;
+
+    <span class="comment">%create the blank frame</span>
+    stereo_remap_2dn=zeros(num_stereo,num_stereo);
+    stereo_remap_mask=ones(num_stereo,num_stereo);
+    num_el=numel(stereo_remap_mask);
+    <span class="comment">% %find the points in the detector frame</span>
+    [in,on] = inpolygon(stereo_x_ok,stereo_y_ok,line_P_rx,line_P_ry);
+    <span class="comment">% in=true(num_el,1);</span>
+    stereo_remap_mask_0=stereo_remap_mask*0;
+    <span class="comment">%read the intepolant</span>
+    stereo_remap_n=stero_interp_exp_n(stereo_x_ok(in),stereo_y_ok(in));
+    stereo_remap_2dn(in)=stereo_remap_n;
+    stereo_remap_mask(in)=stereo_remap_mask_0(in);
+
+    <span class="comment">% stereo_remap_2dn=reshape(stereo_remap_n,num_stereo,num_stereo);</span>
+    <span class="comment">% stereo_mask_2dn=isnan(stereo_remap_2dn);</span>
+
+    <span class="comment">% Figure 6,7</span>
+    <span class="comment">%plot the base dynamical pattern</span>
+    figure; imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+    axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+    hold <span class="string">on</span>;
+
+    <span class="comment">%plot the remapped experiment</span>
+    i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2dn);
+    axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);
+    i1.AlphaData=1-stereo_remap_mask;
+
+    <span class="comment">%plot the blue box</span>
+    plot(line_P_rx,line_P_ry,<span class="string">'b'</span>);
+    xlim([-1 1]);
+    ylim([-1 1]);
+
+    title(int2str(p));
+
+    line_P_rxn(:,p)=line_P_rx;
+    line_P_ryn(:,p)=line_P_ry;
+    stereo_remap_maskp(:,:,p)=stereo_remap_mask;
+    stereo_remap_2dnp(:,:,p)=stereo_remap_2dn;
+<span class="keyword">end</span>
+
+
+figure;
+<span class="comment">% imagesc(nansum(stereo_remap_2dnp,3)./nansum(stereo_remap_maskp,3));</span>
+stereo_weightings=size(cs_al.rot,1)-nansum(stereo_remap_maskp,3);
+stereo_summed=nansum(stereo_remap_2dnp,3);
+
+<span class="comment">%weight and normalize</span>
+stereo_f=stereo_summed./stereo_weightings;
+stereo_f=stereo_f/nanstd(stereo_f(:)); <span class="comment">%normalize intensity</span>
+stereo_f=stereo_f-nanmean(stereo_f(:)); <span class="comment">%zero mean</span>
+</pre>
+<pre class="codeinput">
+<span class="comment">%choose the sterographic limits</span>
+
+xlims=[-1 1];
+ylims=[-1 1];
+<span class="comment">% xlims=[-0.3 0.1];</span>
+<span class="comment">% ylims=[-0.1 0.3];</span>
+
+
+figure;
+
+s1=subplot(2,2,1);
+imagesc(stereo_xl,stereo_yl,stereo_f); title(<span class="string">'Weighted Reconstruction'</span>)<span class="comment">% stereogram normalized by weight</span>
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">equal</span>; axis <span class="string">tight</span>; xlim(xlims); ylim(ylims);
+<span class="comment">% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);</span>
+
+s2=subplot(2,2,4);imagesc(stereo_xl,stereo_yl,stereo_f-reshape(stereo_pat_plotG,num_stereo,num_stereo));title(<span class="string">'Difference'</span>);
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>);  axis <span class="string">equal</span>; axis <span class="string">tight</span>; xlim(xlims); ylim(ylims);
+<span class="comment">% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);</span>
+hold <span class="string">on</span>;
+clim([-6 6]);
+
+s3=subplot(2,2,2); imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+hold <span class="string">on</span>;
+    axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); title(<span class="string">'Simulation'</span>);  axis <span class="string">equal</span>; axis <span class="string">tight</span>;
+    <span class="comment">% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);</span>
+plot(line_P_rx,line_P_ry,<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'parent'</span>,s3); xlim(xlims); ylim(ylims);
+
+s4=subplot(2,2,3);
+i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2d); title(<span class="string">'Remapped'</span>)
+axis <span class="string">image</span>; axis <span class="string">xy</span>; colormap(<span class="string">'gray'</span>); axis <span class="string">equal</span>; axis <span class="string">tight</span>; xlim(xlims); ylim(ylims);
+hold <span class="string">on</span>;
+
+<span class="comment">%{
+</span><span class="comment">%% Plot the sterogram and try to work out the points for this projection
+</span><span class="comment">
+</span><span class="comment">%read the experimental pattern
+</span><span class="comment">pat1_plot2=pat1_plot;
+</span><span class="comment">pat_c=pat1_plot2(:);
+</span><span class="comment">
+</span><span class="comment">pat_maps=zeros(2001,2001,n_sym);
+</span><span class="comment">pat_mapn=pat_maps;
+</span><span class="comment">
+</span><span class="comment">%pick the symemtry
+</span><span class="comment">parfor p=1:n_sym
+</span><span class="comment">    %extract the points of this pattern
+</span><span class="comment">    %rotate these points of the detector around the sphere
+</span><span class="comment">    box_x=EBSD_simulation.xpts_screen(:);
+</span><span class="comment">    box_y=EBSD_simulation.ypts_screen(:);
+</span><span class="comment">    box_z=box_y*0+1;
+</span><span class="comment">
+</span><span class="comment">    box_rs=[box_x(:),box_y(:),box_z(:)];
+</span><span class="comment">    box_rs=box_rs*G_Stereo; %rotate the frame
+</span><span class="comment">
+</span><span class="comment">    % box_r=[box_x,box_y,box_z];
+</span><span class="comment">    box_r = [box_rs(:,1), box_rs(:,2), box_rs(:,3)].*1./sqrt((box_rs(:,1).^2+box_rs(:,2).^2+box_rs(:,3).^2));
+</span><span class="comment">
+</span><span class="comment">    box_r2=box_r*rotmat'*cs_al.rot(p).matrix;
+</span><span class="comment">    % box_r2=box_r*R_x*rotmat'*cs_al.rot(p).matrix;
+</span><span class="comment">    box_r2x=box_r2(:,1);
+</span><span class="comment">    box_r2y=box_r2(:,2);
+</span><span class="comment">    box_r2z=box_r2(:,3);
+</span><span class="comment">
+</span><span class="comment">    %now find those which are in the positive and negative hemisphere ('p'
+</span><span class="comment">    %and 'n' points) based upon their z coords
+</span><span class="comment">    box_r2z_pz=find(box_r2z&gt;0);
+</span><span class="comment">    box_r2z_nz=find(box_r2z&lt;0);
+</span><span class="comment">
+</span><span class="comment">    %subselect the XYZ positives
+</span><span class="comment">    box_r2xp=box_r2x(box_r2z_pz);
+</span><span class="comment">    box_r2yp=box_r2y(box_r2z_pz);
+</span><span class="comment">    box_r2zp=box_r2z(box_r2z_pz);
+</span><span class="comment">
+</span><span class="comment">    %subselect the XYZ negatives
+</span><span class="comment">    box_r2xn=-box_r2x(box_r2z_nz);
+</span><span class="comment">    box_r2yn=-box_r2y(box_r2z_nz);
+</span><span class="comment">    box_r2zn=-box_r2z(box_r2z_nz);
+</span><span class="comment">
+</span><span class="comment">    %extract the pattern data (we are going to use scatter for a lazy plot)
+</span><span class="comment">    pat_cp=pat_c(box_r2z_pz);
+</span><span class="comment">    pat_cn=pat_c(box_r2z_nz);
+</span><span class="comment">
+</span><span class="comment">    %sterographic projection
+</span><span class="comment">    box_r2_lambdap=1./(box_r2zp+1);
+</span><span class="comment">    box_r2_xp=box_r2xp.*box_r2_lambdap;
+</span><span class="comment">    box_r2_yp=box_r2yp.*box_r2_lambdap;
+</span><span class="comment">
+</span><span class="comment">    %find the boundary of the point cloud
+</span><span class="comment">    boundary_r2_p=boundary(box_r2_xp,box_r2_yp);
+</span><span class="comment">    boundary_r2_px=box_r2_xp(boundary_r2_p);
+</span><span class="comment">    boundary_r2_py=box_r2_yp(boundary_r2_p);
+</span><span class="comment">
+</span><span class="comment">    %sterographic projection
+</span><span class="comment">    box_r2_lambdan=1./(box_r2zn+1);
+</span><span class="comment">    box_r2_xn=box_r2xn.*box_r2_lambdan;
+</span><span class="comment">    box_r2_yn=box_r2yn.*box_r2_lambdan;
+</span><span class="comment">
+</span><span class="comment">    %find the boundary of the point cloud
+</span><span class="comment">    boundary_r2_n=boundary(box_r2_xn,box_r2_yn);
+</span><span class="comment">    boundary_r2_nx=box_r2_xn(boundary_r2_n);
+</span><span class="comment">    boundary_r2_ny=box_r2_yn(boundary_r2_n);
+</span><span class="comment">
+</span><span class="comment">    %find the pounts within each boundary
+</span><span class="comment">    sx=stereo_x;
+</span><span class="comment">    sy=stereo_y;
+</span><span class="comment">
+</span><span class="comment">    [in_p]=inpolygon(sx,sy,boundary_r2_px(:),boundary_r2_py(:));
+</span><span class="comment">    [in_n]=inpolygon(sx,sy,boundary_r2_nx(:),boundary_r2_ny(:));
+</span><span class="comment">
+</span><span class="comment">    x_lookup=EBSD_simulation.xpts_screen;
+</span><span class="comment">    y_lookup=EBSD_simulation.ypts_screen;
+</span><span class="comment">
+</span><span class="comment">    r = [x_lookup(:), y_lookup(:), y_lookup(:)*0+1].*1./sqrt((x_lookup(:).^2+y_lookup(:).^2+1));
+</span><span class="comment">    r_exp2 = r*rotmat'*cs_al.rot(p).matrix;
+</span><span class="comment">    % r_exp2 = r*R_x*rotmat'*cs_al.rot(p).matrix;
+</span><span class="comment">    %create the interpolant
+</span><span class="comment">    r_3=r_exp2(:,3);
+</span><span class="comment">    r_lambda=1./(r_3+1);
+</span><span class="comment">
+</span><span class="comment">    %convert from r_exp to the stereogram
+</span><span class="comment">    P_rxn=r_exp2(:,1).*r_lambda;
+</span><span class="comment">    P_ryn=r_exp2(:,2).*r_lambda;
+</span><span class="comment">
+</span><span class="comment">    % generate interpolate
+</span><span class="comment">    stero_interp_exp_s=scatteredInterpolant(P_rxn(:),P_ryn(:),pat1_plot(:),'natural','none');
+</span><span class="comment">
+</span><span class="comment">    stero_interp_exp_sp=scatteredInterpolant(box_r2_xp(:),box_r2_yp(:),pat_cp(:),'natural','none');
+</span><span class="comment">    stero_interp_exp_sn=scatteredInterpolant(box_r2_xn(:),box_r2_yn(:),pat_cn(:),'natural','none');
+</span><span class="comment">
+</span><span class="comment">    P_stero_xp=sx(in_p);
+</span><span class="comment">    P_stero_yp=sy(in_p);
+</span><span class="comment">    Pat_interp_p=stero_interp_exp_sp(P_stero_xp,P_stero_yp);
+</span><span class="comment">
+</span><span class="comment">    P_stero_xn=sx(in_n);
+</span><span class="comment">    P_stero_yn=sy(in_n);
+</span><span class="comment">    Pat_interp_n=stero_interp_exp_sn(P_stero_xn,P_stero_yn);
+</span><span class="comment">
+</span><span class="comment">    pat_map=0*sx;
+</span><span class="comment">    pat_num=0*sx;
+</span><span class="comment">    pat_num(in_p)=pat_num(in_p)+1;
+</span><span class="comment">    pat_num(in_n)=pat_num(in_n)+1;
+</span><span class="comment">
+</span><span class="comment">    pat_map(in_p)=Pat_interp_p;
+</span><span class="comment">    pat_map(in_n)=Pat_interp_n;
+</span><span class="comment">
+</span><span class="comment">    pat_maps(:,:,p)=pat_map;
+</span><span class="comment">    pat_mapn(:,:,p)=pat_num;
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">%% Normalize the overlaid stereogram and plot
+</span><span class="comment">pat_maps_num=sum(pat_mapn,3);
+</span><span class="comment">pat_maps_sum=sum(pat_maps,3);
+</span><span class="comment">pat_maps_norm=pat_maps_sum./pat_maps_num;
+</span><span class="comment">
+</span><span class="comment">%% final stereogram
+</span><span class="comment">figure;
+</span><span class="comment">subplot(1,3,1);
+</span><span class="comment">imagesc(stereo_xl,stereo_yl,pat_maps_sum); title('total')% total stereogram
+</span><span class="comment">axis image; axis xy; colormap('gray'); axis off;
+</span><span class="comment">subplot(1,3,2);
+</span><span class="comment">imagesc(stereo_xl,stereo_yl,pat_maps_norm); title('weighted')% stereogram normalized by weight
+</span><span class="comment">axis image; axis xy; colormap('gray'); axis off;
+</span><span class="comment">% sum/weight hemisphere
+</span><span class="comment">subplot(1,3,3); imagesc(stereo_xl,stereo_yl,pat_maps_num); % overlapped patterns
+</span><span class="comment">axis image; axis xy; colormap('gray'); axis off;
+</span><span class="comment">
+</span><span class="comment">% Difference between simulated and reprojected patterns
+</span><span class="comment">% normalize the reprojected dynamics pattern
+</span><span class="comment">pat_maps_dyn=reshape(stereo_pat_plot,num_stereo,num_stereo);
+</span><span class="comment">pat_maps_dynn=(pat_maps_dyn-mean(pat_maps_dyn(:)))./std(pat_maps_dyn(:));
+</span><span class="comment">pat_maps_normn=(pat_maps_norm-mean(pat_maps_norm(:)))./std(pat_maps_norm(:));
+</span><span class="comment">%%
+</span><span class="comment">figure;
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">subplot(1,3,1);
+</span><span class="comment">imagesc(stereo_xl,stereo_yl,pat_maps_norm); title('weighted')% stereogram normalized by weight
+</span><span class="comment">axis image; axis xy; colormap('gray');
+</span><span class="comment">% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+</span><span class="comment">
+</span><span class="comment">subplot(1,3,3);imagesc(stereo_xl,stereo_yl,pat_maps_norm-pat_maps_dyn);title('difference');
+</span><span class="comment">axis image; axis xy; colormap('gray');
+</span><span class="comment">% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+</span><span class="comment">hold on;
+</span><span class="comment">clim([-6 6]);
+</span><span class="comment">
+</span><span class="comment">subplot(1,3,2); imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+</span><span class="comment">    axis image; axis xy; colormap('gray'); title('Simulation');
+</span><span class="comment">    % xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+</span><span class="comment">%}</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% stereo_reproject.m
+% Created by T. Ben Britton in June 2023
+% Edited and annotated by Tianbi Zhang
+
+% This script takes a Kikuchi pattern, index it, reproject it onto the
+% diffraction sphere and create a stereogram.
+
+% This script accompanies the following article:
+% "Multi-exposure diffraction pattern fusion applied to enable wider-angle 
+% transmission Kikuchi diffraction with direct electron detectors"
+% Tianbi Zhang, T. Ben Britton 
+
+% Requirements: 
+% (1) MATLAB toolboxes: image processsing, statistics and machine learning,
+% parallel computing
+% (2) AstroEBSD package - this script is available as a part of the latest
+% AstroEBSSD distribution.
+% (3) MTEX toolbox (https://mtex-toolbox.github.io/)
+
+% changelog:
+% Dec 21 2023: (i) extended parfor loops to more sections to speed up 
+% (2) reading symmetry operations directly from cif files to expand crystal
+% systems applicable 
+% (3) tidied up indexing - now pattern info only from manual input
+% (the original code did not use indexed results anyway!)
+
+%% Start of the script
+close all;
+clear;
+home;
+
+%% start astro & mtex - please edit the paths
+% location_astro='C:\Users\billy\Documents\GitHub\AstroEBSD_v2\';
+% location_mtex='E:\MATLAB\mtex-5.8.0\';
+% location_astro='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';
+
+InputUser.astro_location='C:\Users\benja\OneDrive\Documents\GitHub\AstroEBSD_v2\';
+InputUser.mtex_location='C:\Users\benja\OneDrive\Documents\MATLAB\mtex-5.8.1'; %working with 5.8.1
+
+try EBSD;
+catch
+    run(fullfile(InputUser.mtex_location,"startup.m"));
+end
+
+%start astro if needed
+try astro_loadcheck
+catch
+    run(fullfile(InputUser.astro_location,"start_AstroEBSD.m"));
+end
+
+
+% run(fullfile(location_astro,'start_AstroEBSD.m'));
+% run(fullfile(location_mtex,'startup.m'));
+
+%% load the pattern 
+path1= 'C:\Users\billy\OneDrive - UBC\PhD\TKD\20240110_PtSn4\';
+path1= 'C:\Users\benja\OneDrive - UBC\GroupWork\Zhang_Tianbi\PtSn4\20240110_PtSn4\';
+pat = 'ebsd_s8_500f_001s_dd1_bgcor.tif';
+patname = fullfile(path1, pat);
+pat1=double(flipud(imread(patname))); % this is the demo TKP
+
+InputUser.Phase_Folder = fullfile(InputUser.astro_location,'phases');
+InputUser.Phase_Input  = {'PtSn4_Ccca'};
+[ Crystal_UCell,Crystal_Family,Crystal_LUT,Settings_LUT,Phase_Num, RTM_info ] = Phase_Builder_RTM( InputUser.Phase_Input,InputUser.Phase_Folder );
+cs_al=loadCIF(RTM_info.cif_file); 
+
+
+%% Enter pattern information and set up indexing
+% Euler angles (Bunge) and PC - they must be very accurate for the
+% reprojection.
+% eangs_pat1=[175.0106 12.7684 134.0371]; % Aba2 fit
+% pc_pat1=[0.5776150 0.5668607 0.4824142]; % Aba2 fit
+
+eangs_pat1=[39.6903 81.0360 351.0890]; % Ccca fit
+pc_pat1=[0.5776150 0.5668607 0.4824142]; % Ccca fit
+
+MicroscopeData.TotalTilt=0;
+
+% Normalise intensities
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( pat1,[]);
+
+%Define all rotation matrices needed in the code
+RTM.Rz=@(theta)[cos(theta) sin(theta) 0;-sin(theta) cos(theta) 0;0 0 1]; %z rotation
+RTM.Rx=@(theta)[1 0 0;0 cos(theta) sin(theta);0 -sin(theta) cos(theta)]; %x rotation
+RTM.Ry=@(theta)[cos(theta) 0 sin(theta);0 1 0; -sin(theta) 0 cos(theta)]; %y rotation
+
+%% Simulate the pattern
+
+eangs=eangs_pat1*pi/180;
+PC_simulation=pc_pat1;
+pattern_info=struct;
+pattern_info.size=size(pat1);
+Detector_tilt = RTM.Rx(MicroscopeData.TotalTilt);
+
+% % InputUser.Phase_Folder
+[ ~,~,~,~,~, RTM_info ] = Phase_Builder_RTM(  {InputUser.Phase_Input{1}},InputUser.Phase_Folder);
+[screen_int] = Cube_Generate(RTM_info.bin_file,RTM_info.isHex);
+% 
+[EBSD_simulation ] = EBSP_Gnom( pattern_info,PC_simulation); %you can change PC_in if you want
+gmatrix=RTM.Rz(eangs(3))*RTM.Rx(eangs(2))*RTM.Rz(eangs(1));
+% [ Pat_sim_eang ] = EBSP_gen( EBSD_simulation,gmatrix*Detector_tilt,screen_int); %generate the EBSP for this iteration
+% 
+% [Pat_sim_astroind]= EBSP_gen( EBSD_simulation,EBSP_Fe_One.rotdata{1}.detector,screen_int); %generate the EBSP for this iteration
+R_x=RTM.Rx(pi/2); 
+G_Stereo=R_x; %apply a rotation to the projection space
+% G_Stereo=eye(3); %apply no rotation
+%% refine + Figure 2
+
+[ Pat_sim_ref ] = EBSP_gen( EBSD_simulation,gmatrix,screen_int); %generate the EBSP for this iteration
+
+%
+% pat1=Pat_sim_ref; %over ride the experimental pattern to check this is working
+%
+
+%normalize the input pattern
+pat1_plot=pat1;
+pat1_plot=pat1_plot/std(pat1(:));
+pat1_plot=pat1_plot-mean(pat1_plot(:));
+
+figure;
+subplot(1,2,1);
+pPattern(Pat_sim_ref,EBSD_simulation);
+subplot(1,2,2);
+pPattern(pat1,EBSD_simulation);
+
+%% Now try to plot a sterogram of the dynamically simulated pattern + Figure 4
+num_stereo=2001;
+
+stereo_range=1;
+stereo_xl=linspace(-stereo_range,stereo_range,num_stereo);
+stereo_yl=linspace(-stereo_range,stereo_range,num_stereo);
+
+[stereo_x,stereo_y]=meshgrid(stereo_xl,stereo_yl);
+
+stereo_r=stereo_x.^2+stereo_y.^2;
+
+stereo_nu=2./(stereo_r+1);
+
+stereo_vx=stereo_nu.*stereo_x;
+stereo_vy=stereo_nu.*stereo_y;
+stereo_vz=-1+stereo_nu;
+
+stereo_vl=sqrt(stereo_vx(:).^2+stereo_vy(:).^2+stereo_vz(:).^2);
+stereo_vx=stereo_vx(:)./stereo_vl(:);
+stereo_vy=stereo_vy(:)./stereo_vl(:);
+stereo_vz=stereo_vz(:)./stereo_vl(:);
+
+stereo_rs=[stereo_vx stereo_vy stereo_vz];
+[stereo_pat] = Cube_Sample(stereo_rs(:,1),stereo_rs(:,2),stereo_rs(:,3),screen_int,0); %sample from the sphere
+stereo_pat_plot=stereo_pat/std(stereo_pat(:)); %normalize intensity
+stereo_pat_plot=stereo_pat_plot-mean(stereo_pat_plot(:)); %zero mean
+
+%update the stereo grid to rotate it - e.g. if you want to look at the
+%stereogram along a different axis
+stereo_rsG=stereo_rs*G_Stereo; %rotate the frame
+
+[stereo_patG] = Cube_Sample(stereo_rsG(:,1),stereo_rsG(:,2),stereo_rsG(:,3),screen_int,0); %sample from the sphere
+stereo_pat_plotG=stereo_patG/std(stereo_patG(:));%normalize intensity
+stereo_pat_plotG=stereo_pat_plotG-mean(stereo_pat_plotG(:)); %zero mean
+
+figure; 
+subplot(1,2,1); 
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+axis image; axis xy; colormap('gray'); axis off; hold on;
+
+subplot(1,2,2); 
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+axis image; axis xy; colormap('gray'); axis off; hold on;
+
+%% Now take the experimental pattern and generate a look up, so we can do the spherical sampling...
+% Figure 5
+% rotmat=EBSP_Fe_One.rotdata{1}.detector;
+
+%We want the grid for the reprojection based upon the EBSD pattern location
+rotmat=gmatrix*Detector_tilt;
+[~,r_exp]= EBSP_gen( EBSD_simulation,rotmat,screen_int); %generate the EBSP for this iteration
+
+%rotate r_exp to the new frame
+r_exp=r_exp*G_Stereo;
+
+%convert from r_exp to the stereogram
+r_lambda=1./(r_exp(:,3)+1);
+P_rx=r_exp(:,1).*r_lambda;
+P_ry=r_exp(:,2).*r_lambda;
+
+% use the interpolant to generate the pattern
+% create the interpolant
+stero_interp_exp=scatteredInterpolant(P_rx(:),P_ry(:),pat1_plot(:),'natural','none');
+
+%read the intepolant onto the stereogram
+stereo_remap=stero_interp_exp(stereo_x(:),stereo_y(:));
+
+stereo_remap_2d=reshape(stereo_remap,num_stereo,num_stereo);
+stereo_mask_2d=isnan(stereo_remap_2d);
+
+figure;
+%plot the full simulated stereogram
+s1=subplot(1,2,1); 
+imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+axis image; axis xy; colormap('gray'); axis off; hold on;
+hold on;
+%plot the experimental pattern
+s2=subplot(1,2,2);
+i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2d);
+axis image; axis xy; colormap('gray'); axis off;
+i1.AlphaData=1-stereo_mask_2d;
+
+hold on;
+%
+% plot the outline of the detector (experimental pattern)
+line_top=[EBSD_simulation.xpts_screen(:,1),EBSD_simulation.ypts_screen(:,1)];
+line_bottom=flipud([EBSD_simulation.xpts_screen(:,end),EBSD_simulation.ypts_screen(:,end)]);
+line_right=[EBSD_simulation.xpts_screen(end,:);EBSD_simulation.ypts_screen(end,:)]';
+line_left=flipud([EBSD_simulation.xpts_screen(1,:);EBSD_simulation.ypts_screen(1,:)]');
+
+line_allx=[line_top(:,1);line_right(:,1);line_bottom(:,1);line_left(:,1)];
+line_ally=[line_top(:,2);line_right(:,2);line_bottom(:,2);line_left(:,2)];
+line_allz=line_ally*0+1;
+
+%rotate these points around the sphere
+line_r = [line_allx(:), line_ally(:), line_allz(:)].*1./sqrt((line_allx(:).^2+line_ally(:).^2+1));
+line_r2 = line_r*rotmat'*G_Stereo;
+
+%convert these points to the stereogram
+line_r_lambda=1./(line_r2(:,3)+1);
+
+%convert from r_exp to the stereogram
+line_P_rx=line_r2(:,1).*line_r_lambda;
+line_P_ry=line_r2(:,2).*line_r_lambda;
+
+%plot the blue box
+plot(line_P_rx,line_P_ry,'b','LineWidth',2,'parent',s1);
+plot(line_P_rx,line_P_ry,'b','LineWidth',2,'parent',s2);
+
+%{ 
+
+%do the fundamental zone
+%write three axes, and construct the lines that go between one and the next
+ax1=[0 0 1];
+ax2=[1 1 1];
+ax3=[1 0 1];
+
+%normalize length
+ax1=ax1./norm(ax1);
+ax2=ax2./norm(ax2);
+ax3=ax3./norm(ax3);
+nl=100;
+
+%inscribe along the great circles and equispace
+ang_12=acos(dot(ax1,ax2));
+ax_12=cross(ax1,ax2);
+ax_12=ax_12/norm(ax_12);
+ax_2p=cross(ax_12,ax1);
+ax_2p=ax_2p/norm(ax_2p);
+sample_spacing12=linspace(0,ang_12,nl);
+line_12=ax1'*cos(sample_spacing12)+ax_2p'*sin(sample_spacing12);
+
+ang_23=acos(dot(ax2,ax3));
+ax_23=cross(ax2,ax3);
+ax_23=ax_23/norm(ax_23);
+ax_3p=cross(ax_23,ax2);
+ax_3p=ax_3p/norm(ax_3p);
+sample_spacing23=linspace(0,ang_23,nl);
+line_23=ax2'*cos(sample_spacing23)+ax_3p'*sin(sample_spacing23);
+
+ang_31=acos(dot(ax3,ax1));
+ax_31=cross(ax3,ax1);
+ax_31=ax_31/norm(ax_31);
+ax_1p=cross(ax_31,ax3);
+ax_1p=ax_1p/norm(ax_1p);
+sample_spacing31=linspace(0,ang_31,nl);
+line_31=ax3'*cos(sample_spacing31)+ax_1p'*sin(sample_spacing31);
+
+%projected on stereogram
+line_set=[line_12';line_23';line_31'];
+line_set_lambda=1./(line_set(:,3)+1);
+line_set_rx=line_set(:,1).*line_set_lambda;
+line_set_ry=line_set(:,2).*line_set_lambda;
+
+% plot(line_set_rx(1:end),line_set_ry(1:end),'y', 'LineWidth',2);
+
+%}
+
+
+%% lets inflate this up to the full pattern, if we can remember how
+
+% this is actually redundant now that astro also reads directly from cif, can consolidate...
+
+EBSP_av=EBSD_simulation;
+[Pat_sim_astroind,r_exp]= EBSP_gen( EBSD_simulation,rotmat,screen_int); %generate the EBSP for this iteration
+r_exp=r_exp;
+r_n=zeros(size(r_exp,1),size(r_exp,2),24);
+
+[n_sym,~] =size(cs_al.rot);
+for n=1:n_sym
+    sym_matrix=cs_al.rot(n).matrix;
+    r_n(:,:,n) = r_exp*sym_matrix*G_Stereo;
+end
+
+nline=20;
+line_P_rxn=zeros(4*nline,n_sym);
+line_P_ryn=zeros(4*nline,n_sym);
+stereo_remap_maskp=zeros(num_stereo,num_stereo,n_sym);
+stereo_remap_2dnp=stereo_remap_maskp;
+
+stereo_x_ok=stereo_x(:);
+stereo_y_ok=stereo_y(:);
+
+% calculate and plot each symmetrically equivalent pattern in the
+% stereogram
+parfor p=1:n_sym
+
+    x_lookup=EBSP_av.xpts_screen;
+    y_lookup=EBSP_av.ypts_screen;
+
+    x_lookup=x_lookup(:,2:end-1);
+    y_lookup=y_lookup(:,2:end-1);
+    pat1_plot_n=pat1_plot(:,2:end-1);
+
+    x_lookup=x_lookup(2:end-1,1);
+    y_lookup=y_lookup(2:end-1,1);
+    pat1_plot_n=pat1_plot_n(2:end-1,:);
+
+    r = [x_lookup(:), y_lookup(:), y_lookup(:)*0+1].*1./sqrt((x_lookup(:).^2+y_lookup(:).^2+1));
+    r_exp2 = r*rotmat';
+
+    r_3=r_n(:,3,p);
+    r_3(r_3<0)=-r_3(r_3<0);
+    r_lambda=1./(r_3+1);
+
+    %convert from r_exp to the stereogram
+    P_rxn=r_n(:,1,p).*r_lambda;
+    P_ryn=r_n(:,2,p).*r_lambda;
+
+    % interpolate
+    stero_interp_exp_n=scatteredInterpolant(P_rxn(:),P_ryn(:),pat1_plot(:),'natural','none');
+
+    %plot the outline of the detector
+    line_top=[EBSD_simulation.xpts_screen(:,1),EBSD_simulation.ypts_screen(:,1)];
+    line_bottom=flipud([EBSD_simulation.xpts_screen(:,end),EBSD_simulation.ypts_screen(:,end)]);
+    line_right=[EBSD_simulation.xpts_screen(end,:);EBSD_simulation.ypts_screen(end,:)]';
+    line_left=flipud([EBSD_simulation.xpts_screen(1,:);EBSD_simulation.ypts_screen(1,:)]');
+    
+    s2=linspace(1,EBSD_simulation.size(1),nline);
+    s2(2:end-1)=round(s2(2:end-1));
+
+    line_allx=[line_top(s2,1);line_right(s2,1);line_bottom(s2,1);line_left(s2,1)];
+    line_ally=[line_top(s2,2);line_right(s2,2);line_bottom(s2,2);line_left(s2,2)];
+    line_allz=line_ally*0+1;
+
+    %rotate these points around the sphere
+    line_r = [line_allx(:), line_ally(:), line_allz(:)].*1./sqrt((line_allx(:).^2+line_ally(:).^2+1));
+    line_r2 = line_r*rotmat'*cs_al.rot(p).matrix*G_Stereo;
+    line_r2_3=line_r2(:,3);
+    line_r2_3(line_r2_3<0)=-line_r2_3(line_r2_3<0);
+    %convert these points to the stereogram
+    line_r_lambda=1./(line_r2_3+1);
+
+    %convert from r_exp to the stereogram
+    line_P_rx=line_r2(:,1).*line_r_lambda;
+    line_P_ry=line_r2(:,2).*line_r_lambda;
+    
+    %create the blank frame
+    stereo_remap_2dn=zeros(num_stereo,num_stereo);
+    stereo_remap_mask=ones(num_stereo,num_stereo);
+    num_el=numel(stereo_remap_mask);
+    % %find the points in the detector frame
+    [in,on] = inpolygon(stereo_x_ok,stereo_y_ok,line_P_rx,line_P_ry);
+    % in=true(num_el,1);
+    stereo_remap_mask_0=stereo_remap_mask*0;
+    %read the intepolant
+    stereo_remap_n=stero_interp_exp_n(stereo_x_ok(in),stereo_y_ok(in));
+    stereo_remap_2dn(in)=stereo_remap_n;
+    stereo_remap_mask(in)=stereo_remap_mask_0(in);
+
+    % stereo_remap_2dn=reshape(stereo_remap_n,num_stereo,num_stereo);
+    % stereo_mask_2dn=isnan(stereo_remap_2dn);
+    
+    % Figure 6,7
+    %plot the base dynamical pattern
+    figure; imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+    axis image; axis xy; colormap('gray');
+    hold on;
+
+    %plot the remapped experiment
+    i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2dn);
+    axis image; axis xy; colormap('gray');
+    i1.AlphaData=1-stereo_remap_mask;
+
+    %plot the blue box
+    plot(line_P_rx,line_P_ry,'b');
+    xlim([-1 1]);
+    ylim([-1 1]);
+
+    title(int2str(p));
+
+    line_P_rxn(:,p)=line_P_rx;
+    line_P_ryn(:,p)=line_P_ry;
+    stereo_remap_maskp(:,:,p)=stereo_remap_mask;
+    stereo_remap_2dnp(:,:,p)=stereo_remap_2dn;
+end
+
+
+figure;
+% imagesc(nansum(stereo_remap_2dnp,3)./nansum(stereo_remap_maskp,3));
+stereo_weightings=size(cs_al.rot,1)-nansum(stereo_remap_maskp,3);
+stereo_summed=nansum(stereo_remap_2dnp,3);
+
+%weight and normalize
+stereo_f=stereo_summed./stereo_weightings;
+stereo_f=stereo_f/nanstd(stereo_f(:)); %normalize intensity
+stereo_f=stereo_f-nanmean(stereo_f(:)); %zero mean
+
+%%
+
+%choose the sterographic limits
+
+xlims=[-1 1];
+ylims=[-1 1];
+% xlims=[-0.3 0.1];
+% ylims=[-0.1 0.3];
+
+
+figure; 
+
+s1=subplot(2,2,1);
+imagesc(stereo_xl,stereo_yl,stereo_f); title('Weighted Reconstruction')% stereogram normalized by weight
+axis image; axis xy; colormap('gray'); axis equal; axis tight; xlim(xlims); ylim(ylims);
+% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+
+s2=subplot(2,2,4);imagesc(stereo_xl,stereo_yl,stereo_f-reshape(stereo_pat_plotG,num_stereo,num_stereo));title('Difference');
+axis image; axis xy; colormap('gray');  axis equal; axis tight; xlim(xlims); ylim(ylims);
+% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+hold on;
+clim([-6 6]);
+
+s3=subplot(2,2,2); imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plotG,num_stereo,num_stereo));
+hold on;
+    axis image; axis xy; colormap('gray'); title('Simulation');  axis equal; axis tight; 
+    % xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+plot(line_P_rx,line_P_ry,'b','LineWidth',2,'parent',s3); xlim(xlims); ylim(ylims);
+
+s4=subplot(2,2,3); 
+i1=imagesc(stereo_xl,stereo_yl,stereo_remap_2d); title('Remapped')
+axis image; axis xy; colormap('gray'); axis equal; axis tight; xlim(xlims); ylim(ylims);
+hold on;
+
+%{
+%% Plot the sterogram and try to work out the points for this projection
+
+%read the experimental pattern
+pat1_plot2=pat1_plot;
+pat_c=pat1_plot2(:);
+
+pat_maps=zeros(2001,2001,n_sym);
+pat_mapn=pat_maps;
+
+%pick the symemtry
+parfor p=1:n_sym
+    %extract the points of this pattern
+    %rotate these points of the detector around the sphere
+    box_x=EBSD_simulation.xpts_screen(:);
+    box_y=EBSD_simulation.ypts_screen(:);
+    box_z=box_y*0+1;
+    
+    box_rs=[box_x(:),box_y(:),box_z(:)];
+    box_rs=box_rs*G_Stereo; %rotate the frame
+
+    % box_r=[box_x,box_y,box_z];
+    box_r = [box_rs(:,1), box_rs(:,2), box_rs(:,3)].*1./sqrt((box_rs(:,1).^2+box_rs(:,2).^2+box_rs(:,3).^2));
+    
+    box_r2=box_r*rotmat'*cs_al.rot(p).matrix;
+    % box_r2=box_r*R_x*rotmat'*cs_al.rot(p).matrix;
+    box_r2x=box_r2(:,1);
+    box_r2y=box_r2(:,2);
+    box_r2z=box_r2(:,3);
+
+    %now find those which are in the positive and negative hemisphere ('p'
+    %and 'n' points) based upon their z coords
+    box_r2z_pz=find(box_r2z>0);
+    box_r2z_nz=find(box_r2z<0);
+
+    %subselect the XYZ positives
+    box_r2xp=box_r2x(box_r2z_pz);
+    box_r2yp=box_r2y(box_r2z_pz);
+    box_r2zp=box_r2z(box_r2z_pz);
+
+    %subselect the XYZ negatives
+    box_r2xn=-box_r2x(box_r2z_nz);
+    box_r2yn=-box_r2y(box_r2z_nz);
+    box_r2zn=-box_r2z(box_r2z_nz);
+
+    %extract the pattern data (we are going to use scatter for a lazy plot)
+    pat_cp=pat_c(box_r2z_pz);
+    pat_cn=pat_c(box_r2z_nz);
+
+    %sterographic projection
+    box_r2_lambdap=1./(box_r2zp+1);
+    box_r2_xp=box_r2xp.*box_r2_lambdap;
+    box_r2_yp=box_r2yp.*box_r2_lambdap;
+
+    %find the boundary of the point cloud
+    boundary_r2_p=boundary(box_r2_xp,box_r2_yp);
+    boundary_r2_px=box_r2_xp(boundary_r2_p);
+    boundary_r2_py=box_r2_yp(boundary_r2_p);
+
+    %sterographic projection
+    box_r2_lambdan=1./(box_r2zn+1);
+    box_r2_xn=box_r2xn.*box_r2_lambdan;
+    box_r2_yn=box_r2yn.*box_r2_lambdan;
+
+    %find the boundary of the point cloud
+    boundary_r2_n=boundary(box_r2_xn,box_r2_yn);
+    boundary_r2_nx=box_r2_xn(boundary_r2_n);
+    boundary_r2_ny=box_r2_yn(boundary_r2_n);
+  
+    %find the pounts within each boundary
+    sx=stereo_x;
+    sy=stereo_y;
+
+    [in_p]=inpolygon(sx,sy,boundary_r2_px(:),boundary_r2_py(:));
+    [in_n]=inpolygon(sx,sy,boundary_r2_nx(:),boundary_r2_ny(:));
+
+    x_lookup=EBSD_simulation.xpts_screen;
+    y_lookup=EBSD_simulation.ypts_screen;
+
+    r = [x_lookup(:), y_lookup(:), y_lookup(:)*0+1].*1./sqrt((x_lookup(:).^2+y_lookup(:).^2+1));
+    r_exp2 = r*rotmat'*cs_al.rot(p).matrix;
+    % r_exp2 = r*R_x*rotmat'*cs_al.rot(p).matrix;
+    %create the interpolant
+    r_3=r_exp2(:,3);
+    r_lambda=1./(r_3+1);
+
+    %convert from r_exp to the stereogram
+    P_rxn=r_exp2(:,1).*r_lambda;
+    P_ryn=r_exp2(:,2).*r_lambda;
+
+    % generate interpolate
+    stero_interp_exp_s=scatteredInterpolant(P_rxn(:),P_ryn(:),pat1_plot(:),'natural','none');
+
+    stero_interp_exp_sp=scatteredInterpolant(box_r2_xp(:),box_r2_yp(:),pat_cp(:),'natural','none');
+    stero_interp_exp_sn=scatteredInterpolant(box_r2_xn(:),box_r2_yn(:),pat_cn(:),'natural','none');
+
+    P_stero_xp=sx(in_p);
+    P_stero_yp=sy(in_p);
+    Pat_interp_p=stero_interp_exp_sp(P_stero_xp,P_stero_yp);
+
+    P_stero_xn=sx(in_n);
+    P_stero_yn=sy(in_n);
+    Pat_interp_n=stero_interp_exp_sn(P_stero_xn,P_stero_yn);
+
+    pat_map=0*sx;
+    pat_num=0*sx;
+    pat_num(in_p)=pat_num(in_p)+1;
+    pat_num(in_n)=pat_num(in_n)+1;
+
+    pat_map(in_p)=Pat_interp_p;
+    pat_map(in_n)=Pat_interp_n;
+
+    pat_maps(:,:,p)=pat_map;
+    pat_mapn(:,:,p)=pat_num;
+end
+
+%% Normalize the overlaid stereogram and plot
+pat_maps_num=sum(pat_mapn,3);
+pat_maps_sum=sum(pat_maps,3);
+pat_maps_norm=pat_maps_sum./pat_maps_num;
+
+%% final stereogram
+figure; 
+subplot(1,3,1);
+imagesc(stereo_xl,stereo_yl,pat_maps_sum); title('total')% total stereogram
+axis image; axis xy; colormap('gray'); axis off;
+subplot(1,3,2);
+imagesc(stereo_xl,stereo_yl,pat_maps_norm); title('weighted')% stereogram normalized by weight
+axis image; axis xy; colormap('gray'); axis off;
+% sum/weight hemisphere
+subplot(1,3,3); imagesc(stereo_xl,stereo_yl,pat_maps_num); % overlapped patterns
+axis image; axis xy; colormap('gray'); axis off; 
+
+% Difference between simulated and reprojected patterns
+% normalize the reprojected dynamics pattern
+pat_maps_dyn=reshape(stereo_pat_plot,num_stereo,num_stereo);
+pat_maps_dynn=(pat_maps_dyn-mean(pat_maps_dyn(:)))./std(pat_maps_dyn(:));
+pat_maps_normn=(pat_maps_norm-mean(pat_maps_norm(:)))./std(pat_maps_norm(:));
+%%
+figure; 
+
+
+subplot(1,3,1);
+imagesc(stereo_xl,stereo_yl,pat_maps_norm); title('weighted')% stereogram normalized by weight
+axis image; axis xy; colormap('gray'); 
+% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+
+subplot(1,3,3);imagesc(stereo_xl,stereo_yl,pat_maps_norm-pat_maps_dyn);title('difference');
+axis image; axis xy; colormap('gray'); 
+% xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+hold on;
+clim([-6 6]);
+
+subplot(1,3,2); imagesc(stereo_xl,stereo_yl,reshape(stereo_pat_plot,num_stereo,num_stereo));
+    axis image; axis xy; colormap('gray'); title('Simulation'); 
+    % xlim([-0.9 -0.1]); ylim([-0.4 0.4]);
+%}
+##### SOURCE END #####
+-->
+</body>
+</html>

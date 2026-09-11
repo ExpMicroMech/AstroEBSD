@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>PCA &amp; RTM postanalysis - TPM 25/10/19</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-08-11">
+<meta name="DC.source" content="PostAnalysis.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>PCA &amp; RTM postanalysis - TPM 25/10/19</h1>
+<pre class="codeinput">
+<span class="comment">% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,</span>
+<span class="comment">% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES</span>
+<span class="comment">% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND</span>
+<span class="comment">% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS</span>
+<span class="comment">% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN</span>
+<span class="comment">% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN</span>
+<span class="comment">% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+
+clear <span class="string">all</span>
+home
+
+<span class="comment">% Set up and locate plugins</span>
+InputUser.MTEX_loc=<span class="string">'C:\CommunalMatlab_plugins\mtex-5.2.beta2'</span>;
+InputUser.Astro_loc=<span class="string">'I:\TomMcA\GitHub\AstroEBSD_v2'</span>;
+
+run([InputUser.MTEX_loc,<span class="string">'\startup_mtex'</span>]);
+run([InputUser.Astro_loc,<span class="string">'\start_AstroEBSD'</span>]);
+
+<span class="comment">% Can provide a list of files, or just specify a directory</span>
+list={<span class="string">'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'</span>};
+
+<span class="comment">%folders=["I:\TomMcA\PCA_output\trialCr+Ti_EBSD+EDS"];</span>
+<span class="comment">%cd(folders)</span>
+<span class="comment">%list=dir('*EBSD*');</span>
+<span class="comment">% ind_forbidden=[10,12,19]; %if you want to skip any files in the list, eg. in a big directory</span>
+</pre>
+<pre class="codeinput">
+<span class="comment">%inds=1;%comment this out if you want to run for all datasets in list, otherwise it will just do this index</span>
+
+namesetting=<span class="string">'weighting1_vt0,1'</span>; <span class="comment">%the name of the analyses you want to do on this list</span>
+
+<span class="comment">%analyse single tile? Unless you specifically want to do this keep as 0.</span>
+post.singletile=0; <span class="comment">%0 by default ; May need to be turned on for older PCA</span>
+<span class="comment">%analysis datasets</span>
+
+<span class="comment">%What to plot in the post-analysis</span>
+post.EBSD=1; <span class="comment">%plot IPFs and colour keys</span>
+
+<span class="comment">% IMPORTANT!! %</span>
+<span class="comment">% In current implementation RCSpectra and AvSpectra require quantified 'results.xls' table in their</span>
+<span class="comment">% saved directories (in Bruker export style). Example is provided in the</span>
+<span class="comment">% repository</span>
+
+post.RCSpectra=1; <span class="comment">%plot RC spectra quant</span>
+post.RCSpectra_std=1; <span class="comment">%include standard deviation lines on the radar plot</span>
+post.AvSpectra=1; <span class="comment">%plot average spectra quant</span>
+post.AvSpectra_std=1; <span class="comment">%include standard deviation lines on the radar plot</span>
+
+post.comb=[4,6,7;4,6,9;7,4,9]; <span class="comment">%element combinations for combo EDS maps %[r1,g1,b1;r2,g2,b2;r3,g3,b3];</span>
+
+post.chemlims.minV=<span class="string">'autoscale'</span>; <span class="comment">%if this is a string this will autoscale the radar plots, otherwise specify in a list: eg. [0,0,0,...] for [C, Zr, Ti...]</span>
+post.chemlims.maxV=<span class="string">'autoscale'</span>; <span class="comment">%as above string or list: eg. [10,12,14,...] for [C, Zr, Ti...]</span>
+post.phase=1; <span class="comment">%plot a phase map</span>
+
+<span class="comment">%set up colourmap</span>
+cmap=cbrewer(<span class="string">'qual'</span>,<span class="string">'Dark2'</span>,15); <span class="comment">%can be useful to change the number in here dep on how many phases you are using</span>
+</pre>
+<pre class="codeinput">
+<span class="comment">%%%%%</span>
+PCA_postanalysis <span class="comment">%runs the postanalysis</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% PCA & RTM postanalysis - TPM 25/10/19
+
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+clear all
+home
+
+% Set up and locate plugins
+InputUser.MTEX_loc='C:\CommunalMatlab_plugins\mtex-5.2.beta2';
+InputUser.Astro_loc='I:\TomMcA\GitHub\AstroEBSD_v2';
+
+run([InputUser.MTEX_loc,'\startup_mtex']);
+run([InputUser.Astro_loc,'\start_AstroEBSD']);
+
+% Can provide a list of files, or just specify a directory
+list={'I:\TomMcA\PCA_output\lr21_redo_EBSD+EDS'};
+
+%folders=["I:\TomMcA\PCA_output\trialCr+Ti_EBSD+EDS"];
+%cd(folders)
+%list=dir('*EBSD*');
+% ind_forbidden=[10,12,19]; %if you want to skip any files in the list, eg. in a big directory
+
+%%
+%inds=1;%comment this out if you want to run for all datasets in list, otherwise it will just do this index
+
+namesetting='weighting1_vt0,1'; %the name of the analyses you want to do on this list
+
+%analyse single tile? Unless you specifically want to do this keep as 0.
+post.singletile=0; %0 by default ; May need to be turned on for older PCA
+%analysis datasets
+
+%What to plot in the post-analysis
+post.EBSD=1; %plot IPFs and colour keys
+
+% IMPORTANT!! %
+% In current implementation RCSpectra and AvSpectra require quantified 'results.xls' table in their
+% saved directories (in Bruker export style). Example is provided in the
+% repository
+
+post.RCSpectra=1; %plot RC spectra quant
+post.RCSpectra_std=1; %include standard deviation lines on the radar plot
+post.AvSpectra=1; %plot average spectra quant
+post.AvSpectra_std=1; %include standard deviation lines on the radar plot
+
+post.comb=[4,6,7;4,6,9;7,4,9]; %element combinations for combo EDS maps %[r1,g1,b1;r2,g2,b2;r3,g3,b3];
+
+post.chemlims.minV='autoscale'; %if this is a string this will autoscale the radar plots, otherwise specify in a list: eg. [0,0,0,...] for [C, Zr, Ti...]
+post.chemlims.maxV='autoscale'; %as above string or list: eg. [10,12,14,...] for [C, Zr, Ti...] 
+post.phase=1; %plot a phase map
+
+%set up colourmap
+cmap=cbrewer('qual','Dark2',15); %can be useful to change the number in here dep on how many phases you are using
+
+%%
+%%%%%
+PCA_postanalysis %runs the postanalysis
+
+%%
+
+     
+
+##### SOURCE END #####
+-->
+</body>
+</html>

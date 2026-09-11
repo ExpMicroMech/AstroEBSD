@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>RTM_refinemap</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-08-11">
+<meta name="DC.source" content="RTM_refinemap.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Toolbox locations for AstroEBSD and MTEX</a>
+</li>
+<li>
+<a href="#3">run Astro and EBSD to start</a>
+</li>
+<li>
+<a href="#4">Read a H5 file &amp; extract one pattern</a>
+</li>
+<li>
+<a href="#5">Build a SO(3) library for RTM</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear
+home
+close <span class="string">all</span>
+
+<span class="comment">% This script was created to kick off discussions at the 2019 EBSD meeting</span>
+<span class="comment">% and it contains basic functionality that may be useful within the</span>
+<span class="comment">% AstroEBSD toolbox</span>
+<span class="comment">%</span>
+<span class="comment">% You can fetch the demo h5 data set from https://doi.org/10.5281/zenodo.2609220</span>
+<span class="comment">%</span>
+<span class="comment">% Works with MTEX 5.2</span>
+</pre>
+<h2 id="2">Toolbox locations for AstroEBSD and MTEX</h2>
+<pre class="codeinput">location_astro=<span class="string">'C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'</span>; <span class="comment">%Change this to your AstroEBSD location</span>
+location_mtex=<span class="string">'C:\Communal_MatlabPlugins\mtex-5.2.beta2'</span>; <span class="comment">%Change this to where you keep your MTEX folder</span>
+</pre>
+<h2 id="3">run Astro and EBSD to start</h2>
+<pre class="codeinput">run(fullfile(location_astro,<span class="string">'start_AstroEBSD.m'</span>));
+run(fullfile(location_mtex,<span class="string">'startup_mtex.m'</span>));
+</pre>
+<pre class="codeoutput error">Error using run
+C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\start_AstroEBSD.m not found.
+
+Error in RTM_refinemap (line 20)
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+</pre>
+<h2 id="4">Read a H5 file &amp; extract one pattern</h2>
+<pre class="codeinput">InputUser.HDF5_folder=<span class="string">'E:\Ben\'</span>; <span class="comment">%Change this to the file location in whch you have saved the example data</span>
+InputUser.HDF5_file=<span class="string">'Demo_Ben_16bin.h5'</span>;
+InputUser.Phases  = {<span class="string">'Ferrite'</span>};
+
+<span class="comment">%Read the h5 data</span>
+[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+<span class="comment">%pick a pattern</span>
+pattern_number=3125;
+
+<span class="comment">%Read an EBSP</span>
+[ EBSP_FeR ] = bReadEBSP(EBSPData,pattern_number);
+
+<span class="comment">%background correction settings</span>
+
+<span class="comment">%gaussian flatten (removes the low frequency bg)</span>
+Settings_Cor_Fe.gfilt=1; <span class="comment">%use a low pass filter (do you mean high pass?)</span>
+Settings_Cor_Fe.gfilt_s=4; <span class="comment">%low pass filter sigma</span>
+
+<span class="comment">%radius mask (crops to a circle)</span>
+Settings_Cor_Fe.radius=1; <span class="comment">%use a radius mask</span>
+Settings_Cor_Fe.radius_frac=0.98; <span class="comment">%fraction of the pattern width to use as the mask</span>
+
+<span class="comment">%split BG fix (removes vertical seam)</span>
+Settings_Cor_Fe.SplitBG=1;
+
+<span class="comment">%background correct</span>
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( EBSP_FeR,Settings_Cor_Fe);
+
+<span class="comment">%extract the PC from the Bruker data</span>
+PC_pat=[MapData.PCX(pattern_number) MapData.PCY(pattern_number) MapData.DD(pattern_number)];
+
+<span class="comment">%generate the pattern geometry</span>
+[ EBSP_One.PatternGeometry ] = EBSP_Gnom( Settings_Cor,PC_pat );
+
+<span class="comment">%plot this pattern</span>
+[I1] = pPattern(EBSP_One.PatternIn,EBSP_One.PatternGeometry);
+</pre>
+<h2 id="5">Build a SO(3) library for RTM</h2>
+<pre class="codeinput">
+<span class="comment">%RTM settings</span>
+RTM.Phase_Folder=<span class="string">'C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\phases'</span>;
+RTM.screensize=Settings_Cor.size; <span class="comment">%screen size, pixels</span>
+
+RTM.Sampling_Freq=8; <span class="comment">%of SO3 space</span>
+RTM.iterations=4; <span class="comment">%number of iterations for refinement</span>
+RTM.LPTsize=500; <span class="comment">%Log-polar size</span>
+
+<span class="comment">%build the crystal info</span>
+<span class="keyword">for</span> i=1:length(InputUser.Phases)
+    [ ~,~,~,~,~, RTI_info ] = Phase_Builder_RTM(InputUser.Phases(i),RTM.Phase_Folder);
+    InputUser.BinFiles{1,i}=RTI_info.bin_file;
+    InputUser.cifnames{1,i}=RTI_info.cif_file;
+    crystals{i}=loadCIF(RTI_info.cif_file);
+<span class="keyword">end</span>
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear
+home 
+close all
+
+% This script was created to kick off discussions at the 2019 EBSD meeting
+% and it contains basic functionality that may be useful within the
+% AstroEBSD toolbox
+%
+% You can fetch the demo h5 data set from https://doi.org/10.5281/zenodo.2609220
+%
+% Works with MTEX 5.2
+
+%% Toolbox locations for AstroEBSD and MTEX
+
+location_astro='C:\Users\tbritton\Documents\GitHub\AstroEBSD_v2\'; %Change this to your AstroEBSD location
+location_mtex='C:\Communal_MatlabPlugins\mtex-5.2.beta2'; %Change this to where you keep your MTEX folder
+
+
+%% run Astro and EBSD to start
+run(fullfile(location_astro,'start_AstroEBSD.m'));
+run(fullfile(location_mtex,'startup_mtex.m'));
+
+%% Read a H5 file & extract one pattern
+InputUser.HDF5_folder='E:\Ben\'; %Change this to the file location in whch you have saved the example data
+InputUser.HDF5_file='Demo_Ben_16bin.h5';
+InputUser.Phases  = {'Ferrite'};
+
+%Read the h5 data
+[ MapData,MicroscopeData,PhaseData,EBSPData ] = bReadHDF5( InputUser );
+
+%pick a pattern
+pattern_number=3125;
+
+%Read an EBSP
+[ EBSP_FeR ] = bReadEBSP(EBSPData,pattern_number);
+
+%background correction settings
+
+%gaussian flatten (removes the low frequency bg)
+Settings_Cor_Fe.gfilt=1; %use a low pass filter (do you mean high pass?)
+Settings_Cor_Fe.gfilt_s=4; %low pass filter sigma
+
+%radius mask (crops to a circle)
+Settings_Cor_Fe.radius=1; %use a radius mask
+Settings_Cor_Fe.radius_frac=0.98; %fraction of the pattern width to use as the mask
+
+%split BG fix (removes vertical seam)
+Settings_Cor_Fe.SplitBG=1;
+
+%background correct
+[EBSP_One.PatternIn,Settings_Cor ] = EBSP_BGCor( EBSP_FeR,Settings_Cor_Fe);
+
+%extract the PC from the Bruker data
+PC_pat=[MapData.PCX(pattern_number) MapData.PCY(pattern_number) MapData.DD(pattern_number)];
+
+%generate the pattern geometry
+[ EBSP_One.PatternGeometry ] = EBSP_Gnom( Settings_Cor,PC_pat );
+
+%plot this pattern
+[I1] = pPattern(EBSP_One.PatternIn,EBSP_One.PatternGeometry);
+
+%% Build a SO(3) library for RTM
+
+%RTM settings
+RTM.Phase_Folder='C:\Users\tpm416\Documents\GitHub\AstroEBSD_v2\phases';
+RTM.screensize=Settings_Cor.size; %screen size, pixels
+
+RTM.Sampling_Freq=8; %of SO3 space
+RTM.iterations=4; %number of iterations for refinement
+RTM.LPTsize=500; %Log-polar size
+
+%build the crystal info
+for i=1:length(InputUser.Phases)
+    [ ~,~,~,~,~, RTI_info ] = Phase_Builder_RTM(InputUser.Phases(i),RTM.Phase_Folder);
+    InputUser.BinFiles{1,i}=RTI_info.bin_file;
+    InputUser.cifnames{1,i}=RTI_info.cif_file;
+    crystals{i}=loadCIF(RTI_info.cif_file);
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>
