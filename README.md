@@ -33,3 +33,19 @@ M. Haroon Qaiser, Lukas Berners, Robin J. Scales, Tianbi Zhang, Martin Heller, J
 For an (incomplete) list of updates, please refer to CHANGELOG.
 
 Loaders of data from a few different EBSD instrument vendors are available: Bruker, TSL/EDAX, Thermo Fisher Scientific, Oxford Instrument, as well as our in-house DED-based modular stages.
+
+
+## Building the documentation using sphinx and matlab build in "publish" command
+
+create a virtual env  and install the requirements
+
+For Windows:
+```
+py -m venv .venv
+.\venv\Scripts\activate
+py -m pip install -r requirements.txt
+```
+
+_ToDo:_
+navigate to the docs Folder and run the buildDocs.m script
+This will automaticall create reSampledText documents that are used by sphinx during the build process. and will call the sphinx make html command in the end.
