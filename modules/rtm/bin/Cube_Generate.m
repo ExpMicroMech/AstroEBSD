@@ -10,14 +10,14 @@ function [screen_int,facedata] = Cube_Generate(BinFile,isHex,varargin)
 % BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
 % ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 % CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+%
 % Requirements:
 % MATLAB R2018a or above
 % MTEX version 5.2.beta2 or above
 % Created by Alex Foden and Ben Britton 28/03/2019
 % If you are using a CIF file not in the MTEX toolbox, you will need to add
 % the full file path to the cif file to the phase file you are using
-
+%
 %v2 - Lukas Berners modified the code, to read in the reference patterns from
 %the square Lambert projection as implemented by the Marc DeGraef group in
 %EMsoft. I also just decided, to give the

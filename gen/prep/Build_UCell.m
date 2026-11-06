@@ -1,5 +1,3 @@
-
-
 function [UCell]=Build_UCell(filename, ciffilename)
 
 try
@@ -88,7 +86,7 @@ try
     else
         factor_n(1)=str2double(ffactors(1:comma_loc(1)-1));
         if size(comma_loc,2) > 1
-            for n=2:size(comma_loc(2))-1
+            for n=2:size(comma_loc,2)-1
                 factor_n(n)=str2double(ffactors(comma_loc(n-1)+1:comma_loc(n)-1));
             end
             factor_n(n+1)=str2double(ffactors(comma_loc(n)+1:end));

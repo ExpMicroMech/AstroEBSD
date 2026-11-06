@@ -811,6 +811,12 @@ BandLabelsLegend();
         % description tidied up 2025-08-01, TBB
 
         g_dynamics=Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2);
+
+        if strcmpi(Input_Data.crystal_shape,'trigonal') & strcmpi(screen_int.simSource,'EMsoft') %deal with the trigonal unit cell issue within EMSoft
+            g_trigonal=Input_Data.Rz(3*pi/2)*Input_Data.Rx(pi/2)*Input_Data.Rz(pi/2);
+            g_dynamics=g_dynamics*g_trigonal;
+        end
+
         [Pattern_Sim]=EBSP_gen( EBSD_Geometry,g_dynamics*RotMat,screen_int);
 
         i_ecp=imagesc(EBSD_Geometry.x_screen,EBSD_Geometry.y_screen,Pattern_Sim,'Parent',h_ecp);
